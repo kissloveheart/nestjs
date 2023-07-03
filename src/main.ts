@@ -1,0 +1,33 @@
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
+import { ConfigService } from '@nestjs/config';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
+import { swaggerConfig } from '@/config/swagger.config';
+import { COMMA } from '@/constant/common.constant';
+
+async function bootstrap() {
+	const app = await NestFactory.create(AppModule);
+
+	const configService = app.get(ConfigService);
+	const logger = app.get(WINSTON_MODULE_NEST_PROVIDER);
+	app.useLogger(logger);
+	app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
+
+	app.enableCors({
+		origin: configService.get<string>('ALLOW_ORIGINS').split(COMMA),
+		methods: ['GET', 'PUT', 'PATCH', 'POST', 'DELETE'],
+		credentials: true,
+	});
+	app.enableVersioning({
+		type: VersioningType.URI,
+		defaultVersion: '1',
+	});
+
+	swaggerConfig(app);
+	const port = configService.get<number>('PORT');
+	await app.listen(port, '0.0.0.0');
+	Logger.log(`Server is listening on ${await app.getUrl()}`, 'Bootstrap');
+}
+
+bootstrap();
