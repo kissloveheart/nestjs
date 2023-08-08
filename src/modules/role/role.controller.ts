@@ -1,10 +1,10 @@
 import { Controller, Delete, Get, Param } from '@nestjs/common';
 import { RoleService } from './role.service';
-import { ParseObjectIdPipe } from '@/pipe/parse-object-id.pipe';
+import { ParseObjectIdPipe } from '@pipe';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
 import { ObjectId } from 'mongodb';
-import { ApiResponse } from '@/types/common.type';
-import { Role } from '@/entities/role.entity';
+import { ApiResponse } from '@types';
+import { Role } from '@entities';
 
 @Controller('role')
 @ApiTags('Albums')

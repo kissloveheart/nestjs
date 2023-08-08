@@ -18,18 +18,18 @@
 		"forceConsistentCasingInFileNames": false,
 		"noFallthroughCasesInSwitch": false,
 		"paths": {
-			"@/*": ["./src/*"],
-			"@/config/*": ["./src/config/*"],
-			"@/modules/*": ["./src/modules/*"],
-			"@/types/*": ["./src/types/*"],
-			"@/repositories/*": ["./src/repositories/*"],
-			"@/filter/*": ["./src/common/filter/*"],
-			"@/pipe/*": ["./src/common/pipe/*"],
-			"@/entities/*": ["./src/entities/*"],
-			"@/log/*": ["./src/shared/log/*"],
-			"@/enum/*": ["./src/types/enum/*"],
-			"@/interceptors/*": ["./src/common/interceptors/*"],
-			"@/constant/*": ["./src/constant/*"]
+			"@config": ["src/config"],
+			"@modules": ["src/modules"],
+			"@types": ["src/types"],
+			"@filter": ["src/common/filter"],
+			"@pipe": ["src/common/pipe"],
+			"@entities": ["src/entities"],
+			"@enum": ["src/types/enum"],
+			"@interceptor": ["src/common/interceptor"],
+			"@constant": ["src/constant"],
+			"@middleware": ["src/common/middleware"],
+			"@shared": ["src/shared"],
+			"@log": ["src/common/log"]
 		}
 	}
 }

@@ -1,8 +1,8 @@
-import { Role } from '@/entities/role.entity';
-import { BaseService } from '@/shared/base/base.abstract.service';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
+import { BaseService } from '@shared';
+import { Role } from '@entities';
 
 @Injectable()
 export class RoleService extends BaseService<Role> {

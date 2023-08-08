@@ -1,6 +1,6 @@
-import { Permission } from '@/entities/permission.entity';
-import { Role } from '@/entities/role.entity';
-import { RoleName, Scope, permission } from '@/enum/role.enum';
+import { Permission } from '@entities';
+import { Role } from '@entities';
+import { RoleName, Scope, permission } from '@enum';
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { RoleService } from './role.service';
 
@@ -38,6 +38,6 @@ export class RoleSeedService implements OnModuleInit {
 			});
 
 		const saveRoles = await this.roleService.saveAll(newRoles);
-		this.log.log(`${saveRoles.length} role have been created`, saveRoles);
+		this.log.log(`${saveRoles.length} role have been created`);
 	}
 }

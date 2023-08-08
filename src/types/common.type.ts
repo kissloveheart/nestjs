@@ -3,15 +3,31 @@ import {
 	ApiExtraModels,
 	ApiOkResponse,
 	ApiProperty,
+	ApiPropertyOptional,
 	getSchemaPath,
 } from '@nestjs/swagger';
 
 export class Response<T> {
-	@ApiProperty()
+	@ApiProperty({
+		description: 'Application code',
+	})
 	code: number;
-	@ApiProperty()
+	@ApiProperty({
+		description: 'Can be success or error message',
+	})
 	message: string;
+	@ApiProperty({
+		description: 'Is API success',
+	})
+	success: boolean;
+	@ApiProperty({
+		description: 'Result data if exist',
+	})
 	data: T;
+	@ApiPropertyOptional()
+	path?: string;
+	@ApiPropertyOptional()
+	timestamp?: Date;
 }
 
 interface IDecoratorApiResponse {

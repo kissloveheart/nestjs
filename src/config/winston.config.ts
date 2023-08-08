@@ -1,10 +1,8 @@
+import { utilities } from 'nest-winston';
+import * as path from 'path';
 import winston, { format, transports } from 'winston';
 import 'winston-daily-rotate-file';
-import * as path from 'path';
-import { ConfigService } from '@nestjs/config';
-import { utilities } from 'nest-winston';
-import { NODE_ENV } from '@/constant/env.constant';
-import { PRODUCTION } from '@/constant/common.constant';
+import { AppConfigService } from './app-config.service';
 
 const formatLogger = format.printf((msg) => {
 	const message = msg.metadata?.error?.stack ?? msg.message;
@@ -16,12 +14,12 @@ const formatLogger = format.printf((msg) => {
 export class LoggerConfig {
 	private readonly options: winston.LoggerOptions;
 
-	constructor(configService: ConfigService) {
+	constructor(configService: AppConfigService) {
 		this.options = {
 			exitOnError: false,
 		};
 
-		if (configService.get<string>(NODE_ENV) === PRODUCTION) {
+		if (configService.isProduction()) {
 			this.options = {
 				...this.options,
 				transports: this.transportRotateFile(configService),
@@ -41,24 +39,27 @@ export class LoggerConfig {
 		return this.options;
 	}
 
-	private transportConsole(configService: ConfigService) {
+	private transportConsole(configService: AppConfigService) {
 		return new transports.Console({
-			level: configService.get<string>('LOG_CONSOLE_LEVEL'),
+			level: configService.getConsoleLogLevel(),
 			format: format.combine(
 				format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-				utilities.format.nestLike(),
+				format.metadata({ fillExcept: ['message', 'level'] }),
+				format.colorize({ all: true }),
+				formatLogger,
+				format.combine(format.splat()),
 			),
 		});
 	}
 
-	private transportRotateFile(configService: ConfigService) {
+	private transportRotateFile(configService: AppConfigService) {
 		return new transports.DailyRotateFile({
 			filename: path.join(__dirname, '..', '..', 'logs', `%DATE%.log`),
 			datePattern: 'YYYY-MM-DD',
 			zippedArchive: true,
 			maxSize: '20m',
 			maxFiles: '14d',
-			level: configService.get<string>('LOG_FILE_LEVEL'),
+			level: configService.getFileLogLevel(),
 			json: false,
 			format: format.combine(
 				format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),

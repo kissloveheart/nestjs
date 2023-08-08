@@ -1,9 +1,9 @@
-import { User } from '@/entities/user.entity';
-import { BaseService } from '@/shared/base/base.abstract.service';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
 import { RoleService } from '../role/role.service';
+import { BaseService } from '@shared';
+import { User } from '@entities';
 
 @Injectable()
 export class UserService extends BaseService<User> {

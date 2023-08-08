@@ -1,5 +1,5 @@
 import { Column } from 'typeorm';
-import { Action, Scope } from '../types/enum/role.enum';
+import { Action, Scope } from '@enum';
 import { IsEnum } from 'class-validator';
 
 export class Permission {

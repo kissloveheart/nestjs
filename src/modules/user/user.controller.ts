@@ -1,4 +1,4 @@
-import { ParseObjectIdPipe } from '@/common/pipe/parse-object-id.pipe';
+import { ParseObjectIdPipe } from '@pipe';
 import { Controller, Get, Param } from '@nestjs/common';
 import { ObjectId } from 'typeorm';
 import { UserService } from './user.service';

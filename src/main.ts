@@ -3,8 +3,8 @@ import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
-import { swaggerConfig } from '@/config/swagger.config';
-import { COMMA } from '@/constant/common.constant';
+import { swaggerConfig } from '@config';
+import { COMMA } from '@constant';
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);

@@ -1,4 +1,3 @@
-import { AuditEntity } from '@/entities/base/audit-entity';
 import {
 	AggregateOptions,
 	CountOptions,
@@ -9,6 +8,7 @@ import {
 	ObjectLiteral,
 } from 'typeorm';
 import { MongoFindManyOptions } from 'typeorm/find-options/mongodb/MongoFindManyOptions';
+import { AuditEntity } from '@entities';
 
 export abstract class BaseService<T extends AuditEntity> {
 	constructor(private readonly repository: MongoRepository<T>) {}

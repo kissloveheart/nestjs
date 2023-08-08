@@ -1,5 +1,5 @@
-import { Response } from '@/types/common.type';
-import { RESPONSE_MESSAGE } from '@/constant';
+import { Response } from '@types';
+import { RESPONSE_MESSAGE } from '@constant';
 import {
 	Injectable,
 	NestInterceptor,
@@ -24,6 +24,7 @@ export class ResponseInterceptor<T> implements NestInterceptor<T, Response<T>> {
 				message:
 					this.reflector.get<string>(RESPONSE_MESSAGE, context.getHandler()) ||
 					'success',
+				success: true,
 				data,
 			})),
 		);

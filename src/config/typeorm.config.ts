@@ -1,17 +1,16 @@
-import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
-import { ConfigService } from '@nestjs/config';
 import { Injectable } from '@nestjs/common';
-import { DatabaseConfig } from '@/config/env/database.config';
-import { DataSource, getMetadataArgsStorage } from 'typeorm';
+import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 import { config } from 'dotenv';
+import { DataSource } from 'typeorm';
+import { AppConfigService } from './app-config.service';
 import { envFilePath } from './env-path.config';
 
 @Injectable()
 export class TypeOrmModuleConfig implements TypeOrmOptionsFactory {
-	constructor(private readonly configService: ConfigService) {}
+	constructor(private readonly configService: AppConfigService) {}
 
 	createTypeOrmOptions(): TypeOrmModuleOptions {
-		const databaseConfig = this.configService.get<DatabaseConfig>('database');
+		const databaseConfig = this.configService.getDatabase();
 		return {
 			type: 'mongodb',
 			url: databaseConfig.url,
