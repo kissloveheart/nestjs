@@ -7,8 +7,10 @@ import { NODE_ENV } from '@/constant/env.constant';
 import { PRODUCTION } from '@/constant/common.constant';
 
 const formatLogger = format.printf((msg) => {
-	const message = msg.message + msg.metadata?.error?.stack;
-	return `${msg.metadata.timestamp} - ${msg.metadata.context}[${msg.level}]: ${message}`;
+	const message = msg.metadata?.error?.stack ?? msg.message;
+	return `${msg.metadata.timestamp} - ${msg.metadata.context}[${msg.level}] ${
+		msg.metadata.requestId ? '- [' + msg.metadata.requestId + ']' : ''
+	}: ${message}`;
 });
 
 export class LoggerConfig {

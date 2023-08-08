@@ -10,10 +10,10 @@ insert_final_newline = true
 # Set default charset
 [*.{js,ts}]
 charset = utf-8
-indent_style = tab
+indent_style = space
 indent_size = 2
 
 # Matches the exact files either package.json or .travis.yml
 [{package.json,.travis.yml}]
-indent_style = tab
+indent_style = space
 indent_size = 2

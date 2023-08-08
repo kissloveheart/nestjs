@@ -1,3 +1,11 @@
+import { configValidationSchema } from '@/config/config.schema';
+import { envFilePath } from '@/config/env-path.config';
+import databaseConfig from '@/config/env/database.config';
+import { TypeOrmModuleConfig } from '@/config/typeorm.config';
+import { LoggerConfig } from '@/config/winston.config';
+import { PRODUCTION } from '@/constant/common.constant';
+import { NODE_ENV } from '@/constant/env.constant';
+import { HttpExceptionFilter } from '@/filter/http-exception.filter';
 import {
 	ClassSerializerInterceptor,
 	MiddlewareConsumer,
@@ -5,27 +13,16 @@ import {
 	NestModule,
 } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { envFilePath } from '@/config/env-path.config';
-import { WinstonModule } from 'nest-winston';
-import { LoggerConfig } from '@/config/winston.config';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { TypeOrmModuleConfig } from '@/config/typeorm.config';
-import databaseConfig from '@/config/env/database.config';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
-import { HttpExceptionFilter } from '@/filter/http-exception.filter';
-import { configValidationSchema } from '@/config/config.schema';
-import { MongooseModule } from '@nestjs/mongoose';
-import { MongooseModuleConfig } from '@/config/mongoose.config';
-import { UsersModule } from '@/modules/users/users.module';
-import { UserRolesModule } from '@/modules/user-roles/user-roles.module';
-import { TopicsModule } from '@/modules/topics/topics.module';
-import { CollectionModule } from '@/modules/collection/collection.module';
-import { FlashCardsModule } from '@/modules/flash-cards/flash-cards.module';
-import { MongooseExceptionFilter } from '@/filter/mongoose-exception.filter';
-import { LoggerMiddleware } from '@/logger/logger.middleware';
-import { NODE_ENV } from '@/constant/env.constant';
-import { PRODUCTION } from '@/constant/common.constant';
-import { LoggerModule } from '@/logger/logger.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { WinstonModule } from 'nest-winston';
+import { LogMiddleware } from './common/middleware/log.middleware';
+import { RoleModule } from '@/modules/role/role.module';
+import { UserModule } from '@/modules/user/user.module';
+import { TypeormExceptionFilter } from '@/filter/typeorm-exception.filter';
+import { LogErrorInterceptor } from './common/interceptors/log-error.interceptor';
+import { ResponseInterceptor } from './common/interceptors/response.interceptor';
+import { ClsModule } from 'nestjs-cls';
 
 @Module({
 	imports: [
@@ -50,16 +47,12 @@ import { LoggerModule } from '@/logger/logger.module';
 			imports: [ConfigModule.forFeature(databaseConfig)],
 			useClass: TypeOrmModuleConfig,
 		}),
-		MongooseModule.forRootAsync({
-			imports: [ConfigModule.forFeature(databaseConfig)],
-			useClass: MongooseModuleConfig,
+		ClsModule.forRoot({
+			global: true,
+			middleware: { mount: true },
 		}),
-		LoggerModule,
-		UsersModule,
-		UserRolesModule,
-		TopicsModule,
-		CollectionModule,
-		FlashCardsModule,
+		UserModule,
+		RoleModule,
 	],
 	providers: [
 		{
@@ -68,7 +61,15 @@ import { LoggerModule } from '@/logger/logger.module';
 		},
 		{
 			provide: APP_FILTER,
-			useClass: MongooseExceptionFilter,
+			useClass: TypeormExceptionFilter,
+		},
+		{
+			provide: APP_INTERCEPTOR,
+			useClass: ResponseInterceptor,
+		},
+		{
+			provide: APP_INTERCEPTOR,
+			useClass: LogErrorInterceptor,
 		},
 		{
 			provide: APP_INTERCEPTOR,
@@ -81,6 +82,6 @@ export class AppModule implements NestModule {
 
 	configure(consumer: MiddlewareConsumer): void {
 		this.configService.get<string>(NODE_ENV) !== PRODUCTION &&
-			consumer.apply(LoggerMiddleware).forRoutes('*');
+			consumer.apply(LogMiddleware).forRoutes('*');
 	}
 }

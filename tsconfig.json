@@ -1,38 +1,35 @@
 {
-  "compilerOptions": {
-    "module": "commonjs",
-    "declaration": true,
-    "removeComments": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true,
-    "target": "ES2021",
-    "sourceMap": true,
-    "outDir": "./dist",
-    "baseUrl": "./",
-    "incremental": true,
-    "skipLibCheck": true,
-    "strictNullChecks": false,
-    "noImplicitAny": false,
-    "strictBindCallApply": false,
-    "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false,
-    "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@/config/*": [
-        "./src/config/*"
-      ],
-      "@/modules/*": [
-        "./src/modules/*"
-      ],
-      "@/types/*": [
-        "./src/types/*"
-      ],
-      "@/repositories/*": [
-        "./src/repositories/*"
-      ]
-    }
-  }
+	"compilerOptions": {
+		"module": "commonjs",
+		"declaration": true,
+		"removeComments": true,
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"allowSyntheticDefaultImports": true,
+		"target": "ES2021",
+		"sourceMap": true,
+		"outDir": "./dist",
+		"baseUrl": "./",
+		"incremental": true,
+		"skipLibCheck": true,
+		"strictNullChecks": false,
+		"noImplicitAny": false,
+		"strictBindCallApply": false,
+		"forceConsistentCasingInFileNames": false,
+		"noFallthroughCasesInSwitch": false,
+		"paths": {
+			"@/*": ["./src/*"],
+			"@/config/*": ["./src/config/*"],
+			"@/modules/*": ["./src/modules/*"],
+			"@/types/*": ["./src/types/*"],
+			"@/repositories/*": ["./src/repositories/*"],
+			"@/filter/*": ["./src/common/filter/*"],
+			"@/pipe/*": ["./src/common/pipe/*"],
+			"@/entities/*": ["./src/entities/*"],
+			"@/log/*": ["./src/shared/log/*"],
+			"@/enum/*": ["./src/types/enum/*"],
+			"@/interceptors/*": ["./src/common/interceptors/*"],
+			"@/constant/*": ["./src/constant/*"]
+		}
+	}
 }

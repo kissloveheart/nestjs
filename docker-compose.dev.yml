@@ -6,9 +6,9 @@ services:
       context: .
       dockerfile: Dockerfile
       target: development
-    container_name: nestjs-dev
+    container_name: nestjs-BE
     environment:
-      - NODE_ENV=development
+      - SUFFIX_ENV_NAME=dev
     ports:
       - ${PORT}:${PORT}
     restart: unless-stopped

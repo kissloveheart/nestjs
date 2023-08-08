@@ -1,12 +1,42 @@
-export enum SORT_TYPE {
-	'DESC' = 'desc',
-	'ASC' = 'acs',
+import { Type, applyDecorators } from '@nestjs/common';
+import {
+	ApiExtraModels,
+	ApiOkResponse,
+	ApiProperty,
+	getSchemaPath,
+} from '@nestjs/swagger';
+
+export class Response<T> {
+	@ApiProperty()
+	code: number;
+	@ApiProperty()
+	message: string;
+	data: T;
 }
 
-export type FindAllResponse<T> = { count: number; items: T[] };
+interface IDecoratorApiResponse {
+	model: Type;
+	description?: string;
+}
 
-export type SortParams = { sortBy: string; sortType: SORT_TYPE };
-
-export type SearchParams = { keywork: string; field: string };
-
-export type PaginateParams = { offset: number; limit: number };
+export const ApiResponse = (options: IDecoratorApiResponse) => {
+	return applyDecorators(
+		ApiExtraModels(Response, options.model),
+		ApiOkResponse({
+			description: options.description || 'Successfully received model list',
+			schema: {
+				allOf: [
+					{ $ref: getSchemaPath(Response) },
+					{
+						properties: {
+							data: {
+								type: 'array',
+								items: { $ref: getSchemaPath(options.model) },
+							},
+						},
+					},
+				],
+			},
+		}),
+	);
+};

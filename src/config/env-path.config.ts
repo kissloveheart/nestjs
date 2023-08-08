@@ -1,8 +1,1 @@
-const environmentName = {
-	production: 'prod',
-	development: 'dev',
-	local: 'local',
-};
-export const envFilePath = `.env.${
-	environmentName[process.env.NODE_ENV] ?? 'dev'
-}`;
+export const envFilePath = `.env.${process.env.SUFFIX_ENV_FILE ?? 'dev'}`;
