@@ -1,14 +1,14 @@
 import {
 	AggregateOptions,
 	CountOptions,
-	DeepPartial,
 	FindManyOptions,
 	MongoRepository,
 	ObjectId,
 	ObjectLiteral,
 } from 'typeorm';
 import { MongoFindManyOptions } from 'typeorm/find-options/mongodb/MongoFindManyOptions';
-import { AuditEntity } from '@entities';
+import { AuditEntity } from './audit-entity';
+import { MongoFindOneOptions } from 'typeorm/find-options/mongodb/MongoFindOneOptions';
 
 export abstract class BaseService<T extends AuditEntity> {
 	constructor(private readonly repository: MongoRepository<T>) {}
@@ -35,6 +35,10 @@ export abstract class BaseService<T extends AuditEntity> {
 		});
 	}
 
+	async findOne(filter?: MongoFindOneOptions<T>) {
+		return await this.repository.findOne(filter);
+	}
+
 	async count(query?: ObjectLiteral, options?: CountOptions): Promise<number> {
 		return await this.repository.count(query, options);
 	}
@@ -45,5 +49,9 @@ export abstract class BaseService<T extends AuditEntity> {
 
 	async aggregate(pipeline: ObjectLiteral[], options?: AggregateOptions) {
 		return await this.repository.aggregate(pipeline, options);
+	}
+
+	async aggregateEntity(pipeline: ObjectLiteral[], options?: AggregateOptions) {
+		return await this.repository.aggregateEntity(pipeline, options);
 	}
 }

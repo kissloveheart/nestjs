@@ -1,9 +1,12 @@
 import { AppConfigModule, AppConfigService } from '@config';
 import { InterceptorModule } from '@interceptor';
 import { LogMiddleware } from '@middleware';
-import { RoleModule, UserModule } from '@modules';
+import { UserModule } from '@modules/user';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { LogModule } from '@log';
+import { AuthModule } from '@modules/auth';
+import { FilterModule } from '@filter';
+import { RoleModule } from '@modules/role';
 
 @Module({
 	imports: [
@@ -12,6 +15,8 @@ import { LogModule } from '@log';
 		AppConfigModule,
 		InterceptorModule,
 		LogModule,
+		AuthModule,
+		FilterModule,
 	],
 	providers: [],
 })

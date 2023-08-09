@@ -1,12 +1,14 @@
-import { Column, Entity } from 'typeorm';
-import { AuditEntity } from './base/audit-entity';
-import { IsArray, IsEnum, ValidateNested } from 'class-validator';
-import { Permission } from './permission.entity';
-import { Exclude, Type } from 'class-transformer';
-import { ApiProperty } from '@nestjs/swagger';
 import { RoleName } from '@enum';
+import { ApiProperty } from '@nestjs/swagger';
+import { AuditEntity } from '@shared';
+import { Exclude, Type } from 'class-transformer';
+import { IsArray, IsEnum, ValidateNested } from 'class-validator';
+import { Column, Entity } from 'typeorm';
+import { Permission } from './permission.entity';
 
-@Entity()
+@Entity({
+	name: 'role',
+})
 export class Role extends AuditEntity {
 	@Column()
 	@IsEnum(RoleName)
@@ -17,8 +19,7 @@ export class Role extends AuditEntity {
 	@Type(() => Permission)
 	@ValidateNested({ each: true })
 	@IsArray()
-	@Exclude()
-	permission: Permission[] = [];
+	permissions: Permission[];
 
 	constructor(partial: Partial<Role>) {
 		super();

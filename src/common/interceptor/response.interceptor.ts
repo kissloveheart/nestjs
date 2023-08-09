@@ -1,4 +1,4 @@
-import { Response } from '@types';
+import { IResponse } from '@types';
 import { RESPONSE_MESSAGE } from '@constant';
 import {
 	Injectable,
@@ -11,13 +11,15 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable()
-export class ResponseInterceptor<T> implements NestInterceptor<T, Response<T>> {
+export class ResponseInterceptor<T>
+	implements NestInterceptor<T, IResponse<T>>
+{
 	constructor(private reflector: Reflector) {}
 
 	intercept(
 		context: ExecutionContext,
 		next: CallHandler,
-	): Observable<Response<T>> {
+	): Observable<IResponse<T>> {
 		return next.handle().pipe(
 			map((data) => ({
 				code: context.switchToHttp().getResponse().statusCode,

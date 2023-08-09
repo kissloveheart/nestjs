@@ -1,28 +1,36 @@
 import { Controller, Delete, Get, Param } from '@nestjs/common';
 import { RoleService } from './role.service';
 import { ParseObjectIdPipe } from '@pipe';
-import { ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { ObjectId } from 'mongodb';
-import { ApiResponse } from '@types';
-import { Role } from '@entities';
+import { Role } from './dto/role.entity';
+import { ApiResponseGeneric } from '@types';
+import { PermitActions, ScopePermission } from '@decorators';
+import { Action, Scope } from '@enum';
 
 @Controller('role')
-@ApiTags('Albums')
+@ApiTags('Role')
+@ApiBearerAuth()
+@ScopePermission(Scope.ROLE)
 export class RoleController {
 	constructor(private readonly roleService: RoleService) {}
 
 	@Get()
-	@ApiResponse({ model: Role })
+	@PermitActions(Action.READ)
+	@ApiResponseGeneric({ model: Role })
 	async getRoles() {
-		return await this.roleService.findAndCount();
+		const data = await this.roleService.findAndCount();
+		return data;
 	}
 
 	@Get('count')
+	@PermitActions(Action.MANAGE)
 	async count() {
 		return await this.roleService.count();
 	}
 
 	@Get(':id')
+	@PermitActions(Action.READ)
 	@ApiParam({
 		name: 'id',
 		type: 'string',
@@ -33,6 +41,7 @@ export class RoleController {
 	}
 
 	@Delete(':id')
+	@PermitActions(Action.READ)
 	@ApiParam({
 		name: 'id',
 		type: 'string',

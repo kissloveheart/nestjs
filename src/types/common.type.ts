@@ -7,7 +7,7 @@ import {
 	getSchemaPath,
 } from '@nestjs/swagger';
 
-export class Response<T> {
+export class IResponse<T> {
 	@ApiProperty({
 		description: 'Application code',
 	})
@@ -35,14 +35,14 @@ interface IDecoratorApiResponse {
 	description?: string;
 }
 
-export const ApiResponse = (options: IDecoratorApiResponse) => {
+export const ApiResponseGeneric = (options: IDecoratorApiResponse) => {
 	return applyDecorators(
-		ApiExtraModels(Response, options.model),
+		ApiExtraModels(IResponse, options.model),
 		ApiOkResponse({
 			description: options.description || 'Successfully received model list',
 			schema: {
 				allOf: [
-					{ $ref: getSchemaPath(Response) },
+					{ $ref: getSchemaPath(IResponse) },
 					{
 						properties: {
 							data: {

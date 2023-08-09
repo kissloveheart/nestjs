@@ -7,9 +7,9 @@ import {
 	NestInterceptor,
 } from '@nestjs/common';
 import { ClsService } from 'nestjs-cls';
-import { Observable, catchError, throwError } from 'rxjs';
+import { Observable, catchError, of, throwError } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
-import { Response } from '@types';
+import { IResponse } from '@types';
 import { Request } from 'express';
 import { LogService } from '@log';
 
@@ -29,15 +29,15 @@ export class LogErrorInterceptor implements NestInterceptor {
 				if (!(err instanceof HttpException)) {
 					this.log.error(err);
 				}
-				const errorResponse: Response<null> = {
-					code: err.getStatus() ?? 500,
+				const errorResponse: IResponse<null> = {
+					code: typeof err.getStatus === 'function' ? err.getStatus() : 500,
 					message: err.message ?? 'Internal server error',
 					success: false,
 					data: null,
 					path: context.switchToHttp().getRequest<Request>().url,
 					timestamp: new Date(),
 				};
-				throw new HttpException(errorResponse, errorResponse.code);
+				return of(errorResponse);
 			}),
 		);
 	}

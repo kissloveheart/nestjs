@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DatabaseConfig } from './env/database.config';
-import { DATABASE } from '@constant';
+import { AUTH, DATABASE } from '@constant';
+import { AuthEnv } from './env/auth.config';
 
 @Injectable()
 export class AppConfigService {
@@ -25,5 +26,9 @@ export class AppConfigService {
 
 	getDatabase() {
 		return this.configService.get<DatabaseConfig>(DATABASE);
+	}
+
+	getJwt() {
+		return this.configService.get<AuthEnv>(AUTH).jwt;
 	}
 }

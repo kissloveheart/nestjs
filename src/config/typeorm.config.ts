@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 import { config } from 'dotenv';
-import { DataSource } from 'typeorm';
+import { DataSource, getMetadataArgsStorage } from 'typeorm';
 import { AppConfigService } from './app-config.service';
 import { envFilePath } from './env-path.config';
 
@@ -15,7 +15,7 @@ export class TypeOrmModuleConfig implements TypeOrmOptionsFactory {
 			type: 'mongodb',
 			url: databaseConfig.url,
 			logging: databaseConfig.isLogging,
-			entities: ['dist/entities/*.entity.js'],
+			entities: getMetadataArgsStorage().tables.map((tbl) => tbl.target),
 			migrations: ['dist/migrations/*.js'],
 			useNewUrlParser: true,
 			useUnifiedTopology: true,

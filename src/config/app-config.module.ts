@@ -9,6 +9,7 @@ import { envFilePath } from './env-path.config';
 import { TypeOrmModuleConfig } from './typeorm.config';
 import { LoggerConfig } from './winston.config';
 import databaseConfig from './env/database.config';
+import authConfig from './env/auth.config';
 
 @Global()
 @Module({
@@ -24,6 +25,7 @@ import databaseConfig from './env/database.config';
 			},
 		}),
 		ConfigModule.forFeature(databaseConfig),
+		ConfigModule.forFeature(authConfig),
 		WinstonModule.forRootAsync({
 			imports: [AppConfigModule],
 			useFactory: (configService: AppConfigService) => {
