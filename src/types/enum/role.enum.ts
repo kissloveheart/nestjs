@@ -12,6 +12,7 @@ export enum Action {
 export enum Scope {
 	USER = 'user',
 	ROLE = 'role',
+	AUTH = 'auth',
 }
 const permission: {
 	[key in RoleName]: {
@@ -21,10 +22,12 @@ const permission: {
 	[RoleName.ADMIN]: {
 		[Scope.USER]: [Action.MANAGE],
 		[Scope.ROLE]: [Action.MANAGE],
+		[Scope.AUTH]: [Action.MANAGE],
 	},
 	[RoleName.USER]: {
 		[Scope.USER]: [Action.READ],
 		[Scope.ROLE]: [Action.READ],
+		[Scope.AUTH]: [Action.MANAGE],
 	},
 };
 

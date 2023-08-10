@@ -5,19 +5,21 @@ import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { ObjectId } from 'mongodb';
 import { Role } from './dto/role.entity';
 import { ApiResponseGeneric } from '@types';
-import { PermitActions, ScopePermission } from '@decorators';
+import { PermitActions, Public, ScopePermission } from '@decorators';
 import { Action, Scope } from '@enum';
 
 @Controller('role')
 @ApiTags('Role')
 @ApiBearerAuth()
 @ScopePermission(Scope.ROLE)
+@Public()
 export class RoleController {
 	constructor(private readonly roleService: RoleService) {}
 
 	@Get()
 	@PermitActions(Action.READ)
 	@ApiResponseGeneric({ model: Role })
+	@Public()
 	async getRoles() {
 		const data = await this.roleService.findAndCount();
 		return data;

@@ -1,5 +1,4 @@
 import { AppConfigService } from '@config';
-import { UserService } from '@modules/user';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Inject, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
@@ -9,28 +8,35 @@ import { validateIat } from '../auth.utils';
 import { JwtPayload } from '../dto/jwt-payload.dto';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
+export class RefreshTokenStrategy extends PassportStrategy(
+	Strategy,
+	'jwt-refresh',
+) {
 	constructor(
-		private readonly appConfig: AppConfigService,
+		private readonly appConfigService: AppConfigService,
 		@Inject(CACHE_MANAGER)
 		private readonly cacheManager: Cache,
-		private readonly userService: UserService,
 	) {
 		super({
 			jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+			secretOrKey: appConfigService.getJwt().refresh.secret,
 			ignoreExpiration: false,
-			secretOrKey: appConfig.getJwt().access.secret,
 		});
 	}
 
-	async validate(payload: JwtPayload) {
+	async validate(payload: JwtPayload): Promise<JwtPayload> {
+		const { iat, exp, emailAddress } = payload;
+
 		const currentIat = await this.cacheManager.get<number | undefined>(
-			payload.emailAddress,
+			emailAddress,
 		);
 
-		validateIat(currentIat, payload.iat);
+		validateIat(currentIat, iat);
 
-		const user = await this.userService.findByEmail(payload.emailAddress);
-		return user;
+		const remainingTime = exp * 1000 - Date.now();
+		const cacheExpireTime = remainingTime > 0 ? remainingTime : 1;
+
+		await this.cacheManager.set(emailAddress, iat, cacheExpireTime);
+		return payload;
 	}
 }

@@ -7,6 +7,7 @@ import {
 	Param,
 	Post,
 	Put,
+	Query,
 } from '@nestjs/common';
 import { ObjectId } from 'typeorm';
 import { UserService } from './user.service';
@@ -27,7 +28,7 @@ export class UserController {
 	@Get()
 	@PermitActions(Action.READ)
 	@ApiResponseGeneric({ model: UserEntity })
-	async findAll() {
+	async findAll(@Query() user: UserCreateDto) {
 		const data = await this.userService.find({
 			take: 1,
 		});

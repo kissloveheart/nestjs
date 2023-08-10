@@ -10,13 +10,14 @@ import { TypeOrmModuleConfig } from './typeorm.config';
 import { LoggerConfig } from './winston.config';
 import databaseConfig from './env/database.config';
 import authConfig from './env/auth.config';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Global()
 @Module({
 	imports: [
 		ConfigModule.forRoot({
 			isGlobal: true,
-			envFilePath: envFilePath,
+			envFilePath: [envFilePath, '.env'],
 			cache: true,
 			expandVariables: true,
 			validationSchema: configValidationSchema,
@@ -41,6 +42,7 @@ import authConfig from './env/auth.config';
 			global: true,
 			middleware: { mount: true },
 		}),
+		CacheModule.register({ isGlobal: true }),
 	],
 	providers: [AppConfigService],
 	exports: [AppConfigService],

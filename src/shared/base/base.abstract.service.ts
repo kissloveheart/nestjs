@@ -7,7 +7,7 @@ import {
 	ObjectLiteral,
 } from 'typeorm';
 import { MongoFindManyOptions } from 'typeorm/find-options/mongodb/MongoFindManyOptions';
-import { AuditEntity } from './audit-entity';
+import { AuditEntity } from './audit.entity';
 import { MongoFindOneOptions } from 'typeorm/find-options/mongodb/MongoFindOneOptions';
 
 export abstract class BaseService<T extends AuditEntity> {

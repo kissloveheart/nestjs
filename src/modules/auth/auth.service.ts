@@ -1,8 +1,11 @@
-import { Injectable } from '@nestjs/common';
-import { UserService } from '../user/user.service';
-import { JwtService } from '@nestjs/jwt';
 import { AppConfigService } from '@config';
+import { USER_HAS_BEEN_LOGGED_OUT } from '@constant';
 import { UserEntity } from '@modules/user';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Inject, Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { Cache } from 'cache-manager';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class AuthService {
@@ -10,6 +13,8 @@ export class AuthService {
 		private readonly userService: UserService,
 		private readonly jwtService: JwtService,
 		private readonly appConfigService: AppConfigService,
+		@Inject(CACHE_MANAGER)
+		private readonly cacheManager: Cache,
 	) {}
 
 	async authentication(email: string, code: string) {
@@ -43,8 +48,17 @@ export class AuthService {
 	}
 
 	async login(user: UserEntity) {
-		const accessToken = await this.createAccessToken(user.email);
-		const refreshToken = await this.createRefreshToken(user.email);
+		await this.cacheManager.del(user.email);
+		return await this.createToken(user.email);
+	}
+
+	async logout(user: UserEntity) {
+		await this.cacheManager.set(user.email, USER_HAS_BEEN_LOGGED_OUT, 0);
+	}
+
+	async createToken(email: string) {
+		const accessToken = await this.createAccessToken(email);
+		const refreshToken = await this.createRefreshToken(email);
 		return {
 			accessToken,
 			refreshToken,

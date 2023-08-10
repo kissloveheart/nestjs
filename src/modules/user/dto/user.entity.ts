@@ -1,4 +1,5 @@
 import { Role } from '@modules/role';
+import { ApiProperty } from '@nestjs/swagger';
 import { AuditEntity } from '@shared';
 import { Exclude, Transform, Type } from 'class-transformer';
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
@@ -15,14 +16,17 @@ MongoBulkWriteError;
 export class UserEntity extends AuditEntity {
 	@Column()
 	@IsString()
+	@ApiProperty()
 	firstName: string;
 
 	@Column()
 	@IsString()
+	@ApiProperty()
 	lastName: string;
 
 	@Column()
 	@IsEmail()
+	@ApiProperty()
 	email: string;
 
 	@Column()
@@ -33,7 +37,7 @@ export class UserEntity extends AuditEntity {
 	@Exclude()
 	pin: number;
 
-	@ObjectIdColumn({ array: true })
+	@Column({ array: true })
 	@Type(() => ObjectId)
 	@Transform(({ value }) => value.map((value) => value.toString()))
 	role_ids: ObjectId[];

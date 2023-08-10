@@ -3,7 +3,7 @@ import { Action, Scope } from '@enum';
 import { UserEntity } from '@modules/user';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { isPublicRequest } from './is-public-request.utils';
+import { isPublicRequest } from '../auth.utils';
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
