@@ -1,5 +1,5 @@
 import { Entity } from 'typeorm';
-import { AuditEntity } from '@shared';
+import { AuditEntity } from '@shared/base';
 
 @Entity({ name: '__moduleName__' })
 export class __moduleName__CamelCase__Entity extends AuditEntity {

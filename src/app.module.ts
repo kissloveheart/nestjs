@@ -7,6 +7,9 @@ import { LogModule } from '@log';
 import { AuthModule } from '@modules/auth';
 import { FilterModule } from '@filter';
 import { RoleModule } from '@modules/role';
+import { AuditSubscriber } from '@shared/subscriber';
+import { EmailModule } from '@shared/email';
+import { TwilioModule } from '@shared/twilio';
 
 @Module({
 	imports: [
@@ -17,8 +20,10 @@ import { RoleModule } from '@modules/role';
 		LogModule,
 		AuthModule,
 		FilterModule,
+		EmailModule,
+		TwilioModule,
 	],
-	providers: [],
+	providers: [AuditSubscriber],
 })
 export class AppModule implements NestModule {
 	constructor(private readonly configService: AppConfigService) {}

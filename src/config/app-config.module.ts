@@ -11,6 +11,8 @@ import { LoggerConfig } from './winston.config';
 import databaseConfig from './env/database.config';
 import authConfig from './env/auth.config';
 import { CacheModule } from '@nestjs/cache-manager';
+import mailConfig from './env/mail.config';
+import twilioConfig from './env/twilio.config';
 
 @Global()
 @Module({
@@ -27,6 +29,8 @@ import { CacheModule } from '@nestjs/cache-manager';
 		}),
 		ConfigModule.forFeature(databaseConfig),
 		ConfigModule.forFeature(authConfig),
+		ConfigModule.forFeature(mailConfig),
+		ConfigModule.forFeature(twilioConfig),
 		WinstonModule.forRootAsync({
 			imports: [AppConfigModule],
 			useFactory: (configService: AppConfigService) => {

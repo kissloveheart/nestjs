@@ -10,7 +10,7 @@ export class TypeOrmModuleConfig implements TypeOrmOptionsFactory {
 	constructor(private readonly configService: AppConfigService) {}
 
 	createTypeOrmOptions(): TypeOrmModuleOptions {
-		const databaseConfig = this.configService.getDatabase();
+		const databaseConfig = this.configService.database();
 		return {
 			type: 'mongodb',
 			url: databaseConfig.url,
@@ -32,7 +32,7 @@ export default new DataSource({
 	url: process.env.DATABASE_URL,
 	logging: process.env.DATABASE_LOGGING?.toLocaleLowerCase() === 'true',
 	entities: ['dist/entities/*.entity.js'],
-	migrations: ['dist/migrations/*.js'],
+	migrations: ['dist/src/migrations/*.js'],
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
 	synchronize: false,

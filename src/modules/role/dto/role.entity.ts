@@ -1,6 +1,6 @@
 import { RoleName } from '@enum';
 import { ApiProperty } from '@nestjs/swagger';
-import { AuditEntity } from '@shared';
+import { AuditEntity } from '@shared/base';
 import { Exclude, Type } from 'class-transformer';
 import { IsArray, IsEnum, ValidateNested } from 'class-validator';
 import { Column, Entity } from 'typeorm';

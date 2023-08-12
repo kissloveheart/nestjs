@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
 import { RoleService } from '@modules/role';
-import { BaseService } from '@shared';
 import { UserEntity } from './dto/user.entity';
-import { RoleName } from '@enum';
+import { RoleName, UserStatus } from '@enum';
 import { UserCreateDto } from './dto/user-create.dto';
+import { BaseService } from '@shared/base';
 
 @Injectable()
 export class UserService extends BaseService<UserEntity> {
@@ -28,11 +28,12 @@ export class UserService extends BaseService<UserEntity> {
 		return await this.save(user);
 	}
 
-	async findByEmail(email: string) {
+	async findByEmailWithRoles(email: string) {
 		const cursor = await this.aggregateEntity([
 			{
 				$match: {
 					email: email,
+					status: UserStatus.ACTIVE,
 				},
 			},
 			{
@@ -46,5 +47,16 @@ export class UserService extends BaseService<UserEntity> {
 		]);
 
 		return cursor.next();
+	}
+
+	async findByEmail(email: string) {
+		const data = await this.findOne({
+			where: {
+				email,
+				status: UserStatus.ACTIVE,
+			},
+		});
+
+		return data;
 	}
 }

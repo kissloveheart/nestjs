@@ -1,11 +1,11 @@
 import { AppConfigService } from '@config';
 import { USER_HAS_BEEN_LOGGED_OUT } from '@constant';
-import { UserEntity } from '@modules/user';
+import { UserEntity, UserService } from '@modules/user';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, BadRequestException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { TwilioService } from '@shared/twilio';
 import { Cache } from 'cache-manager';
-import { UserService } from '../user/user.service';
 
 @Injectable()
 export class AuthService {
@@ -13,26 +13,17 @@ export class AuthService {
 		private readonly userService: UserService,
 		private readonly jwtService: JwtService,
 		private readonly appConfigService: AppConfigService,
+		private readonly twiliioService: TwilioService,
 		@Inject(CACHE_MANAGER)
 		private readonly cacheManager: Cache,
 	) {}
-
-	async authentication(email: string, code: string) {
-		// TODO check code with Twillo
-		const data = await this.userService.findOne({
-			where: {
-				email: email,
-			},
-		});
-		return data;
-	}
 
 	async createAccessToken(emailAddress: string) {
 		return this.jwtService.sign(
 			{ emailAddress },
 			{
-				secret: this.appConfigService.getJwt().access.secret,
-				expiresIn: this.appConfigService.getJwt().access.expiresIn,
+				secret: this.appConfigService.jwt().access.secret,
+				expiresIn: this.appConfigService.jwt().access.expiresIn,
 			},
 		);
 	}
@@ -41,8 +32,8 @@ export class AuthService {
 		return this.jwtService.sign(
 			{ emailAddress },
 			{
-				secret: this.appConfigService.getJwt().refresh.secret,
-				expiresIn: this.appConfigService.getJwt().refresh.expiresIn,
+				secret: this.appConfigService.jwt().refresh.secret,
+				expiresIn: this.appConfigService.jwt().refresh.expiresIn,
 			},
 		);
 	}
@@ -63,5 +54,18 @@ export class AuthService {
 			accessToken,
 			refreshToken,
 		};
+	}
+
+	async sendVerifyCode(email: string) {
+		if (!(await this.checkExistEmail(email))) throw new BadRequestException();
+		this.twiliioService.sendVerification(email);
+	}
+
+	async checkExistEmail(email: string) {
+		return !!(await this.userService.findByEmail(email));
+	}
+
+	async checkVerification(email: string, code: string) {
+		return await this.twiliioService.checkVerification(email, code);
 	}
 }

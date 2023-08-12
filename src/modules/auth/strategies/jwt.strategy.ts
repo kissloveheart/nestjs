@@ -19,7 +19,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
 		super({
 			jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
 			ignoreExpiration: false,
-			secretOrKey: appConfig.getJwt().access.secret,
+			secretOrKey: appConfig.jwt().access.secret,
 		});
 	}
 
@@ -30,7 +30,9 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
 
 		validateIat(currentIat, payload.iat);
 
-		const user = await this.userService.findByEmail(payload.emailAddress);
+		const user = await this.userService.findByEmailWithRoles(
+			payload.emailAddress,
+		);
 		return user;
 	}
 }

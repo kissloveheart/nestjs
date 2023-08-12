@@ -1,12 +1,15 @@
-import { ApiProperty, OmitType } from '@nestjs/swagger';
-import { IsEmail, IsNumber } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsEmail, IsString, Length, Matches } from 'class-validator';
 
-export class LoginDto {
+export class EmailDto {
 	@ApiProperty()
 	@IsEmail()
 	email: string;
-
+}
+export class LoginDto extends EmailDto {
 	@ApiProperty()
-	@IsNumber()
-	code: number;
+	@IsString()
+	@Matches('^\\d+$')
+	@Length(6, 6)
+	code: string;
 }

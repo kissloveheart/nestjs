@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DatabaseConfig } from './env/database.config';
-import { AUTH, DATABASE } from '@constant';
+import { AUTH, DATABASE, MAIL, TWILIO } from '@constant';
 import { AuthEnv } from './env/auth.config';
+import { MailConfig } from './env/mail.config';
+import { TwilioConfig } from './env/twilio.config';
 
 @Injectable()
 export class AppConfigService {
@@ -24,11 +26,19 @@ export class AppConfigService {
 		return this.configService.get<string>('LOG_CONSOLE_LEVEL');
 	}
 
-	getDatabase() {
+	database() {
 		return this.configService.get<DatabaseConfig>(DATABASE);
 	}
 
-	getJwt() {
+	jwt() {
 		return this.configService.get<AuthEnv>(AUTH).jwt;
+	}
+
+	mail() {
+		return this.configService.get<MailConfig>(MAIL);
+	}
+
+	twilio() {
+		return this.configService.get<TwilioConfig>(TWILIO);
 	}
 }

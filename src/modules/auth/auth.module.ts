@@ -10,9 +10,18 @@ import { PermissionGuard } from './guard/permission.guard';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
 import { RefreshTokenStrategy } from './strategies/refreshToken.strategy';
+import { EmailModule } from '@shared/email';
+import { TwilioModule } from '@shared/twilio';
 
 @Module({
-	imports: [UserModule, JwtModule.register({}), PassportModule],
+	imports: [
+		UserModule,
+		JwtModule.register({}),
+		PassportModule,
+		EmailModule,
+		TwilioModule,
+		UserModule,
+	],
 	controllers: [AuthController],
 	providers: [
 		AuthService,

@@ -27,7 +27,7 @@ export class ResponseInterceptor<T>
 					this.reflector.get<string>(RESPONSE_MESSAGE, context.getHandler()) ||
 					'success',
 				success: true,
-				data,
+				data: data,
 			})),
 		);
 	}

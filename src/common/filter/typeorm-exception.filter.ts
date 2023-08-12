@@ -4,31 +4,27 @@ import {
 	ExceptionFilter,
 	HttpStatus,
 } from '@nestjs/common';
-import {
-	CannotCreateEntityIdMapError,
-	EntityNotFoundError,
-	QueryFailedError,
-	TypeORMError,
-} from 'typeorm';
+import { IResponse } from '@types';
 import { Request, Response } from 'express';
+import { MongoServerError } from 'mongodb';
+import { QueryFailedError, TypeORMError } from 'typeorm';
 
-@Catch(
-	QueryFailedError,
-	EntityNotFoundError,
-	CannotCreateEntityIdMapError,
-	TypeORMError,
-)
+@Catch(MongoServerError, TypeORMError, QueryFailedError)
 export class TypeormExceptionFilter implements ExceptionFilter {
-	catch(exception: TypeORMError, host: ArgumentsHost) {
+	catch(exception: MongoServerError, host: ArgumentsHost) {
 		const ctx = host.switchToHttp();
 		const response = ctx.getResponse<Response>();
 		const request = ctx.getRequest<Request>();
-		const message = (exception as TypeORMError).message;
 
-		response.status(HttpStatus.UNPROCESSABLE_ENTITY).json({
-			detail: message,
+		const errorResponse: IResponse<null> = {
+			code: exception.code,
+			message: exception.message,
+			success: false,
+			data: null,
 			path: request.url,
-			timestamp: new Date().toISOString(),
-		});
+			timestamp: new Date(),
+		};
+
+		response.status(HttpStatus.INTERNAL_SERVER_ERROR).json(errorResponse);
 	}
 }

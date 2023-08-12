@@ -11,7 +11,7 @@ export class IResponse<T> {
 	@ApiProperty({
 		description: 'Application code',
 	})
-	code: number;
+	code: number | string;
 	@ApiProperty({
 		description: 'Can be success or error message',
 	})

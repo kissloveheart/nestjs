@@ -1,6 +1,7 @@
 import {
 	AggregateOptions,
 	CountOptions,
+	DeepPartial,
 	FindManyOptions,
 	MongoRepository,
 	ObjectId,
@@ -12,6 +13,10 @@ import { MongoFindOneOptions } from 'typeorm/find-options/mongodb/MongoFindOneOp
 
 export abstract class BaseService<T extends AuditEntity> {
 	constructor(private readonly repository: MongoRepository<T>) {}
+
+	async create(dto: DeepPartial<T>): Promise<T> {
+		return this.repository.create(dto);
+	}
 
 	async save(entity: T): Promise<T> {
 		return await this.repository.save(entity);

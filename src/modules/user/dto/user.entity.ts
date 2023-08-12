@@ -1,16 +1,11 @@
+import { UserStatus } from '@enum';
 import { Role } from '@modules/role';
 import { ApiProperty } from '@nestjs/swagger';
-import { AuditEntity } from '@shared';
+import { AuditEntity } from '@shared/base';
+import { enumTransform } from '@transform';
 import { Exclude, Transform, Type } from 'class-transformer';
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
-import {
-	Column,
-	Entity,
-	MongoBulkWriteError,
-	ObjectId,
-	ObjectIdColumn,
-} from 'typeorm';
-MongoBulkWriteError;
+import { IsEmail, IsEnum, IsString } from 'class-validator';
+import { Column, Entity, ObjectId } from 'typeorm';
 
 @Entity({ name: 'user' })
 export class UserEntity extends AuditEntity {
@@ -33,9 +28,14 @@ export class UserEntity extends AuditEntity {
 	phoneNumber: string;
 
 	@Column()
-	@IsNotEmpty()
+	@IsString()
 	@Exclude()
-	pin: number;
+	pin: string;
+
+	@Column()
+	@IsEnum(UserStatus)
+	@Transform(({ value }) => enumTransform(value, UserStatus))
+	status: UserStatus;
 
 	@Column({ array: true })
 	@Type(() => ObjectId)

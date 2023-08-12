@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MongoRepository } from 'typeorm';
-import { BaseService } from '@shared';
+import { BaseService } from '@shared/base';
 import { __moduleName__CamelCase__Entity } from './dto/__moduleName__.entity';
 
 @Injectable()
