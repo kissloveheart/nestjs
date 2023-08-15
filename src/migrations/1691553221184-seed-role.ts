@@ -33,7 +33,11 @@ export class SeedRole1691553221184 implements MigrationInterface {
 			],
 			createdTime: new Date(),
 		};
-
+		await queryRunner.createCollectionIndex(
+			'role',
+			{ name: 1 },
+			{ unique: true },
+		);
 		await queryRunner.insertMany('role', [admin, user]);
 	}
 

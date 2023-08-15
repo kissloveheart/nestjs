@@ -16,7 +16,7 @@ export class TypeOrmModuleConfig implements TypeOrmOptionsFactory {
 			url: databaseConfig.url,
 			logging: databaseConfig.isLogging,
 			entities: getMetadataArgsStorage().tables.map((tbl) => tbl.target),
-			migrations: ['dist/migrations/*.js'],
+			migrations: ['dist/src/migrations/*.js'],
 			useNewUrlParser: true,
 			useUnifiedTopology: true,
 			synchronize: false,

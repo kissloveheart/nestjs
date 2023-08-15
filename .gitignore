@@ -37,3 +37,5 @@ lerna-debug.log*
 
 # MongoDB data
 /mongo_data
+
+rest.http
