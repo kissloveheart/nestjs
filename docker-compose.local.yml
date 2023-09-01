@@ -6,11 +6,9 @@ services:
       context: .
       dockerfile: Dockerfile
       target: development
-    container_name: nestjs-BE
-    environment:
-      - SUFFIX_ENV_NAME=dev
+    container_name: Nestjs
     ports:
-      - ${PORT}:${PORT}
+      - 4000:4000
     restart: unless-stopped
     networks:
       - app-network
@@ -22,9 +20,7 @@ services:
     image: mongo:latest
     container_name: mongodb
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=${DATABASE_USERNAME}
-      - MONGO_INITDB_ROOT_PASSWORD=${DATABASE_PASSWORD}
-      - MONGO_INITDB_DATABASE=${DATABASE_NAME}
+      - MONGO_INITDB_DATABASE=knk
     ports:
       - "27017:27017"
     restart: unless-stopped

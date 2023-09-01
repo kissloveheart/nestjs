@@ -1,12 +1,9 @@
 import { IsEmail, IsNumber } from 'class-validator';
 
 export class JwtPayload {
-	@IsEmail()
-	emailAddress: string;
+  @IsEmail()
+  emailAddress: string;
 
-	@IsNumber()
-	iat: number;
-
-	@IsNumber()
-	exp: number;
+  @IsNumber()
+  iat: number;
 }

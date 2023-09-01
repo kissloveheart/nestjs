@@ -7,27 +7,27 @@ import { swaggerConfig } from '@config';
 import { COMMA } from '@constant';
 
 async function bootstrap() {
-	const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule);
 
-	const configService = app.get(ConfigService);
-	const logger = app.get(WINSTON_MODULE_NEST_PROVIDER);
-	app.useLogger(logger);
-	app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
+  const configService = app.get(ConfigService);
+  const logger = app.get(WINSTON_MODULE_NEST_PROVIDER);
+  app.useLogger(logger);
+  app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
 
-	app.enableCors({
-		origin: configService.get<string>('ALLOW_ORIGINS').split(COMMA),
-		methods: ['GET', 'PUT', 'PATCH', 'POST', 'DELETE'],
-		credentials: true,
-	});
-	app.enableVersioning({
-		type: VersioningType.URI,
-		defaultVersion: '1',
-	});
+  app.enableCors({
+    origin: configService.get<string>('ALLOW_ORIGINS').split(COMMA),
+    methods: ['GET', 'PUT', 'PATCH', 'POST', 'DELETE'],
+    credentials: true,
+  });
+  app.enableVersioning({
+    type: VersioningType.URI,
+    defaultVersion: '1',
+  });
 
-	swaggerConfig(app);
-	const port = configService.get<number>('PORT');
-	await app.listen(port, '0.0.0.0');
-	Logger.log(`Server is listening on ${await app.getUrl()}`, 'Bootstrap');
+  swaggerConfig(app);
+  const port = configService.get<number>('PORT');
+  await app.listen(port, '0.0.0.0');
+  Logger.log(`Server is listening on ${await app.getUrl()}`, 'Bootstrap');
 }
 
 bootstrap();

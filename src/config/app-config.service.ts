@@ -1,44 +1,50 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { DatabaseConfig } from './env/database.config';
-import { AUTH, DATABASE, MAIL, TWILIO } from '@constant';
-import { AuthEnv } from './env/auth.config';
-import { MailConfig } from './env/mail.config';
-import { TwilioConfig } from './env/twilio.config';
 
 @Injectable()
 export class AppConfigService {
-	constructor(private configService: ConfigService) {}
+  constructor(private configService: ConfigService) {}
 
-	isProduction() {
-		return this.configService.get('NODE_ENV') === 'production';
-	}
+  isProduction() {
+    return this.configService.get('NODE_ENV') === 'production';
+  }
 
-	getBcryptSalt() {
-		return parseInt(this.configService.get('SALT')) || 12;
-	}
+  bcryptSalt() {
+    return parseInt(this.configService.get('SALT')) || 12;
+  }
 
-	getFileLogLevel() {
-		return this.configService.get<string>('LOG_FILE_LEVEL');
-	}
+  fileLogLevel() {
+    return this.configService.get<string>('LOG_FILE_LEVEL');
+  }
 
-	getConsoleLogLevel() {
-		return this.configService.get<string>('LOG_CONSOLE_LEVEL');
-	}
+  consoleLogLevel() {
+    return this.configService.get<string>('LOG_CONSOLE_LEVEL');
+  }
 
-	database() {
-		return this.configService.get<DatabaseConfig>(DATABASE);
-	}
+  database() {
+    return {
+      url: this.configService.get<string>('DATABASE_URL'),
+    };
+  }
 
-	jwt() {
-		return this.configService.get<AuthEnv>(AUTH).jwt;
-	}
+  jwt() {
+    return {
+      secret: this.configService.get<string>('JWT_ACCESS_TOKEN_SECRET'),
+    };
+  }
 
-	mail() {
-		return this.configService.get<MailConfig>(MAIL);
-	}
+  mail() {
+    return {
+      apiKey: this.configService.get<string>('SEND_GRID_API_KEY'),
+      sender: this.configService.get<string>('EMAIL_SENDER'),
+    };
+  }
 
-	twilio() {
-		return this.configService.get<TwilioConfig>(TWILIO);
-	}
+  twilio() {
+    return {
+      accountSid: this.configService.get<string>('TWILIO_ACCOUNT_SID'),
+      serviceSid: this.configService.get<string>('TWILIO_SERVICE_SID'),
+      token: this.configService.get<string>('TWILIO_TOKEN'),
+    };
+  }
 }

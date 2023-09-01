@@ -1,73 +1,55 @@
-import { ParseObjectIdPipe } from '@pipe';
-import {
-	Body,
-	Controller,
-	Delete,
-	Get,
-	Param,
-	Post,
-	Put,
-	Query,
-} from '@nestjs/common';
-import { ObjectId } from 'typeorm';
-import { UserService } from './user.service';
-import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
+import { Public } from '@decorators';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { ApiBearerAuth, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { EmailValidation, ParseObjectIdPipe } from '@pipe';
 import { ApiResponseGeneric } from '@types';
-import { UserEntity } from './dto/user.entity';
+import { ObjectId } from 'typeorm';
 import { UserCreateDto } from './dto/user-create.dto';
-import { PermitActions, ScopePermission } from '@decorators';
-import { Action, Scope } from '@enum';
+import { UserEntity } from './entities/user.entity';
+import { UserService } from './user.service';
 
 @ApiTags('User')
 @Controller('user')
 @ApiBearerAuth()
-@ScopePermission(Scope.USER)
 export class UserController {
-	constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) {}
 
-	@Get()
-	@PermitActions(Action.READ)
-	@ApiResponseGeneric({ model: UserEntity })
-	async findAll(@Query() user: UserCreateDto) {
-		const data = await this.userService.find({
-			take: 1,
-		});
-		return data;
-	}
+  @Get()
+  @Public()
+  @ApiResponseGeneric({ model: UserEntity })
+  async findAll(@Query() user: UserCreateDto) {
+    const data = await this.userService.find();
+    return data;
+  }
 
-	@Get(':id')
-	@PermitActions(Action.READ)
-	@ApiParam({
-		name: 'id',
-		type: 'string',
-	})
-	@ApiResponseGeneric({ model: UserEntity })
-	async findOne(@Param('id', ParseObjectIdPipe) id: ObjectId) {
-		return this.userService.findById(id);
-	}
+  @Get(':id')
+  @ApiParam({
+    name: 'id',
+    type: 'string',
+  })
+  @ApiResponseGeneric({ model: UserEntity })
+  async findOne(@Param('id', ParseObjectIdPipe) id: ObjectId) {
+    return this.userService.findById(id);
+  }
 
-	@Post()
-	@PermitActions(Action.READ)
-	async create(@Body() dto: UserCreateDto) {
-		return await this.userService.create(dto);
-	}
+  @Post()
+  async create(@Body() dto: UserCreateDto) {
+    return await this.userService.create(dto);
+  }
 
-	@Put(':id')
-	@PermitActions(Action.READ)
-	@ApiParam({
-		name: 'id',
-		type: 'string',
-	})
-	async update(
-		@Param('id', ParseObjectIdPipe) id: ObjectId,
-		@Body() dto: UserCreateDto,
-	) {
-		throw new Error('Implement method');
-	}
-
-	@Delete(':id')
-	@PermitActions(Action.READ)
-	async delete(@Param('id', ParseObjectIdPipe) id: ObjectId) {
-		await this.userService.delete(id);
-	}
+  @Get('check-exist-email')
+  @Public()
+  @ApiQuery({
+    name: 'email',
+    required: true,
+    type: String,
+    examples: {
+      'hiep.nguyenvan1@ncc.asia': {
+        value: 'hiep.nguyenvan1@ncc.asia',
+      },
+    },
+  })
+  async checkExistEmail(@Query('email', EmailValidation) email: string) {
+    return await this.userService.checkExistEmail(email);
+  }
 }

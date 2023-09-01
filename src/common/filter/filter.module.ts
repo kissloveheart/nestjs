@@ -4,15 +4,15 @@ import { Module } from '@nestjs/common';
 import { TypeormExceptionFilter } from './typeorm-exception.filter';
 
 @Module({
-	providers: [
-		{
-			provide: APP_FILTER,
-			useClass: HttpExceptionFilter,
-		},
-		{
-			provide: APP_FILTER,
-			useClass: TypeormExceptionFilter,
-		},
-	],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: TypeormExceptionFilter,
+    },
+  ],
 })
 export class FilterModule {}

@@ -1,10 +1,7 @@
-import { ACTION_KEY, SCOPE_KEY, SKIP_AUTH } from '@constant';
-import { Action, Scope } from '@enum';
+import { ROLE_KEY, SKIP_AUTH } from '@constant';
+import { RoleName } from '@enum';
 import { SetMetadata } from '@nestjs/common';
 
-export const ScopePermission = (scope: Scope) => SetMetadata(SCOPE_KEY, scope);
-
-export const PermitActions = (...actions: Action[]) =>
-	SetMetadata(ACTION_KEY, actions);
+export const RequiredRole = (role: RoleName) => SetMetadata(ROLE_KEY, role);
 
 export const Public = () => SetMetadata(SKIP_AUTH, true);

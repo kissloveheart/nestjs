@@ -1,62 +1,37 @@
+import { UserStatus } from '@enum';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MongoRepository } from 'typeorm';
-import { RoleService } from '@modules/role';
-import { UserEntity } from './dto/user.entity';
-import { RoleName, UserStatus } from '@enum';
-import { UserCreateDto } from './dto/user-create.dto';
 import { BaseService } from '@shared/base';
+import { MongoRepository } from 'typeorm';
+import { UserCreateDto } from './dto/user-create.dto';
+import { UserEntity } from './entities/user.entity';
 
 @Injectable()
 export class UserService extends BaseService<UserEntity> {
-	constructor(
-		@InjectRepository(UserEntity)
-		private readonly userRepository: MongoRepository<UserEntity>,
-		private readonly roleService: RoleService,
-	) {
-		super(userRepository);
-	}
+  constructor(
+    @InjectRepository(UserEntity)
+    private readonly userRepository: MongoRepository<UserEntity>,
+  ) {
+    super(userRepository);
+  }
 
-	async create(dto: UserCreateDto) {
-		const userRole = await this.roleService.find({
-			where: {
-				name: RoleName.ADMIN,
-			},
-		});
-		const user = new UserEntity(dto);
-		user.role_ids = userRole.map((role) => role.id);
-		return await this.save(user);
-	}
+  async create(dto: UserCreateDto) {
+    const user = new UserEntity(dto);
+    return await this.save(user);
+  }
 
-	async findByEmailWithRoles(email: string) {
-		const cursor = await this.aggregateEntity([
-			{
-				$match: {
-					email: email,
-					status: UserStatus.ACTIVE,
-				},
-			},
-			{
-				$lookup: {
-					from: 'role',
-					localField: 'role_ids',
-					foreignField: '_id',
-					as: 'roles',
-				},
-			},
-		]);
+  async findByEmail(email: string) {
+    const data = await this.findOne({
+      where: {
+        email,
+        status: UserStatus.ACTIVE,
+      },
+    });
 
-		return cursor.next();
-	}
+    return data;
+  }
 
-	async findByEmail(email: string) {
-		const data = await this.findOne({
-			where: {
-				email,
-				status: UserStatus.ACTIVE,
-			},
-		});
-
-		return data;
-	}
+  async checkExistEmail(email: string) {
+    return !!(await this.findByEmail(email));
+  }
 }

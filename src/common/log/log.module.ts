@@ -6,16 +6,16 @@ import { LogService } from './log.service';
 
 @Global()
 @Module({
-	imports: [
-		WinstonModule.forRootAsync({
-			imports: [AppConfigModule],
-			useFactory: (configService: AppConfigService) => {
-				return new LoggerConfig(configService).transports();
-			},
-			inject: [AppConfigService],
-		}),
-	],
-	providers: [LogService],
-	exports: [LogService],
+  imports: [
+    WinstonModule.forRootAsync({
+      imports: [AppConfigModule],
+      useFactory: (configService: AppConfigService) => {
+        return new LoggerConfig(configService).transports();
+      },
+      inject: [AppConfigService],
+    }),
+  ],
+  providers: [LogService],
+  exports: [LogService],
 })
 export class LogModule {}

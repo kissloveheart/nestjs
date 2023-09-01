@@ -1,17 +1,18 @@
 import * as Joi from 'joi';
 
 export const configValidationSchema = Joi.object({
-	PORT: Joi.number().default(3000),
-	LOG_CONSOLE_LEVEL: Joi.string()
-		.valid('error', 'warn', 'info', 'debug')
-		.default('debug'),
-	LOG_FILE_LEVEL: Joi.string()
-		.valid('error', 'warn', 'info', 'debug')
-		.default('info'),
-	DATABASE_USERNAME: Joi.string().required(),
-	DATABASE_PASSWORD: Joi.string().required(),
-	DATABASE_URL: Joi.string().required(),
-	DATABASE_NAME: Joi.string().required(),
-	DATABASE_LOGGING: Joi.boolean().default(false),
-	ALLOW_ORIGINS: Joi.string().required(),
+  PORT: Joi.number().default(4000),
+  LOG_CONSOLE_LEVEL: Joi.string()
+    .valid('error', 'warn', 'info', 'debug')
+    .default('debug'),
+  LOG_FILE_LEVEL: Joi.string()
+    .valid('error', 'warn', 'info', 'debug')
+    .default('info'),
+  DATABASE_URL: Joi.string().required(),
+  ALLOW_ORIGINS: Joi.string().required(),
+  TWILIO_TOKEN: Joi.string().required(),
+  TWILIO_ACCOUNT_SID: Joi.string().required(),
+  SEND_GRID_API_KEY: Joi.string().required(),
+  EMAIL_SENDER: Joi.string().required(),
+  JWT_ACCESS_TOKEN_SECRET: Joi.string().required(),
 });

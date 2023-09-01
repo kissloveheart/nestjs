@@ -8,47 +8,37 @@ import { configValidationSchema } from './config.schema';
 import { envFilePath } from './env-path.config';
 import { TypeOrmModuleConfig } from './typeorm.config';
 import { LoggerConfig } from './winston.config';
-import databaseConfig from './env/database.config';
-import authConfig from './env/auth.config';
-import { CacheModule } from '@nestjs/cache-manager';
-import mailConfig from './env/mail.config';
-import twilioConfig from './env/twilio.config';
 
 @Global()
 @Module({
-	imports: [
-		ConfigModule.forRoot({
-			isGlobal: true,
-			envFilePath: [envFilePath, '.env'],
-			cache: true,
-			expandVariables: true,
-			validationSchema: configValidationSchema,
-			validationOptions: {
-				abortEarly: false,
-			},
-		}),
-		ConfigModule.forFeature(databaseConfig),
-		ConfigModule.forFeature(authConfig),
-		ConfigModule.forFeature(mailConfig),
-		ConfigModule.forFeature(twilioConfig),
-		WinstonModule.forRootAsync({
-			imports: [AppConfigModule],
-			useFactory: (configService: AppConfigService) => {
-				return new LoggerConfig(configService).transports();
-			},
-			inject: [AppConfigService],
-		}),
-		TypeOrmModule.forRootAsync({
-			imports: [AppConfigModule],
-			useClass: TypeOrmModuleConfig,
-		}),
-		ClsModule.forRoot({
-			global: true,
-			middleware: { mount: true },
-		}),
-		CacheModule.register({ isGlobal: true }),
-	],
-	providers: [AppConfigService],
-	exports: [AppConfigService],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: ['.env', envFilePath],
+      cache: true,
+      expandVariables: true,
+      validationSchema: configValidationSchema,
+      validationOptions: {
+        abortEarly: false,
+      },
+    }),
+    WinstonModule.forRootAsync({
+      imports: [AppConfigModule],
+      useFactory: (configService: AppConfigService) => {
+        return new LoggerConfig(configService).transports();
+      },
+      inject: [AppConfigService],
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [AppConfigModule],
+      useClass: TypeOrmModuleConfig,
+    }),
+    ClsModule.forRoot({
+      global: true,
+      middleware: { mount: true },
+    }),
+  ],
+  providers: [AppConfigService],
+  exports: [AppConfigService],
 })
 export class AppConfigModule {}
