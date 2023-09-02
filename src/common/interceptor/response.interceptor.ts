@@ -28,6 +28,8 @@ export class ResponseInterceptor<T>
           'success',
         success: true,
         data: data,
+        path: context.switchToHttp().getRequest<Request>().url,
+        timestamp: new Date(),
       })),
     );
   }

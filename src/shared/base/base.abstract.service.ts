@@ -14,7 +14,7 @@ import { MongoFindOneOptions } from 'typeorm/find-options/mongodb/MongoFindOneOp
 export abstract class BaseService<T extends AuditEntity> {
   constructor(private readonly repository: MongoRepository<T>) {}
 
-  async create(dto: DeepPartial<T>): Promise<T> {
+  create(dto: DeepPartial<T>): T {
     return this.repository.create(dto);
   }
 

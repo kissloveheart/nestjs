@@ -10,18 +10,23 @@ export class EmailService {
     private readonly appConfigService: AppConfigService,
     private readonly log: LogService,
   ) {
+    this.log.setContext(EmailService.name);
     this.sendGridClient = new MailService();
     this.sendGridClient.setApiKey(this.appConfigService.mail().apiKey);
   }
 
   async send(to: string, subject: string, body: string) {
-    const msg = {
-      to: to,
-      from: this.appConfigService.mail().sender,
-      subject: subject,
-      html: body,
-    };
+    try {
+      const msg = {
+        to: to,
+        from: this.appConfigService.mail().sender,
+        subject: subject,
+        html: body,
+      };
 
-    this.sendGridClient.send(msg);
+      await this.sendGridClient.send(msg);
+    } catch (err) {
+      this.log.error(err);
+    }
   }
 }

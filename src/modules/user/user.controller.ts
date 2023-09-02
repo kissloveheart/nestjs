@@ -1,6 +1,13 @@
 import { Public } from '@decorators';
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
-import { ApiBearerAuth, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import { EmailValidation, ParseObjectIdPipe } from '@pipe';
 import { ApiResponseGeneric } from '@types';
 import { ObjectId } from 'typeorm';
@@ -10,17 +17,8 @@ import { UserService } from './user.service';
 
 @ApiTags('User')
 @Controller('user')
-@ApiBearerAuth()
 export class UserController {
   constructor(private readonly userService: UserService) {}
-
-  @Get()
-  @Public()
-  @ApiResponseGeneric({ model: UserEntity })
-  async findAll(@Query() user: UserCreateDto) {
-    const data = await this.userService.find();
-    return data;
-  }
 
   @Get(':id')
   @ApiParam({
@@ -28,16 +26,39 @@ export class UserController {
     type: 'string',
   })
   @ApiResponseGeneric({ model: UserEntity })
+  @ApiBearerAuth()
   async findOne(@Param('id', ParseObjectIdPipe) id: ObjectId) {
     return this.userService.findById(id);
   }
 
   @Post()
-  async create(@Body() dto: UserCreateDto) {
-    return await this.userService.create(dto);
+  @Public()
+  @ApiOperation({
+    summary: 'Signup',
+  })
+  @ApiBody({
+    type: UserCreateDto,
+    examples: {
+      user: {
+        value: {
+          lastName: 'John',
+          firstName: 'Herry',
+          email: 'hiep.nguyenvan1@ncc.asia',
+          phoneNumber: '1234567890',
+          ageAccepted: true,
+          termsAccepted: true,
+        } as UserCreateDto,
+      },
+    },
+  })
+  async signup(@Body() payload: UserCreateDto) {
+    await this.userService.signup(payload);
   }
 
   @Get('check-exist-email')
+  @ApiOperation({
+    summary: 'Check if email exists or not',
+  })
   @Public()
   @ApiQuery({
     name: 'email',

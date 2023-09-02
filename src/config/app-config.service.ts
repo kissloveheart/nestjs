@@ -45,6 +45,11 @@ export class AppConfigService {
       accountSid: this.configService.get<string>('TWILIO_ACCOUNT_SID'),
       serviceSid: this.configService.get<string>('TWILIO_SERVICE_SID'),
       token: this.configService.get<string>('TWILIO_TOKEN'),
+      phoneNumber: this.configService.get<string>('TWILIO_PHONE_NUMBER'),
     };
+  }
+
+  OTPExpiredMinutes() {
+    return this.configService.get<number>('OTP_EXPIRED_MINUTES');
   }
 }

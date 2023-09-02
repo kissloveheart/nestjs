@@ -3,6 +3,8 @@ import { UserEntity, UserService } from '@modules/user';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { TwilioService } from '@shared/twilio';
+import { EmailService } from '@shared/email';
+import { VerifyType } from '@enum';
 
 @Injectable()
 export class AuthService {
@@ -11,6 +13,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly appConfigService: AppConfigService,
     private readonly twilioService: TwilioService,
+    private readonly emailService: EmailService,
   ) {}
 
   async createAccessToken(emailAddress: string) {
@@ -40,7 +43,27 @@ export class AuthService {
     this.twilioService.sendVerification(email);
   }
 
-  async checkVerification(email: string, code: string) {
-    return await this.twilioService.checkVerification(email, code);
+  async sendOTPByEmail(email: string) {
+    const user = await this.userService.findByEmail(email);
+    if (!user) throw new BadRequestException(`Email ${email} does not exist`);
+    const code = await this.userService.generateOTP(user);
+    this.emailService.send(
+      email,
+      'Your Kith & Kin login code',
+      `<h3>Welcome to Kith and Kin!</h3>
+      <p>Hi ${user.firstName}!</p>
+      <p>Your login code is <strong>${code}</strong>.<p>
+      <p>Note: for security reasons, the above code will expire in 10 minutes.<p>`,
+    );
+  }
+
+  async sendOTPBySMS(phoneNumber: string) {
+    const user = await this.userService.findByPhoneNumber(phoneNumber);
+    if (!user)
+      throw new BadRequestException(
+        `Phone number ${phoneNumber} does not exist`,
+      );
+    const code = await this.userService.generateOTP(user);
+    this.twilioService.send(phoneNumber, `Your Kith & Kin login code ${code}`);
   }
 }

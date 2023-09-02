@@ -3,19 +3,19 @@ import {
   Catch,
   ExceptionFilter,
   HttpStatus,
+  Logger,
 } from '@nestjs/common';
 import { IResponse } from '@types';
 import { Request, Response } from 'express';
 import { MongoServerError } from 'mongodb';
-import { QueryFailedError, TypeORMError } from 'typeorm';
 
-@Catch(MongoServerError, TypeORMError, QueryFailedError)
+@Catch(MongoServerError)
 export class TypeormExceptionFilter implements ExceptionFilter {
   catch(exception: MongoServerError, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
-
+    Logger.error(exception.message);
     const errorResponse: IResponse<null> = {
       code: exception.code,
       message: exception.message,

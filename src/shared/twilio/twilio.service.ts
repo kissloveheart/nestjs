@@ -39,4 +39,15 @@ export class TwilioService {
       return false;
     }
   }
+
+  async send(to: string, message: string) {
+    this.twilioClient.messages
+      .create({
+        from: this.appConfigService.twilio().phoneNumber,
+        to,
+        body: message,
+      })
+      .then(() => this.log.info(`Sent sms to ${to}`))
+      .catch((err) => this.log.error(err));
+  }
 }

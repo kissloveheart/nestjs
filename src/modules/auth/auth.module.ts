@@ -8,9 +8,10 @@ import { UserModule } from '../user/user.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guard/jwt.guard';
+import { OTPAuthGuard } from './guard/otp.guard';
 import { RoleGuard } from './guard/role.guard';
 import { JwtStrategy } from './strategies/jwt.strategy';
-import { LocalStrategy } from './strategies/local.strategy';
+import { OTPStrategy } from './strategies/otp.strategy';
 
 @Module({
   imports: [
@@ -19,13 +20,13 @@ import { LocalStrategy } from './strategies/local.strategy';
     PassportModule,
     EmailModule,
     TwilioModule,
-    UserModule,
   ],
   controllers: [AuthController],
   providers: [
     AuthService,
-    LocalStrategy,
+    OTPAuthGuard,
     JwtStrategy,
+    OTPStrategy,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,

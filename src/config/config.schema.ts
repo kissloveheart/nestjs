@@ -15,4 +15,5 @@ export const configValidationSchema = Joi.object({
   SEND_GRID_API_KEY: Joi.string().required(),
   EMAIL_SENDER: Joi.string().required(),
   JWT_ACCESS_TOKEN_SECRET: Joi.string().required(),
+  OTP_EXPIRED_MINUTES: Joi.number().required(),
 });

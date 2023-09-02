@@ -4,6 +4,7 @@ import { AuditEntity } from '@shared/base';
 import { enumTransform } from '@transform';
 import { Exclude, Expose, Transform, Type } from 'class-transformer';
 import {
+  IsBoolean,
   IsEmail,
   IsEnum,
   IsNumberString,
@@ -28,6 +29,10 @@ export class OTP {
 
   @Column()
   consumedDate?: Date;
+
+  constructor(partial: Partial<OTP>) {
+    Object.assign(this, partial);
+  }
 }
 
 @Exclude()
@@ -35,10 +40,10 @@ export class SecurityInformation {
   @Column()
   @Length(4, 4)
   @IsNumberString()
-  pin: string;
+  pin?: string;
 
   @Column()
-  pinUpdatedDate: Date;
+  pinUpdatedDate?: Date;
 
   @Column()
   failedPinCount: number = 0;
@@ -48,15 +53,19 @@ export class SecurityInformation {
   @MaxLength(100)
   @Expose()
   @ApiProperty()
-  securityQuestion: string;
+  securityQuestion?: string;
 
   @Column()
   @IsString()
   @MaxLength(50)
-  securityAnswer: string;
+  securityAnswer?: string;
 
   @Column()
   failedSecurityQuestionCount: number = 0;
+
+  constructor(partial: Partial<SecurityInformation>) {
+    Object.assign(this, partial);
+  }
 }
 
 @Entity({ name: 'user' })
@@ -78,7 +87,7 @@ export class UserEntity extends AuditEntity {
 
   @Column()
   @IsNumberString()
-  @Length(6, 6)
+  @Length(10, 10)
   @ApiProperty()
   phoneNumber: string;
 
@@ -98,6 +107,24 @@ export class UserEntity extends AuditEntity {
   endSessionDate: Date = new Date();
 
   @Column()
+  @ApiProperty()
+  isSetupPin: boolean = false;
+
+  @Column()
+  @ApiProperty()
+  isSetupSecurityQuestion: boolean = false;
+
+  @Column()
+  @ApiProperty()
+  @IsBoolean()
+  termsAccepted: boolean = false;
+
+  @Column()
+  @ApiProperty()
+  @IsBoolean()
+  ageAccepted: boolean = false;
+
+  @Column()
   @Type(() => OTP)
   @Exclude()
   otp?: OTP;
@@ -105,7 +132,7 @@ export class UserEntity extends AuditEntity {
   @Column()
   @Type(() => SecurityInformation)
   @ApiProperty()
-  securityInformation: SecurityInformation;
+  securityInformation?: SecurityInformation;
 
   constructor(partial: Partial<UserEntity>) {
     super();
