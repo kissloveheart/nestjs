@@ -52,4 +52,11 @@ export class AppConfigService {
   OTPExpiredMinutes() {
     return this.configService.get<number>('OTP_EXPIRED_MINUTES');
   }
+
+  throttler() {
+    return {
+      ttl: this.configService.get<number>('THROTTLE_TTL'),
+      limit: this.configService.get<number>('THROTTLE_LIMIT'),
+    };
+  }
 }

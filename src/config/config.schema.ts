@@ -16,4 +16,6 @@ export const configValidationSchema = Joi.object({
   EMAIL_SENDER: Joi.string().required(),
   JWT_ACCESS_TOKEN_SECRET: Joi.string().required(),
   OTP_EXPIRED_MINUTES: Joi.number().required(),
+  THROTTLE_LIMIT: Joi.number().required(),
+  THROTTLE_TTL: Joi.number().required(),
 });

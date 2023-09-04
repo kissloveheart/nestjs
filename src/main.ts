@@ -5,6 +5,7 @@ import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { swaggerConfig } from '@config';
 import { COMMA } from '@constant';
+import helmet from 'helmet';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -13,6 +14,8 @@ async function bootstrap() {
   const logger = app.get(WINSTON_MODULE_NEST_PROVIDER);
   app.useLogger(logger);
   app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
+
+  app.use(helmet());
 
   app.enableCors({
     origin: configService.get<string>('ALLOW_ORIGINS').split(COMMA),

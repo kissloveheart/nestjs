@@ -8,6 +8,7 @@ import { configValidationSchema } from './config.schema';
 import { envFilePath } from './env-path.config';
 import { TypeOrmModuleConfig } from './typeorm.config';
 import { LoggerConfig } from './winston.config';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 @Global()
 @Module({
@@ -36,6 +37,14 @@ import { LoggerConfig } from './winston.config';
     ClsModule.forRoot({
       global: true,
       middleware: { mount: true },
+    }),
+    ThrottlerModule.forRootAsync({
+      imports: [AppConfigModule],
+      inject: [AppConfigService],
+      useFactory: (config: AppConfigService) => ({
+        ttl: config.throttler().ttl,
+        limit: config.throttler().limit,
+      }),
     }),
   ],
   providers: [AppConfigService],
