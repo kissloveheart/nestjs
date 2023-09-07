@@ -1,4 +1,4 @@
-export enum VerifyType {
+export enum LoginType {
   EMAIL = 'email',
   SMS = 'sms',
 }

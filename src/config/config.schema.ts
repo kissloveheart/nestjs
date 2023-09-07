@@ -18,4 +18,5 @@ export const configValidationSchema = Joi.object({
   OTP_EXPIRED_MINUTES: Joi.number().required(),
   THROTTLE_LIMIT: Joi.number().required(),
   THROTTLE_TTL: Joi.number().required(),
+  USER_NUMBER_FAILED_PIN_LIMIT: Joi.number().required(),
 });

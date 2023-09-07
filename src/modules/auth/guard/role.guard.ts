@@ -1,6 +1,6 @@
 import { ROLE_KEY } from '@constant';
 import { RoleName } from '@enum';
-import { UserEntity } from '@modules/user';
+import { User } from '@modules/user';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { isPublicRequest } from '../auth.utils';
@@ -21,7 +21,7 @@ export class RoleGuard implements CanActivate {
 
     if (!requiredRole) return true;
 
-    const { user }: { user: UserEntity } = context.switchToHttp().getRequest();
+    const { user }: { user: User } = context.switchToHttp().getRequest();
 
     if (user.role === RoleName.ADMIN) {
       return true;

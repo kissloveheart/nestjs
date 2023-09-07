@@ -20,10 +20,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
 
   async validate(payload: JwtPayload) {
     const user = await this.userService.findByEmail(payload.emailAddress);
-    if (
-      payload.iat * 1000 < user.endSessionDate.getTime() ||
-      payload.iat * 1000 > user.otp.consumedDate.getTime()
-    ) {
+    if (payload.iat * 1000 < user.endSessionDate.getTime()) {
       throw new UnauthorizedException('JWT token is expired');
     }
     return user;

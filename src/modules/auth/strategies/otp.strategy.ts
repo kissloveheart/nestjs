@@ -1,4 +1,4 @@
-import { UserEntity, UserService } from '@modules/user';
+import { User, UserService } from '@modules/user';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { plainToClass } from 'class-transformer';
@@ -13,9 +13,10 @@ export class OTPStrategy extends PassportStrategy(Strategy, 'otp') {
     super();
   }
 
-  async validate(req: Request): Promise<UserEntity> {
+  async validate(req: Request): Promise<User> {
     const code = req.query.code as string;
-    const error = await validate(plainToClass(LoginDto, { code }));
+    const email = req.query.email as string;
+    const error = await validate(plainToClass(LoginDto, { code, email }));
     if (error.length > 0) {
       throw new BadRequestException(
         JSON.stringify(
@@ -23,7 +24,7 @@ export class OTPStrategy extends PassportStrategy(Strategy, 'otp') {
         ),
       );
     }
-    const user = await this.userService.verifyOTP(code);
+    const user = await this.userService.verifyOTP(code, email);
     return user;
   }
 }

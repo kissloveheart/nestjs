@@ -1,10 +1,12 @@
 import { RoleName, UserStatus } from '@enum';
 import { MigrationInterface } from 'typeorm';
 import { MongoQueryRunner } from 'typeorm/driver/mongodb/MongoQueryRunner';
+import { hashPin } from '@utils';
 
 export class SeedUser1692066221729 implements MigrationInterface {
   public async up(queryRunner: MongoQueryRunner): Promise<void> {
-    if (process.env.NODE_ENV === 'production') return;
+    if (process.env.SUFFIX_ENV_NAME !== 'local') return;
+    const { salt, hash } = await hashPin('1234');
 
     await queryRunner.insertMany('user', [
       {
@@ -22,7 +24,8 @@ export class SeedUser1692066221729 implements MigrationInterface {
           consumed: false,
         },
         securityInformation: {
-          pin: '1234',
+          pin: hash,
+          salt,
           pinUpdatedDate: new Date(),
           failedPinCount: 0,
           securityQuestion: 'What is your favorite color?',
@@ -45,7 +48,8 @@ export class SeedUser1692066221729 implements MigrationInterface {
           consumed: false,
         },
         securityInformation: {
-          pin: '1234',
+          pin: hash,
+          salt,
           pinUpdatedDate: new Date(),
           failedPinCount: 0,
           securityQuestion: 'What is your favorite color?',
@@ -68,7 +72,8 @@ export class SeedUser1692066221729 implements MigrationInterface {
           consumed: false,
         },
         securityInformation: {
-          pin: '1234',
+          pin: hash,
+          salt,
           pinUpdatedDate: new Date(),
           failedPinCount: 0,
           securityQuestion: 'What is your favorite color?',
@@ -91,7 +96,8 @@ export class SeedUser1692066221729 implements MigrationInterface {
           consumed: false,
         },
         securityInformation: {
-          pin: '1234',
+          pin: hash,
+          salt,
           pinUpdatedDate: new Date(),
           failedPinCount: 0,
           securityQuestion: 'What is your favorite color?',
@@ -114,7 +120,8 @@ export class SeedUser1692066221729 implements MigrationInterface {
           consumed: false,
         },
         securityInformation: {
-          pin: '1234',
+          pin: hash,
+          salt,
           pinUpdatedDate: new Date(),
           failedPinCount: 0,
           securityQuestion: 'What is your favorite color?',

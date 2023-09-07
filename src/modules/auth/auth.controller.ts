@@ -1,5 +1,13 @@
 import { Public } from '@decorators';
-import { Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -12,7 +20,8 @@ import { AuthService } from './auth.service';
 import { LoginDto } from './dto/auth.dto';
 import { OTPAuthGuard } from './guard/otp.guard';
 import { ApiResponseGeneric } from '@types';
-import { UserEntity } from '@modules/user';
+import { User } from '@modules/user';
+import { LoginType } from '@enum';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -20,7 +29,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Public()
-  @Post('verify-otp')
+  @Post('otp')
   @ApiOperation({
     summary: 'Verify OTP code',
   })
@@ -30,7 +39,7 @@ export class AuthController {
     return this.authService.login(request.user);
   }
 
-  @ApiResponseGeneric({ model: UserEntity })
+  @ApiResponseGeneric({ model: User })
   @Get('me')
   @ApiOperation({
     summary: 'My profile',
@@ -46,9 +55,9 @@ export class AuthController {
     await this.authService.logout(request.user);
   }
 
-  @Get('send-opt/email/:email')
+  @Get('otp/:email')
   @ApiOperation({
-    summary: 'Login by email',
+    summary: 'Get OTP by email or sms',
   })
   @Public()
   @ApiParam({
@@ -61,26 +70,17 @@ export class AuthController {
       },
     },
   })
-  async sendOTPByEmail(@Param('email', EmailValidation) email: string) {
-    await this.authService.sendOTPByEmail(email);
-  }
-
-  @Get('send-opt/sms/:phoneNumber')
-  @ApiOperation({
-    summary: 'Login by sms',
-  })
-  @Public()
-  @ApiParam({
-    name: 'phoneNumber',
+  @ApiQuery({
+    name: 'type',
     required: true,
-    type: String,
-    examples: {
-      'hiep.nguyenvan1@ncc.asia': {
-        value: '+84393916840',
-      },
-    },
+    type: 'string',
+    enum: LoginType,
+    example: LoginType.EMAIL,
   })
-  async sendOTPBySMS(@Param('phoneNumber') phoneNumber: string) {
-    await this.authService.sendOTPBySMS(phoneNumber);
+  async sendOTPByEmail(
+    @Param('email', EmailValidation) email: string,
+    @Query('type') type: LoginType,
+  ) {
+    await this.authService.sendOTP(email, type);
   }
 }

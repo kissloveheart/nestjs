@@ -1,10 +1,11 @@
 import { AppConfigService } from '@config';
-import { UserEntity, UserService } from '@modules/user';
+import { LoginType } from '@enum';
+import { LogService } from '@log';
+import { User, UserService } from '@modules/user';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { TwilioService } from '@shared/twilio';
 import { EmailService } from '@shared/email';
-import { VerifyType } from '@enum';
+import { TwilioService } from '@shared/twilio';
 
 @Injectable()
 export class AuthService {
@@ -14,6 +15,7 @@ export class AuthService {
     private readonly appConfigService: AppConfigService,
     private readonly twilioService: TwilioService,
     private readonly emailService: EmailService,
+    private readonly log: LogService,
   ) {}
 
   async createAccessToken(emailAddress: string) {
@@ -25,30 +27,37 @@ export class AuthService {
     );
   }
 
-  async login(user: UserEntity) {
+  async login(user: User) {
     const accessToken = await this.createAccessToken(user.email);
     return {
       accessToken,
     };
   }
 
-  async logout(user: UserEntity) {
+  async logout(user: User) {
     user.endSessionDate = new Date();
     await this.userService.save(user);
   }
 
-  async sendVerifyCode(email: string) {
-    if (!(await this.userService.checkExistEmail(email)))
-      throw new BadRequestException();
-    this.twilioService.sendVerification(email);
-  }
-
-  async sendOTPByEmail(email: string) {
+  async sendOTP(email: string, type: LoginType) {
     const user = await this.userService.findByEmail(email);
     if (!user) throw new BadRequestException(`Email ${email} does not exist`);
     const code = await this.userService.generateOTP(user);
+    switch (type) {
+      case LoginType.EMAIL:
+        this.sendOTPByEmail(user, code);
+        break;
+      case LoginType.SMS:
+        this.sendOTPBySMS(user, code);
+        break;
+      default:
+        this.log.warn(`Unknown login type ${type}`);
+    }
+  }
+
+  async sendOTPByEmail(user: User, code: string) {
     this.emailService.send(
-      email,
+      user.email,
       'Your Kith & Kin login code',
       `<h3>Welcome to Kith and Kin!</h3>
       <p>Hi ${user.firstName}!</p>
@@ -57,13 +66,10 @@ export class AuthService {
     );
   }
 
-  async sendOTPBySMS(phoneNumber: string) {
-    const user = await this.userService.findByPhoneNumber(phoneNumber);
-    if (!user)
-      throw new BadRequestException(
-        `Phone number ${phoneNumber} does not exist`,
-      );
-    const code = await this.userService.generateOTP(user);
-    this.twilioService.send(phoneNumber, `Your Kith & Kin login code ${code}`);
+  async sendOTPBySMS(user: User, code: string) {
+    this.twilioService.send(
+      user.phoneNumber,
+      `Your Kith & Kin login code ${code}`,
+    );
   }
 }

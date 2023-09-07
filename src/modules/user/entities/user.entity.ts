@@ -7,6 +7,7 @@ import {
   IsBoolean,
   IsEmail,
   IsEnum,
+  IsNumber,
   IsNumberString,
   IsString,
   Length,
@@ -38,9 +39,10 @@ export class OTP {
 @Exclude()
 export class SecurityInformation {
   @Column()
-  @Length(4, 4)
-  @IsNumberString()
   pin?: string;
+
+  @Column()
+  salt?: string;
 
   @Column()
   pinUpdatedDate?: Date;
@@ -69,7 +71,7 @@ export class SecurityInformation {
 }
 
 @Entity({ name: 'user' })
-export class UserEntity extends AuditEntity {
+export class User extends AuditEntity {
   @Column()
   @IsString()
   @ApiProperty()
@@ -134,7 +136,7 @@ export class UserEntity extends AuditEntity {
   @ApiProperty()
   securityInformation?: SecurityInformation;
 
-  constructor(partial: Partial<UserEntity>) {
+  constructor(partial: Partial<User>) {
     super();
     Object.assign(this, partial);
   }

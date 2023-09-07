@@ -15,6 +15,7 @@ export class TwilioService {
       this.appConfigService.twilio().accountSid,
       this.appConfigService.twilio().token,
     );
+    this.log.setContext(TwilioService.name);
   }
 
   sendVerification(email: string) {

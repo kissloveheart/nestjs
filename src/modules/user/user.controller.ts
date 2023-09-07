@@ -1,5 +1,5 @@
 import { Public } from '@decorators';
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -8,11 +8,11 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { EmailValidation, ParseObjectIdPipe } from '@pipe';
+import { EmailValidation, ParseObjectIdPipe, PinValidation } from '@pipe';
 import { ApiResponseGeneric } from '@types';
 import { ObjectId } from 'typeorm';
 import { UserCreateDto } from './dto/user-create.dto';
-import { UserEntity } from './entities/user.entity';
+import { User } from './entities/user.entity';
 import { UserService } from './user.service';
 
 @ApiTags('User')
@@ -25,7 +25,7 @@ export class UserController {
     name: 'id',
     type: 'string',
   })
-  @ApiResponseGeneric({ model: UserEntity })
+  @ApiResponseGeneric({ model: User })
   @ApiBearerAuth()
   async findOne(@Param('id', ParseObjectIdPipe) id: ObjectId) {
     return this.userService.findById(id);
@@ -72,5 +72,35 @@ export class UserController {
   })
   async checkExistEmail(@Query('email', EmailValidation) email: string) {
     return await this.userService.checkExistEmail(email);
+  }
+
+  @Post('pin')
+  @ApiOperation({
+    summary: 'Create PIN',
+  })
+  @ApiQuery({
+    name: 'pin',
+    required: true,
+    type: String,
+    example: 1234,
+  })
+  @ApiBearerAuth()
+  async createPin(@Query('pin', PinValidation) pin: string) {
+    await this.userService.createPin(pin);
+  }
+
+  @Put('pin')
+  @ApiOperation({
+    summary: 'Verify PIN',
+  })
+  @ApiQuery({
+    name: 'pin',
+    required: true,
+    type: String,
+    example: 1234,
+  })
+  @ApiBearerAuth()
+  async verifyPin(@Query('pin', PinValidation) pin: string) {
+    await this.userService.verifyPin(pin);
   }
 }

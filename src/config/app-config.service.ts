@@ -59,4 +59,12 @@ export class AppConfigService {
       limit: this.configService.get<number>('THROTTLE_LIMIT'),
     };
   }
+
+  user() {
+    return {
+      numberFailedPinLimit: this.configService.get<number>(
+        'USER_NUMBER_FAILED_PIN_LIMIT',
+      ),
+    };
+  }
 }
