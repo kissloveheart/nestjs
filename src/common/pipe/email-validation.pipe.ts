@@ -13,6 +13,6 @@ export class EmailValidation implements PipeTransform<string, string> {
       throw new BadRequestException(`Malformed email: ${value}`);
     }
 
-    return value;
+    return value.trim().toLowerCase();
   }
 }

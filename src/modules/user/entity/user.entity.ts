@@ -4,14 +4,15 @@ import { AuditEntity } from '@shared/base';
 import { enumTransform } from '@transform';
 import { Exclude, Expose, Transform, Type } from 'class-transformer';
 import {
+  IsArray,
   IsBoolean,
   IsEmail,
   IsEnum,
-  IsNumber,
-  IsNumberString,
+  IsOptional,
+  IsPhoneNumber,
   IsString,
-  Length,
   MaxLength,
+  ValidateNested,
 } from 'class-validator';
 import { Column, Entity } from 'typeorm';
 
@@ -83,14 +84,14 @@ export class User extends AuditEntity {
   lastName: string;
 
   @Column()
-  @IsEmail()
   @ApiProperty()
+  @Transform(({ value }) => value?.trim().toLowerCase(), { toClassOnly: true })
+  @IsEmail()
   email: string;
 
   @Column()
-  @IsNumberString()
-  @Length(10, 10)
   @ApiProperty()
+  @IsPhoneNumber('US')
   phoneNumber: string;
 
   @Column()
@@ -127,13 +128,22 @@ export class User extends AuditEntity {
   ageAccepted: boolean = false;
 
   @Column()
+  @IsOptional()
+  fcm?: string[];
+
+  @Column()
+  totalFileSize: number = 0;
+
+  @Column()
   @Type(() => OTP)
   @Exclude()
+  @ValidateNested()
   otp?: OTP;
 
   @Column()
   @Type(() => SecurityInformation)
   @ApiProperty()
+  @ValidateNested()
   securityInformation?: SecurityInformation;
 
   constructor(partial: Partial<User>) {

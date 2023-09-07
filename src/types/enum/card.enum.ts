@@ -1,0 +1,15 @@
+export enum CardType {
+  ALLERGIES = 'Allergies',
+  APPOINTMENTS = 'Appointments',
+  ATTACHMENTS = 'Attachments',
+  CONDITIONS = 'Conditions',
+  HOSPITALIZATIONS = 'Hospitalizations',
+  ID_CARD = 'ID Card',
+  LAB_WORK = 'Lab Work',
+  MEDICATIONS = 'Medications',
+  NOTES = 'Notes',
+  PRACTITIONERS = 'Practitioners',
+  PROCEDURES = 'Procedures',
+  QUESTIONS = 'Questions',
+  VACCINATIONS = 'Vaccinations',
+}

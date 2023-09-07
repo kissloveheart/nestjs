@@ -77,7 +77,7 @@ export class AuthController {
     enum: LoginType,
     example: LoginType.EMAIL,
   })
-  async sendOTPByEmail(
+  async sendOTP(
     @Param('email', EmailValidation) email: string,
     @Query('type') type: LoginType,
   ) {

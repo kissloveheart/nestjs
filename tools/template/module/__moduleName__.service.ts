@@ -1,15 +1,18 @@
+import { LogService } from '@log';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { MongoRepository } from 'typeorm';
 import { BaseService } from '@shared/base';
-import { __moduleName__CamelCase__Entity } from './dto/__moduleName__.entity';
+import { MongoRepository } from 'typeorm';
+import { __moduleName__ } from './entity/__moduleName__.entity';
 
 @Injectable()
-export class __moduleName__CamelCase__Service extends BaseService<__moduleName__CamelCase__Entity> {
-	constructor(
-		@InjectRepository(__moduleName__CamelCase__Entity)
-		private readonly userRepository: MongoRepository<__moduleName__CamelCase__Entity>,
-	) {
-		super(userRepository);
-	}
+export class __moduleName__Service extends BaseService<__moduleName__> {
+  constructor(
+    @InjectRepository(__moduleName__)
+    private readonly __moduleName__CamelCase__Repository: MongoRepository<__moduleName__>,
+    private readonly log: LogService,
+  ) {
+    super(__moduleName__CamelCase__Repository);
+    this.log.setContext(__moduleName__Service.name);
+  }
 }

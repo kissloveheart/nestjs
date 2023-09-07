@@ -12,7 +12,7 @@ import { EmailValidation, ParseObjectIdPipe, PinValidation } from '@pipe';
 import { ApiResponseGeneric } from '@types';
 import { ObjectId } from 'typeorm';
 import { UserCreateDto } from './dto/user-create.dto';
-import { User } from './entities/user.entity';
+import { User } from './entity/user.entity';
 import { UserService } from './user.service';
 
 @ApiTags('User')
@@ -44,7 +44,7 @@ export class UserController {
           lastName: 'John',
           firstName: 'Herry',
           email: 'hiep.nguyenvan1@ncc.asia',
-          phoneNumber: '1234567890',
+          phoneNumber: '8147320869',
           ageAccepted: true,
           termsAccepted: true,
         } as UserCreateDto,

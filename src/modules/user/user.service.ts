@@ -9,7 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from '@shared/base';
 import { MongoRepository } from 'typeorm';
 import { UserCreateDto } from './dto/user-create.dto';
-import { User, OTP } from './entities/user.entity';
+import { User, OTP } from './entity/user.entity';
 import * as randomNumber from 'randomstring';
 import * as moment from 'moment';
 import { AppConfigService } from '@config';

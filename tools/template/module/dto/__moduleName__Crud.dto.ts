@@ -1,6 +1,8 @@
 import { PartialType } from '@nestjs/swagger';
-import { __moduleName__CamelCase__Entity } from './__moduleName__.entity';
+import { __moduleName__ } from '../entity/__moduleName__.entity';
 
-export class __moduleName__CamelCase__CreateDto extends PartialType(__moduleName__CamelCase__Entity) {}
+export class __moduleName__CreateDto extends PartialType(__moduleName__) {}
 
-export class __moduleName__CamelCase__DtoUpdateDto extends PartialType(__moduleName__CamelCase__CreateDto) {}
+export class __moduleName__DtoUpdateDto extends PartialType(
+  __moduleName__CreateDto,
+) {}
