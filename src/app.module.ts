@@ -9,6 +9,7 @@ import { FilterModule } from '@filter';
 import { AuditSubscriber } from '@shared/subscriber';
 import { EmailModule } from '@shared/email';
 import { TwilioModule } from '@shared/twilio';
+import { PushNotificationModule } from './shared/push-notification/push-notification.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { TwilioModule } from '@shared/twilio';
     FilterModule,
     EmailModule,
     TwilioModule,
+    PushNotificationModule,
   ],
   providers: [AuditSubscriber],
 })
