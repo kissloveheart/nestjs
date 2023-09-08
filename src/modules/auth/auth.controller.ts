@@ -1,4 +1,6 @@
 import { Public } from '@decorators';
+import { LoginType } from '@enum';
+import { User } from '@modules/user';
 import {
   Controller,
   Get,
@@ -16,12 +18,10 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { EmailValidation } from '@pipe';
+import { ApiResponseObject } from '@types';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/auth.dto';
 import { OTPAuthGuard } from './guard/otp.guard';
-import { ApiResponseGeneric } from '@types';
-import { User } from '@modules/user';
-import { LoginType } from '@enum';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -39,7 +39,7 @@ export class AuthController {
     return this.authService.login(request.user);
   }
 
-  @ApiResponseGeneric({ model: User })
+  @ApiResponseObject(User)
   @Get('me')
   @ApiOperation({
     summary: 'My profile',

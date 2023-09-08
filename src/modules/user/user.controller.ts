@@ -1,4 +1,4 @@
-import { Public } from '@decorators';
+import { Public, RequiredRole } from '@decorators';
 import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -9,26 +9,24 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { EmailValidation, ParseObjectIdPipe, PinValidation } from '@pipe';
-import { ApiResponseGeneric } from '@types';
+import { ApiResponsePagination, PageRequest } from '@types';
 import { ObjectId } from 'typeorm';
 import { UserCreateDto } from './dto/user-create.dto';
 import { User } from './entity/user.entity';
 import { UserService } from './user.service';
+import { RoleName } from '../../types/enum/role.enum';
 
 @ApiTags('User')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get(':id')
-  @ApiParam({
-    name: 'id',
-    type: 'string',
-  })
-  @ApiResponseGeneric({ model: User })
+  @Get()
+  @ApiResponsePagination(User)
   @ApiBearerAuth()
-  async findOne(@Param('id', ParseObjectIdPipe) id: ObjectId) {
-    return this.userService.findById(id);
+  @RequiredRole(RoleName.ADMIN)
+  async findAll(@Query() pageRequest: PageRequest) {
+    return await this.userService.getAll(pageRequest);
   }
 
   @Post()

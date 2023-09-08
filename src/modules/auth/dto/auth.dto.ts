@@ -8,7 +8,13 @@ export class LoginDto {
   @Length(6, 6)
   code: string;
 
-  @ApiProperty()
+  @ApiProperty({
+    examples: {
+      'hiep.nguyenvan1@ncc.asia': {
+        value: 'hiep.nguyenvan1@ncc.asia',
+      },
+    },
+  })
   @IsString()
   @IsEmail()
   email: string;

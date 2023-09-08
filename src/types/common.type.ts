@@ -6,6 +6,7 @@ import {
   ApiPropertyOptional,
   getSchemaPath,
 } from '@nestjs/swagger';
+import { Pageable } from './page.type';
 
 export class IResponse<T> {
   @ApiProperty({
@@ -30,16 +31,10 @@ export class IResponse<T> {
   timestamp?: Date;
 }
 
-interface IDecoratorApiResponse {
-  model: Type;
-  description?: string;
-}
-
-export const ApiResponseGeneric = (options: IDecoratorApiResponse) => {
+export const ApiResponseArray = (model: Type) => {
   return applyDecorators(
-    ApiExtraModels(IResponse, options.model),
+    ApiExtraModels(IResponse, model),
     ApiOkResponse({
-      description: options.description || 'Successfully received model list',
       schema: {
         allOf: [
           { $ref: getSchemaPath(IResponse) },
@@ -47,7 +42,51 @@ export const ApiResponseGeneric = (options: IDecoratorApiResponse) => {
             properties: {
               data: {
                 type: 'array',
-                items: { $ref: getSchemaPath(options.model) },
+                items: { $ref: getSchemaPath(model) },
+              },
+            },
+          },
+        ],
+      },
+    }),
+  );
+};
+
+export const ApiResponseObject = (model: Type) => {
+  return applyDecorators(
+    ApiExtraModels(IResponse, model),
+    ApiOkResponse({
+      schema: {
+        allOf: [
+          { $ref: getSchemaPath(IResponse) },
+          {
+            properties: {
+              data: { $ref: getSchemaPath(model) },
+            },
+          },
+        ],
+      },
+    }),
+  );
+};
+
+export const ApiResponsePagination = (model: Type) => {
+  return applyDecorators(
+    ApiExtraModels(IResponse, Pageable, model),
+    ApiOkResponse({
+      schema: {
+        allOf: [
+          { $ref: getSchemaPath(IResponse) },
+          {
+            properties: {
+              data: {
+                $ref: getSchemaPath(Pageable),
+                properties: {
+                  result: {
+                    type: 'array',
+                    items: { $ref: getSchemaPath(model) },
+                  },
+                },
               },
             },
           },

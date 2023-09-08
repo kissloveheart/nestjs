@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from '@shared/base';
-import { MongoRepository } from 'typeorm';
+import { FindManyOptions, MongoRepository } from 'typeorm';
 import { UserCreateDto } from './dto/user-create.dto';
 import { User, OTP } from './entity/user.entity';
 import * as randomNumber from 'randomstring';
@@ -16,6 +16,8 @@ import { AppConfigService } from '@config';
 import { ClsService } from 'nestjs-cls';
 import { USER_TOKEN } from '@constant';
 import { hashPin, isMatchPin } from '@utils';
+import { PageRequest, Pageable } from '../../types';
+import { fileURLToPath } from 'url';
 
 @Injectable()
 export class UserService extends BaseService<User> {
@@ -26,6 +28,18 @@ export class UserService extends BaseService<User> {
     private readonly clsService: ClsService,
   ) {
     super(userRepository);
+  }
+
+  async getAll(pageRequest: PageRequest) {
+    const { page, size, skip, search, order, orderBy } = pageRequest;
+    const filter: FindManyOptions<User> = {
+      take: size,
+      skip,
+      order: { [orderBy]: order },
+    };
+
+    const [users, count] = await this.findAndCount(filter);
+    return new Pageable(users, { size, page, count });
   }
 
   async signup(payload: UserCreateDto): Promise<User> {
