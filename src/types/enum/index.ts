@@ -5,3 +5,4 @@ export * from './login.enum';
 export * from './http-exception-code.enum';
 export * from './card.enum';
 export * from './profile.enum';
+export * from './file.enum';

@@ -2,6 +2,9 @@ import { ApiProperty } from '@nestjs/swagger';
 import { AuditEntity } from '@shared/base';
 import { ObjectId } from 'mongodb';
 import { Column, Entity } from 'typeorm';
+import { FileStatus } from '@enum';
+import { formatUrlBucket } from '@utils';
+import { Transform } from 'class-transformer';
 
 @Entity({ name: 'file' })
 export class File extends AuditEntity {
@@ -14,20 +17,23 @@ export class File extends AuditEntity {
 
   @Column()
   @ApiProperty()
+  @Transform(({ value }) => formatUrlBucket(value), { toPlainOnly: true })
   path: string;
 
   @Column()
-  @ApiProperty()
   mineType: string;
 
   @Column()
-  metadata: object;
+  size: number;
+
+  @Column()
+  status: FileStatus;
 
   @Column()
   user: ObjectId;
 
   @Column()
-  profile: ObjectId;
+  profile?: ObjectId;
 
   constructor(partial: Partial<File>) {
     super();

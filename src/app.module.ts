@@ -11,6 +11,7 @@ import { EmailModule } from '@shared/email';
 import { TwilioModule } from '@shared/twilio';
 import { PushNotificationModule } from '@shared/push-notification';
 import { UploadModule } from '@shared/upload';
+import { FileModule } from './modules/file/file.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { UploadModule } from '@shared/upload';
     TwilioModule,
     PushNotificationModule,
     UploadModule,
+    FileModule,
   ],
   providers: [AuditSubscriber],
 })

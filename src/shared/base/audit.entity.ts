@@ -6,6 +6,7 @@ import {
   CreateDateColumn,
   ObjectIdColumn,
   UpdateDateColumn,
+  VersionColumn,
 } from 'typeorm';
 
 export abstract class AuditEntity {
@@ -34,4 +35,12 @@ export abstract class AuditEntity {
   @Exclude()
   @UpdateDateColumn()
   updatedTime?: Date;
+
+  @ApiHideProperty()
+  @Exclude()
+  deletedTime?: Date;
+
+  @VersionColumn()
+  @ApiHideProperty()
+  __v?: number;
 }

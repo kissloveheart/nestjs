@@ -31,7 +31,8 @@ export class AuditSubscriber implements EntitySubscriberInterface<AuditEntity> {
         'Consider using .save() method because Subscriber can only be triggered that way',
       );
     const user = this.cls.get(USER_TOKEN);
-    if (!event.entity.createdBy) event.entity.createdBy = user?.id ?? SYSTEM;
+    if (!event.entity.createdBy)
+      event.entity.createdBy = user?._id.toString() ?? SYSTEM;
   }
 
   beforeUpdate(event: UpdateEvent<AuditEntity>) {
@@ -40,6 +41,6 @@ export class AuditSubscriber implements EntitySubscriberInterface<AuditEntity> {
         'Consider using .save() method because Subscriber can only be triggered that way',
       );
     const user = this.cls.get(USER_TOKEN);
-    event.entity.updatedBy = user?.id ?? SYSTEM;
+    event.entity.updatedBy = user?._id.toString() ?? SYSTEM;
   }
 }
