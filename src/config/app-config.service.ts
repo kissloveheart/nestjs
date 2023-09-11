@@ -67,12 +67,4 @@ export class AppConfigService {
       ),
     };
   }
-
-  firebase() {
-    return {
-      serviceAccount: this.configService.get<string>(
-        'FIREBASE_ADMIN_SERVICE_ACCOUNT_PATH',
-      ),
-    };
-  }
 }

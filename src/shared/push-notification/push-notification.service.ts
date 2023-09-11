@@ -1,25 +1,12 @@
-import { AppConfigService } from '@config';
 import { LogService } from '@log';
-import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import admin from 'firebase-admin';
-import * as fs from 'fs';
-import * as path from 'path';
 
 @Injectable()
 export class PushNotificationService {
   private client: admin.app.App;
-  constructor(
-    private readonly configService: AppConfigService,
-    private readonly log: LogService,
-  ) {
-    const serviceAccount = fs
-      .readFileSync(path.join(this.configService.firebase().serviceAccount))
-      .toString();
-
-    this.client = admin.initializeApp({
-      credential: admin.credential.cert(JSON.parse(serviceAccount)),
-    });
-
+  constructor(private readonly log: LogService) {
+    this.client = admin.initializeApp();
     this.log.setContext(PushNotificationService.name);
   }
 

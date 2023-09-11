@@ -19,5 +19,4 @@ export const configValidationSchema = Joi.object({
   THROTTLE_LIMIT: Joi.number().required(),
   THROTTLE_TTL: Joi.number().required(),
   USER_NUMBER_FAILED_PIN_LIMIT: Joi.number().required(),
-  FIREBASE_ADMIN_SERVICE_ACCOUNT_PATH: Joi.string().required(),
 });
