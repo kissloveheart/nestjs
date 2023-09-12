@@ -37,9 +37,4 @@ export class File extends AuditEntity {
 
   @Column()
   isAvatar: boolean = false;
-
-  constructor(partial: Partial<File>) {
-    super();
-    Object.assign(this, partial);
-  }
 }

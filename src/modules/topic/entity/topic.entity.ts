@@ -13,9 +13,4 @@ export class Topic extends AuditEntity {
 
   @Column()
   profile: ObjectId;
-
-  constructor(partial: Partial<Topic>) {
-    super();
-    Object.assign(this, partial);
-  }
 }

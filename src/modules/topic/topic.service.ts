@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from '@shared/base';
 import { MongoRepository } from 'typeorm';
-import { Topic } from './entity/Topic.entity';
+import { Topic } from './entity/topic.entity';
 
 @Injectable()
 export class TopicService extends BaseService<Topic> {
@@ -12,7 +12,7 @@ export class TopicService extends BaseService<Topic> {
     private readonly topicRepository: MongoRepository<Topic>,
     private readonly log: LogService,
   ) {
-    super(topicRepository);
+    super(topicRepository, Topic);
     this.log.setContext(TopicService.name);
   }
 }

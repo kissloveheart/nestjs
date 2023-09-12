@@ -1,5 +1,9 @@
 import { BloodType, ProfileRole, Pronouns, Sex } from '@enum';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import {
+  ApiHideProperty,
+  ApiProperty,
+  ApiPropertyOptional,
+} from '@nestjs/swagger';
 import { AuditEntity } from '@shared/base';
 import { booleanTransform, enumTransform, stringToDate } from '@transform';
 import { formatUrlBucket } from '@utils';
@@ -16,7 +20,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { ObjectId } from 'mongodb';
-import { Column, Entity, ObjectIdColumn } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 
 export class BasicInformation {
   @Column()
@@ -62,20 +66,12 @@ export class BasicInformation {
   @Matches(/^\d{3}-\d{2}-\d{4}$/)
   @ApiPropertyOptional()
   SSN: string;
-
-  constructor(partial: Partial<BasicInformation>) {
-    Object.assign(this, partial);
-  }
 }
 
 export class EmergencyContact {
-  @ObjectIdColumn()
-  @ApiProperty()
-  @Transform(({ value }) => value.toString(), { toPlainOnly: true })
+  @Column()
+  @ApiHideProperty()
   @Type(() => ObjectId)
-  @Transform(({ value }) => (value ? new ObjectId(value) : new ObjectId()), {
-    toClassOnly: true,
-  })
   _id: ObjectId;
 
   @Column()
@@ -92,10 +88,6 @@ export class EmergencyContact {
   @ApiProperty()
   @IsPhoneNumber('US')
   phoneNumber: string;
-
-  constructor(partial: Partial<EmergencyContact>) {
-    Object.assign(this, partial);
-  }
 }
 
 export class HealthDetail {
@@ -123,10 +115,6 @@ export class HealthDetail {
   @IsBoolean()
   @Transform(({ value }) => booleanTransform(value))
   isOrganDonor: boolean = false;
-
-  constructor(partial: Partial<HealthDetail>) {
-    Object.assign(this, partial);
-  }
 }
 
 export class Acl {
@@ -171,8 +159,8 @@ export class Profile extends AuditEntity {
 
   @Column()
   @ApiPropertyOptional({ type: EmergencyContact, isArray: true })
-  @Type(() => EmergencyContact)
   @ValidateNested({ each: true })
+  @Type(() => EmergencyContact)
   emergencyContacts?: EmergencyContact[];
 
   @Column()
@@ -180,9 +168,4 @@ export class Profile extends AuditEntity {
   @ApiPropertyOptional()
   @Transform(({ value }) => formatUrlBucket(value))
   avatar?: string;
-
-  constructor(partial: Partial<Profile>) {
-    super();
-    Object.assign(this, partial);
-  }
 }

@@ -1,34 +1,35 @@
-import { NestFactory } from '@nestjs/core';
-import { ConfigService } from '@nestjs/config';
-import { AppModule } from './app.module';
-import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+import { AppConfigModule, AppConfigService, swaggerConfig } from '@config';
 import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
-import { swaggerConfig } from '@config';
-import { COMMA } from '@constant';
+import { NestFactory } from '@nestjs/core';
 import helmet from 'helmet';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const configService = app.get(ConfigService);
+  const configService = app.select(AppConfigModule).get(AppConfigService);
   const logger = app.get(WINSTON_MODULE_NEST_PROVIDER);
   app.useLogger(logger);
   app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
 
-  app.use(helmet());
+  // app.use(helmet());
 
   app.enableCors({
-    origin: configService.get<string>('ALLOW_ORIGINS').split(COMMA),
+    origin: configService.cors().origin,
     methods: ['GET', 'PUT', 'PATCH', 'POST', 'DELETE'],
     credentials: true,
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
   });
+
   app.enableVersioning({
     type: VersioningType.URI,
     defaultVersion: '1',
   });
 
   swaggerConfig(app);
-  const port = configService.get<number>('PORT');
+  const port = configService.port();
   await app.listen(port, '0.0.0.0');
   Logger.log(`Server is listening on ${await app.getUrl()}`, 'Bootstrap');
 }

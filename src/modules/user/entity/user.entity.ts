@@ -31,10 +31,6 @@ export class OTP {
 
   @Column()
   consumedDate?: Date;
-
-  constructor(partial: Partial<OTP>) {
-    Object.assign(this, partial);
-  }
 }
 
 @Exclude()
@@ -65,10 +61,6 @@ export class SecurityInformation {
 
   @Column()
   failedSecurityQuestionCount: number = 0;
-
-  constructor(partial: Partial<SecurityInformation>) {
-    Object.assign(this, partial);
-  }
 }
 
 @Entity({ name: 'user' })
@@ -145,9 +137,4 @@ export class User extends AuditEntity {
   @ApiProperty()
   @ValidateNested()
   securityInformation?: SecurityInformation;
-
-  constructor(partial: Partial<User>) {
-    super();
-    Object.assign(this, partial);
-  }
 }

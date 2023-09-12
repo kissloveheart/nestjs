@@ -1,13 +1,13 @@
 import { FileStatus } from '@enum';
 import { LogService } from '@log';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from '@shared/base';
 import { UploadService } from '@shared/upload';
 import { ObjectId } from 'mongodb';
 import slugify from 'slugify';
 import { MongoRepository } from 'typeorm';
-import { File } from './entity/File.entity';
+import { File } from './entity/file.entity';
 
 @Injectable()
 export class FileService extends BaseService<File> {
@@ -17,7 +17,7 @@ export class FileService extends BaseService<File> {
     private readonly log: LogService,
     private readonly uploadService: UploadService,
   ) {
-    super(fileRepository);
+    super(fileRepository, File);
     this.log.setContext(FileService.name);
   }
 
@@ -63,18 +63,5 @@ export class FileService extends BaseService<File> {
       await this.save(newFile);
       throw err;
     }
-  }
-
-  async softDelete(id: ObjectId) {
-    const file = await this.findOne({
-      where: {
-        _id: id,
-        deletedTime: null,
-      },
-    });
-
-    if (!file) throw new NotFoundException(`File ${id} does not exist`);
-    file.deletedTime = new Date();
-    await this.save(file);
   }
 }

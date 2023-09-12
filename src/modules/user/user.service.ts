@@ -1,3 +1,5 @@
+import { AppConfigService } from '@config';
+import { USER_TOKEN } from '@constant';
 import { HttpExceptionCode, UserStatus } from '@enum';
 import {
   BadRequestException,
@@ -7,17 +9,15 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from '@shared/base';
-import { FindManyOptions, MongoRepository } from 'typeorm';
-import { UserCreateDto } from './dto/user-create.dto';
-import { User, OTP } from './entity/user.entity';
-import * as randomNumber from 'randomstring';
-import * as moment from 'moment';
-import { AppConfigService } from '@config';
-import { ClsService } from 'nestjs-cls';
-import { USER_TOKEN } from '@constant';
 import { hashPin, isMatchPin } from '@utils';
+import { plainToInstance } from 'class-transformer';
+import * as moment from 'moment';
+import { ClsService } from 'nestjs-cls';
+import * as randomNumber from 'randomstring';
+import { FindManyOptions, MongoRepository } from 'typeorm';
 import { PageRequest, Pageable } from '../../types';
-import { fileURLToPath } from 'url';
+import { UserCreateDto } from './dto/user-create.dto';
+import { OTP, User } from './entity/user.entity';
 
 @Injectable()
 export class UserService extends BaseService<User> {
@@ -27,7 +27,7 @@ export class UserService extends BaseService<User> {
     private readonly configService: AppConfigService,
     private readonly clsService: ClsService,
   ) {
-    super(userRepository);
+    super(userRepository, User);
   }
 
   async getAll(pageRequest: PageRequest) {
@@ -81,7 +81,7 @@ export class UserService extends BaseService<User> {
       });
     } while (await this.findByOTP(code));
 
-    user.otp = new OTP({ code });
+    user.otp = plainToInstance(OTP, { code });
     await this.save(user);
     return code;
   }

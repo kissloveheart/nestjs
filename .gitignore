@@ -37,3 +37,4 @@ lerna-debug.log*
 /mongo_data
 
 rest.http
+firebase-admin.json

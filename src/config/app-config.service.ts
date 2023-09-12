@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { COMMA } from '@constant';
 
 @Injectable()
 export class AppConfigService {
@@ -72,5 +73,15 @@ export class AppConfigService {
     return {
       bucketName: this.configService.get<string>('GOOGLE_BUCKET_NAME'),
     };
+  }
+
+  cors() {
+    return {
+      origin: this.configService.get<string>('ALLOW_ORIGINS').split(COMMA),
+    };
+  }
+
+  port() {
+    return this.configService.get<number>('PORT');
   }
 }

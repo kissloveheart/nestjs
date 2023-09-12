@@ -12,6 +12,7 @@ import {
 export abstract class AuditEntity {
   @ObjectIdColumn()
   @Transform(({ value }) => value.toString(), { toPlainOnly: true })
+  @Type(() => ObjectId)
   _id: ObjectId;
 
   @ApiHideProperty()

@@ -1,15 +1,14 @@
 import { LogService } from '@log';
+import { FileService } from '@modules/file';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from '@shared/base';
 import { PageRequest, Pageable } from '@types';
-import { plainToInstance } from 'class-transformer';
+import { formatUrlBucket } from '@utils';
 import { ObjectId } from 'mongodb';
 import { FindManyOptions, MongoRepository } from 'typeorm';
 import { ProfileDto } from './dto/profile.dto';
 import { Profile } from './entity/Profile.entity';
-import { FileService } from '@modules/file';
-import { formatUrlBucket } from '@utils';
 
 @Injectable()
 export class ProfileService extends BaseService<Profile> {
@@ -19,7 +18,7 @@ export class ProfileService extends BaseService<Profile> {
     private readonly fileService: FileService,
     private readonly log: LogService,
   ) {
-    super(profileRepository);
+    super(profileRepository, Profile);
     this.log.setContext(ProfileService.name);
   }
 
@@ -56,14 +55,7 @@ export class ProfileService extends BaseService<Profile> {
       profile = this.create(payload);
     }
 
-    profile = await this.save({ ...profile, ...payload });
-    return plainToInstance(Profile, profile);
-  }
-
-  async softDelete(id: ObjectId) {
-    const profile = await this.getOne(id);
-    profile.deletedTime = new Date();
-    await this.save(profile);
+    return await this.save({ ...profile, ...payload });
   }
 
   async changeAvatar(id: ObjectId, file: Express.Multer.File) {

@@ -9,14 +9,15 @@ import {
 } from '@modules/profile';
 import { BloodType, Pronouns, Sex } from '@enum';
 import { faker } from '@faker-js/faker';
+import { plainToInstance } from 'class-transformer';
 
 export class SeedProfile1694490729073 implements MigrationInterface {
   public async up(queryRunner: MongoQueryRunner): Promise<void> {
     const profilesToInsert = [];
     for (let i = 1; i <= 1000; i++) {
-      const profile = new Profile({
+      const profile = plainToInstance(Profile, {
         owner: new ObjectId(i), // Replace with the owner's ObjectId
-        basicInformation: new BasicInformation({
+        basicInformation: plainToInstance(BasicInformation, {
           firstName: faker.person.firstName(),
           lastName: faker.person.lastName(),
           birthDate: faker.date.birthdate(),
@@ -24,14 +25,14 @@ export class SeedProfile1694490729073 implements MigrationInterface {
           sex: Sex.MALE,
           SSN: '123-45-6789',
         }),
-        healthDetail: new HealthDetail({
+        healthDetail: plainToInstance(HealthDetail, {
           height: '175 cm',
           weight: '70 kg',
           bloodType: BloodType.A_POSITIVE,
           isOrganDonor: true,
         }),
         emergencyContacts: [
-          new EmergencyContact({
+          plainToInstance(EmergencyContact, {
             _id: new ObjectId(i),
             firstName: faker.person.firstName(),
             lastName: faker.person.lastName(),

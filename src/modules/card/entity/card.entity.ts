@@ -1,8 +1,8 @@
-import { AuditEntity } from '@shared/base';
-import { Column, Entity, TableInheritance } from 'typeorm';
 import { CardType } from '@enum';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { ObjectId } from 'mongodb';
+import { AuditEntity } from '@shared/base';
+import { booleanTransform, stringToDate } from '@transform';
+import { Transform } from 'class-transformer';
 import {
   IsArray,
   IsBoolean,
@@ -11,8 +11,8 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { Transform } from 'class-transformer';
-import { stringToDate, booleanTransform } from '@transform';
+import { ObjectId } from 'mongodb';
+import { Column, Entity, TableInheritance } from 'typeorm';
 
 @Entity({ name: 'card' })
 @TableInheritance()
@@ -54,9 +54,4 @@ export class Card extends AuditEntity {
   @IsOptional()
   @ApiPropertyOptional()
   topics?: ObjectId[];
-
-  constructor(partial: Partial<Card>) {
-    super();
-    Object.assign(this, partial);
-  }
 }
