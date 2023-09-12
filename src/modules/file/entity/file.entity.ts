@@ -30,10 +30,13 @@ export class File extends AuditEntity {
   status: FileStatus;
 
   @Column()
-  user: ObjectId;
+  user?: ObjectId;
 
   @Column()
   profile?: ObjectId;
+
+  @Column()
+  isAvatar: boolean = false;
 
   constructor(partial: Partial<File>) {
     super();

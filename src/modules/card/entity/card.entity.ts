@@ -12,7 +12,7 @@ import {
   IsString,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { StringToDate, booleanTransform } from '@transform';
+import { stringToDate, booleanTransform } from '@transform';
 
 @Entity({ name: 'card' })
 @TableInheritance()
@@ -39,14 +39,14 @@ export class Card extends AuditEntity {
   @IsDate()
   @IsOptional()
   @ApiPropertyOptional()
-  @Transform(({ value }) => StringToDate(value))
+  @Transform(({ value }) => stringToDate(value))
   startTime?: Date;
 
   @Column()
   @IsDate()
   @IsOptional()
   @ApiPropertyOptional()
-  @Transform(({ value }) => StringToDate(value))
+  @Transform(({ value }) => stringToDate(value))
   endTime?: Date;
 
   @Column()

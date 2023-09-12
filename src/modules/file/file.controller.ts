@@ -5,11 +5,10 @@ import {
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
-import { FileService } from './File.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { imageTypeFilter } from '@utils';
-import { User } from '@modules/user';
+import { FileService } from './file.service';
 
 @Controller('File')
 @ApiTags('File')
@@ -44,6 +43,6 @@ export class FileController {
     image: Express.Multer.File,
     @Req() request,
   ) {
-    await this.fileService.upload(image, request.user as User);
+    await this.fileService.upload(image);
   }
 }

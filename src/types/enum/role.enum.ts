@@ -12,7 +12,8 @@ export enum Permission {
 }
 
 export enum ProfileRole {
-  OWNER = 'Owner',
-  EDITOR = 'Editor',
-  VIEWER = 'Viewer',
+  OWNER = 128,
+  EDITOR = 8,
+  CONTRIBUTOR = 4,
+  VIEWER = 2,
 }

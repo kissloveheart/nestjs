@@ -1,7 +1,8 @@
 import { BloodType, ProfileRole, Pronouns, Sex } from '@enum';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { AuditEntity } from '@shared/base';
-import { booleanTransform, enumTransform } from '@transform';
+import { booleanTransform, enumTransform, stringToDate } from '@transform';
+import { formatUrlBucket } from '@utils';
 import { Transform, Type } from 'class-transformer';
 import {
   IsArray,
@@ -15,7 +16,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { ObjectId } from 'mongodb';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, ObjectIdColumn } from 'typeorm';
 
 export class BasicInformation {
   @Column()
@@ -35,24 +36,48 @@ export class BasicInformation {
 
   @Column()
   @IsDate()
+  @ApiPropertyOptional()
+  @Transform(({ value }) => stringToDate(value))
   birthDate: Date;
 
   @Column()
   @IsEnum(Pronouns)
   @Transform(({ value }) => enumTransform(value, Pronouns))
+  @ApiPropertyOptional({
+    enum: Pronouns,
+    default: Pronouns.HE,
+  })
   pronouns: Pronouns = Pronouns.HE;
 
   @Column()
   @IsEnum(Sex)
   @Transform(({ value }) => enumTransform(value, Sex))
+  @ApiPropertyOptional({
+    enum: Sex,
+    default: Sex.MALE,
+  })
   sex: Sex = Sex.MALE;
 
   @Column()
   @Matches(/^\d{3}-\d{2}-\d{4}$/)
+  @ApiPropertyOptional()
   SSN: string;
+
+  constructor(partial: Partial<BasicInformation>) {
+    Object.assign(this, partial);
+  }
 }
 
 export class EmergencyContact {
+  @ObjectIdColumn()
+  @ApiProperty()
+  @Transform(({ value }) => value.toString(), { toPlainOnly: true })
+  @Type(() => ObjectId)
+  @Transform(({ value }) => (value ? new ObjectId(value) : new ObjectId()), {
+    toClassOnly: true,
+  })
+  _id: ObjectId;
+
   @Column()
   @ApiProperty()
   @IsString()
@@ -67,6 +92,10 @@ export class EmergencyContact {
   @ApiProperty()
   @IsPhoneNumber('US')
   phoneNumber: string;
+
+  constructor(partial: Partial<EmergencyContact>) {
+    Object.assign(this, partial);
+  }
 }
 
 export class HealthDetail {
@@ -81,7 +110,10 @@ export class HealthDetail {
   weight: string;
 
   @Column()
-  @ApiProperty()
+  @ApiProperty({
+    enum: BloodType,
+    default: BloodType.UNKNOWN,
+  })
   @IsEnum(BloodType)
   @Transform(({ value }) => enumTransform(value, BloodType))
   bloodType: BloodType = BloodType.UNKNOWN;
@@ -91,6 +123,10 @@ export class HealthDetail {
   @IsBoolean()
   @Transform(({ value }) => booleanTransform(value))
   isOrganDonor: boolean = false;
+
+  constructor(partial: Partial<HealthDetail>) {
+    Object.assign(this, partial);
+  }
 }
 
 export class Acl {
@@ -98,7 +134,10 @@ export class Acl {
   accessor: ObjectId;
 
   @Column()
-  @ApiProperty()
+  @ApiProperty({
+    enum: ProfileRole,
+    default: ProfileRole.OWNER,
+  })
   @IsEnum(ProfileRole)
   @Transform(({ value }) => enumTransform(value, ProfileRole))
   role: ProfileRole = ProfileRole.OWNER;
@@ -107,11 +146,14 @@ export class Acl {
 @Entity({ name: 'profile' })
 export class Profile extends AuditEntity {
   @Column()
+  @ApiProperty()
+  @Transform(({ value }) => value.toString(), { toPlainOnly: true })
   owner: ObjectId;
 
   @Column()
   @ValidateNested()
   @Type(() => BasicInformation)
+  @ApiProperty()
   basicInformation: BasicInformation;
 
   @Column()
@@ -128,10 +170,16 @@ export class Profile extends AuditEntity {
   healthDetail?: HealthDetail;
 
   @Column()
-  deletedTime?: Date;
+  @ApiPropertyOptional({ type: EmergencyContact, isArray: true })
+  @Type(() => EmergencyContact)
+  @ValidateNested({ each: true })
+  emergencyContacts?: EmergencyContact[];
 
   @Column()
-  avatar: string;
+  @IsOptional()
+  @ApiPropertyOptional()
+  @Transform(({ value }) => formatUrlBucket(value))
+  avatar?: string;
 
   constructor(partial: Partial<Profile>) {
     super();

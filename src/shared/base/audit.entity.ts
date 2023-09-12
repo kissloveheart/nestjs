@@ -38,6 +38,7 @@ export abstract class AuditEntity {
 
   @ApiHideProperty()
   @Exclude()
+  @Column()
   deletedTime?: Date;
 
   @VersionColumn()

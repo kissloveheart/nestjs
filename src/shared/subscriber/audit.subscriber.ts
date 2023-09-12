@@ -33,6 +33,7 @@ export class AuditSubscriber implements EntitySubscriberInterface<AuditEntity> {
     const user = this.cls.get(USER_TOKEN);
     if (!event.entity.createdBy)
       event.entity.createdBy = user?._id.toString() ?? SYSTEM;
+    event.entity.updatedTime = event.entity.createdTime;
   }
 
   beforeUpdate(event: UpdateEvent<AuditEntity>) {

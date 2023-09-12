@@ -11,7 +11,8 @@ import { EmailModule } from '@shared/email';
 import { TwilioModule } from '@shared/twilio';
 import { PushNotificationModule } from '@shared/push-notification';
 import { UploadModule } from '@shared/upload';
-import { FileModule } from './modules/file/file.module';
+import { FileModule } from '@modules/file';
+import { ProfileModule } from '@modules/profile';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { FileModule } from './modules/file/file.module';
     EmailModule,
     TwilioModule,
     PushNotificationModule,
+    ProfileModule,
     UploadModule,
     FileModule,
   ],
