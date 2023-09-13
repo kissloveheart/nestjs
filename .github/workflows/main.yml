@@ -40,5 +40,5 @@ jobs:
 
       - name: SSH into GCE VM and deploy container
         run: |
-          gcloud compute ssh instance-1 --command "docker pull gcr.io/${{ secrets.GCE_PROJECT }}/knk:${{ github.sha }} && docker run -d -p 80:4001 gcr.io/${{ secrets.GCE_PROJECT }}/knk:${{ github.sha }}"
+          gcloud compute ssh instance-1 --zone asia-southeast1-b --command "docker pull gcr.io/${{ secrets.GCE_PROJECT }}/knk:${{ github.sha }} && docker run -d -p 80:4001 gcr.io/${{ secrets.GCE_PROJECT }}/knk:${{ github.sha }}"
     
