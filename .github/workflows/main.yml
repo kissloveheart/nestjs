@@ -12,6 +12,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: export service account to file
+        run: |
+          echo ${{ secrets.GCE_SA_KEY }} > ./firebase-admin.json
+
       - id: 'auth'
         uses: 'google-github-actions/auth@v1'
         with:
