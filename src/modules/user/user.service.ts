@@ -27,7 +27,7 @@ export class UserService extends BaseService<User> {
     private readonly configService: AppConfigService,
     private readonly clsService: ClsService,
   ) {
-    super(userRepository, User);
+    super(userRepository, User.name);
   }
 
   async getAll(pageRequest: PageRequest) {

@@ -12,7 +12,7 @@ export class TopicService extends BaseService<Topic> {
     private readonly topicRepository: MongoRepository<Topic>,
     private readonly log: LogService,
   ) {
-    super(topicRepository, Topic);
+    super(topicRepository, Topic.name);
     this.log.setContext(TopicService.name);
   }
 }

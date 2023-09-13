@@ -1,10 +1,16 @@
 import { ChildEntity, Column } from 'typeorm';
-import { Card } from '../Card.entity';
 import { IsArray, IsOptional, IsString } from 'class-validator';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import {
+  ApiHideProperty,
+  ApiProperty,
+  ApiPropertyOptional,
+} from '@nestjs/swagger';
 import { ObjectId } from 'mongodb';
+import { Card } from '../card.entity';
+import { CardType } from '@enum';
+import { Exclude } from 'class-transformer';
 
-@ChildEntity()
+@ChildEntity(CardType.NOTES)
 export class Note extends Card {
   @Column()
   @IsString()
@@ -14,6 +20,7 @@ export class Note extends Card {
   @Column()
   @IsArray()
   @IsOptional()
-  @ApiPropertyOptional()
+  @ApiHideProperty()
+  @Exclude()
   attachments?: ObjectId[];
 }

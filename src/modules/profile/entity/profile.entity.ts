@@ -1,9 +1,5 @@
 import { BloodType, ProfileRole, Pronouns, Sex } from '@enum';
-import {
-  ApiHideProperty,
-  ApiProperty,
-  ApiPropertyOptional,
-} from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { AuditEntity } from '@shared/base';
 import { booleanTransform, enumTransform, stringToDate } from '@transform';
 import { formatUrlBucket } from '@utils';
@@ -70,9 +66,10 @@ export class BasicInformation {
 
 export class EmergencyContact {
   @Column()
-  @ApiHideProperty()
+  @ApiProperty()
   @Type(() => ObjectId)
-  _id: ObjectId;
+  @Transform(({ value }) => value.toString(), { toPlainOnly: true })
+  _id: ObjectId = new ObjectId();
 
   @Column()
   @ApiProperty()
@@ -159,6 +156,7 @@ export class Profile extends AuditEntity {
 
   @Column()
   @ApiPropertyOptional({ type: EmergencyContact, isArray: true })
+  @IsArray()
   @ValidateNested({ each: true })
   @Type(() => EmergencyContact)
   emergencyContacts?: EmergencyContact[];

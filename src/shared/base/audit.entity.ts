@@ -1,4 +1,4 @@
-import { ApiHideProperty } from '@nestjs/swagger';
+import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 import { Exclude, Transform, Type } from 'class-transformer';
 import { ObjectId } from 'mongodb';
 import {
@@ -13,6 +13,7 @@ export abstract class AuditEntity {
   @ObjectIdColumn()
   @Transform(({ value }) => value.toString(), { toPlainOnly: true })
   @Type(() => ObjectId)
+  @ApiProperty()
   _id: ObjectId;
 
   @ApiHideProperty()
@@ -40,9 +41,10 @@ export abstract class AuditEntity {
   @ApiHideProperty()
   @Exclude()
   @Column()
-  deletedTime?: Date;
+  deletedTime?: Date = null;
 
   @VersionColumn()
   @ApiHideProperty()
-  __v?: number;
+  @Exclude()
+  __v?: number = 0;
 }

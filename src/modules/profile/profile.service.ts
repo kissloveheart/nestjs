@@ -3,11 +3,11 @@ import { FileService } from '@modules/file';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from '@shared/base';
-import { PageRequest, Pageable } from '@types';
+import { PageRequest, PageRequestSync, Pageable } from '@types';
 import { formatUrlBucket } from '@utils';
 import { ObjectId } from 'mongodb';
-import { FindManyOptions, MongoRepository } from 'typeorm';
-import { ProfileDto } from './dto/profile.dto';
+import { FilterOperators, FindManyOptions, MongoRepository } from 'typeorm';
+import { ProfileDto, SyncProfileDto } from './dto/profile.dto';
 import { Profile } from './entity/Profile.entity';
 
 @Injectable()
@@ -18,12 +18,12 @@ export class ProfileService extends BaseService<Profile> {
     private readonly fileService: FileService,
     private readonly log: LogService,
   ) {
-    super(profileRepository, Profile);
+    super(profileRepository, Profile.name);
     this.log.setContext(ProfileService.name);
   }
 
   async getAll(pageRequest: PageRequest) {
-    const { page, size, skip, search, order, orderBy } = pageRequest;
+    const { page, size, skip, order, orderBy } = pageRequest;
     const filter: FindManyOptions<Profile> = {
       where: {
         deletedTime: null,
@@ -35,6 +35,24 @@ export class ProfileService extends BaseService<Profile> {
 
     const [profiles, count] = await this.findAndCount(filter);
     return new Pageable(profiles, { size, page, count });
+  }
+
+  async getAllSync(pageRequest: PageRequestSync) {
+    const { page, size, skip, order, orderBy, lastSyncTime } = pageRequest;
+    const filter: FindManyOptions<Profile> | FilterOperators<Profile> = {
+      where: {
+        updatedTime: { $gt: lastSyncTime },
+      },
+      take: size,
+      skip,
+      order: { [orderBy]: order },
+    };
+
+    const [profiles, count] = await this.findAnfCountMongo(filter);
+    const profilesSyncDto = profiles.map(
+      (profile) => new SyncProfileDto(profile),
+    );
+    return new Pageable(profilesSyncDto, { size, page, count });
   }
 
   async getOne(id: ObjectId) {
@@ -54,7 +72,12 @@ export class ProfileService extends BaseService<Profile> {
     if (!profile) {
       profile = this.create(payload);
     }
-
+    payload.emergencyContacts?.map((emergencyContact) => {
+      if (!emergencyContact._id) {
+        emergencyContact._id = new ObjectId();
+      }
+      return emergencyContact;
+    });
     return await this.save({ ...profile, ...payload });
   }
 

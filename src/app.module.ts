@@ -13,7 +13,7 @@ import { PushNotificationModule } from '@shared/push-notification';
 import { UploadModule } from '@shared/upload';
 import { FileModule } from '@modules/file';
 import { ProfileModule } from '@modules/profile';
-
+import { CardModule } from '@modules/card';
 @Module({
   imports: [
     UserModule,
@@ -28,6 +28,7 @@ import { ProfileModule } from '@modules/profile';
     ProfileModule,
     UploadModule,
     FileModule,
+    CardModule,
   ],
   providers: [AuditSubscriber],
 })

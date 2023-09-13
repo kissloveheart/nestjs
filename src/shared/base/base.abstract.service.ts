@@ -12,15 +12,16 @@ import {
 import { MongoFindManyOptions } from 'typeorm/find-options/mongodb/MongoFindManyOptions';
 import { MongoFindOneOptions } from 'typeorm/find-options/mongodb/MongoFindOneOptions';
 import { AuditEntity } from './audit.entity';
+import { CardType } from '@enum';
 
 export abstract class BaseService<T extends AuditEntity> {
-  private readonly instance: new () => T;
+  private readonly entityName: string;
 
   constructor(
     private readonly repository: MongoRepository<T>,
-    instance: new () => T,
+    name: string,
   ) {
-    this.instance = instance;
+    this.entityName = name;
   }
 
   create(dto: DeepPartial<T>): T {
@@ -62,6 +63,21 @@ export abstract class BaseService<T extends AuditEntity> {
     return await this.repository.findOne(filter);
   }
 
+  async findOneCardWithDeletedTimeNull(
+    profileId: ObjectId,
+    id: ObjectId,
+    cardType: CardType,
+  ) {
+    return await this.findOne({
+      where: {
+        _id: id,
+        deletedTime: null,
+        profile: profileId,
+        cardType: cardType,
+      },
+    });
+  }
+
   async count(query?: ObjectLiteral, options?: CountOptions): Promise<number> {
     return await this.repository.count(query, options);
   }
@@ -79,7 +95,21 @@ export abstract class BaseService<T extends AuditEntity> {
     });
 
     if (!data)
-      throw new NotFoundException(`${this.instance.name} ${id} does not exist`);
+      throw new NotFoundException(`${this.entityName} ${id} does not exist`);
+
+    data.deletedTime = new Date();
+    await this.save(data);
+  }
+
+  async softDeleteCard(profileId: ObjectId, id: ObjectId, cardType: CardType) {
+    const data = await this.findOneCardWithDeletedTimeNull(
+      profileId,
+      id,
+      cardType,
+    );
+
+    if (!data)
+      throw new NotFoundException(`${this.entityName} ${id} does not exist`);
 
     data.deletedTime = new Date();
     await this.save(data);

@@ -27,6 +27,7 @@
       "@interceptor": ["src/common/interceptor"],
       "@constant": ["src/constant"],
       "@middleware": ["src/common/middleware"],
+      "@guard": ["src/modules/auth/guard"],
       "@shared/*": ["src/shared/*"],
       "@log": ["src/common/log"],
       "@decorators": ["src/decorators"],

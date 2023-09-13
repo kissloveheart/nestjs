@@ -94,7 +94,7 @@ export class User extends AuditEntity {
   @Column()
   @IsEnum(RoleName)
   @Transform(({ value }) => enumTransform(value, RoleName))
-  @ApiProperty()
+  @ApiProperty({ enum: RoleName })
   role: RoleName = RoleName.MEMBER;
 
   @Column()

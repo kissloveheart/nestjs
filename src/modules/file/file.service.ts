@@ -17,7 +17,7 @@ export class FileService extends BaseService<File> {
     private readonly log: LogService,
     private readonly uploadService: UploadService,
   ) {
-    super(fileRepository, File);
+    super(fileRepository, File.name);
     this.log.setContext(FileService.name);
   }
 

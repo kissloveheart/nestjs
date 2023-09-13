@@ -1,10 +1,13 @@
 import { CardType } from '@enum';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { AuditEntity } from '@shared/base';
-import { booleanTransform, stringToDate } from '@transform';
-import { Transform } from 'class-transformer';
 import {
-  IsArray,
+  ApiHideProperty,
+  ApiProperty,
+  ApiPropertyOptional,
+} from '@nestjs/swagger';
+import { AuditEntity } from '@shared/base';
+import { booleanTransform, enumTransform, stringToDate } from '@transform';
+import { Exclude, Transform, Type } from 'class-transformer';
+import {
   IsBoolean,
   IsDate,
   IsEnum,
@@ -15,23 +18,32 @@ import { ObjectId } from 'mongodb';
 import { Column, Entity, TableInheritance } from 'typeorm';
 
 @Entity({ name: 'card' })
-@TableInheritance()
-export class Card extends AuditEntity {
+@TableInheritance({
+  column: {
+    name: 'cardType',
+    type: 'string',
+  },
+})
+export abstract class Card extends AuditEntity {
   @Column()
   @IsString()
   @ApiProperty()
   title: string;
 
   @Column()
-  @ApiProperty()
+  @ApiProperty({ enum: CardType })
   @IsEnum(CardType)
+  @Transform(({ value }) => enumTransform(value, CardType))
   cardType: CardType;
 
   @Column()
+  @Type(() => ObjectId)
+  @Exclude()
   profile: ObjectId;
 
   @Column()
   @IsBoolean()
+  @ApiProperty()
   @Transform(({ value }) => booleanTransform(value))
   isFollowedUp: boolean = false;
 
@@ -50,8 +62,7 @@ export class Card extends AuditEntity {
   endTime?: Date;
 
   @Column()
-  @IsArray()
-  @IsOptional()
-  @ApiPropertyOptional()
+  @ApiHideProperty()
+  @Type(() => ObjectId)
   topics?: ObjectId[];
 }

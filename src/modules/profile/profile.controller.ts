@@ -18,17 +18,22 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { ProfileService } from './Profile.service';
-import { ApiResponseObject, ApiResponsePagination, PageRequest } from '@types';
+import {
+  ApiResponseObject,
+  ApiResponsePagination,
+  PageRequest,
+  PageRequestSync,
+} from '@types';
 import { Profile } from './entity/Profile.entity';
 import { Public } from '@decorators';
 import { ParseObjectIdPipe } from '@pipe';
-import { ProfileDto } from './dto/profile.dto';
+import { ProfileDto, SyncProfileDto } from './dto/profile.dto';
 import { ObjectId } from 'mongodb';
-import { BloodType, Pronouns } from '../../types/enum';
+import { BloodType, Pronouns } from '@enum';
 import { Sex } from '@enum';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { imageTypeFilter } from '@utils';
+import { ProfileService } from './profile.service';
 
 @Controller('profile')
 @ApiTags('Profile')
@@ -43,6 +48,15 @@ export class ProfileController {
   @ApiResponsePagination(Profile)
   async getAll(@Query() pageRequest: PageRequest) {
     return await this.profileService.getAll(pageRequest);
+  }
+
+  @Get('sync')
+  @ApiOperation({
+    summary: 'Get all profiles from last sync time',
+  })
+  @ApiResponsePagination(SyncProfileDto)
+  async getAllSync(@Query() pageRequest: PageRequestSync) {
+    return await this.profileService.getAllSync(pageRequest);
   }
 
   @Get(':id')
@@ -131,7 +145,6 @@ export class ProfileController {
           },
           emergencyContacts: [
             {
-              _id: '00000005f2bcdc0145e39bea',
               firstName: 'Update',
               lastName: 'Update',
               phoneNumber: '9433376809',

@@ -1,10 +1,11 @@
 import { ChildEntity, Column } from 'typeorm';
-import { Card } from '../Card.entity';
 import { IsArray, IsOptional, IsString } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { ObjectId } from 'mongodb';
+import { CardType } from '@enum';
+import { Card } from '../card.entity';
 
-@ChildEntity()
+@ChildEntity(CardType.ATTACHMENTS)
 export class Attachment extends Card {
   @Column()
   @IsString()

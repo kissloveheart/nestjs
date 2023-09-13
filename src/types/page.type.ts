@@ -1,7 +1,15 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { enumTransform } from '@transform';
+import { ApiProperty, ApiPropertyOptional, OmitType } from '@nestjs/swagger';
+import { enumTransform, stringToDate } from '@transform';
 import { Transform, Type } from 'class-transformer';
-import { IsArray, IsEnum, IsInt, IsOptional, Max, Min } from 'class-validator';
+import {
+  IsArray,
+  IsDate,
+  IsEnum,
+  IsInt,
+  IsOptional,
+  Max,
+  Min,
+} from 'class-validator';
 
 export enum OrderDirection {
   ASC = 'asc',
@@ -94,4 +102,19 @@ export class PageRequest {
   get skip(): number {
     return (this.page - 1) * this.size;
   }
+}
+
+export class PageRequestSync extends OmitType(PageRequest, [
+  'search',
+] as const) {
+  @ApiProperty({
+    type: 'string',
+    format: 'date-time',
+    example: '2023-09-13T00:30:00Z',
+    description: 'The date in ISO 8601 format.',
+    required: true,
+  })
+  @IsDate()
+  @Transform(({ value }) => stringToDate(value))
+  lastSyncTime: Date;
 }
