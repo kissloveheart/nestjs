@@ -15,7 +15,7 @@ jobs:
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@master
         with:
-          project_id: ${{ secret.GCE_PROJECT }}
+          project_id: ${{ secrets.GCE_PROJECT }}
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           export_default_credentials: true
 
@@ -27,14 +27,14 @@ jobs:
         with:
           context: .
           push: true
-          tags: gcr.io/${{ secret.GCE_PROJECT }}/knk:latest
+          tags: gcr.io/${{ secrets.GCE_PROJECT }}/knk:latest
           build-args: |
             HTTP_PORT=80
 
       - name: Deploy to Cloud Run
         uses: google-github-actions/deploy-cloudrun@main
         with:
-          image: gcr.io/${{ secret.GCE_PROJECT }}/knk:latest
+          image: gcr.io/${{ secrets.GCE_PROJECT }}/knk:latest
           service: 'knk'
           region: 'asia-southeast1-b'
           platform: managed
