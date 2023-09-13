@@ -38,14 +38,14 @@ jobs:
         with:
           context: .
           push: true
-          tags: gcr.io/$PROJECT_ID/knk:latest
+          tags: gcr.io/knnk-159c7/knk:latest
           build-args: |
             HTTP_PORT=80
 
       - name: Deploy to Cloud Run
         uses: google-github-actions/deploy-cloudrun@main
         with:
-          image: gcr.io/$PROJECT_ID/knk:latest
+          image: gcr.io/knnk-159c7/knk:latest
           service: 'knk'
           region: 'asia-southeast1-b'
           platform: managed
