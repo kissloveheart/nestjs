@@ -24,7 +24,6 @@ import {
   PageRequest,
   PageRequestSync,
 } from '@types';
-import { Profile } from './entity/Profile.entity';
 import { Public } from '@decorators';
 import { ParseObjectIdPipe } from '@pipe';
 import { ProfileDto, SyncProfileDto } from './dto/profile.dto';
@@ -34,6 +33,7 @@ import { Sex } from '@enum';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { imageTypeFilter } from '@utils';
 import { ProfileService } from './profile.service';
+import { Profile } from './entity/profile.entity';
 
 @Controller('profile')
 @ApiTags('Profile')

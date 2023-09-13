@@ -8,7 +8,7 @@ import { formatUrlBucket } from '@utils';
 import { ObjectId } from 'mongodb';
 import { FilterOperators, FindManyOptions, MongoRepository } from 'typeorm';
 import { ProfileDto, SyncProfileDto } from './dto/profile.dto';
-import { Profile } from './entity/Profile.entity';
+import { Profile } from './entity/profile.entity';
 
 @Injectable()
 export class ProfileService extends BaseService<Profile> {

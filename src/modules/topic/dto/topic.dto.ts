@@ -1,5 +1,5 @@
 import { PartialType } from '@nestjs/swagger';
-import { Topic } from '../entity/Topic.entity';
+import { Topic } from '../entity/topic.entity';
 
 export class TopicCreateDto extends PartialType(Topic) {}
 

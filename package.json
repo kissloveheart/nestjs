@@ -23,7 +23,6 @@
     "prepare": "test -d node_modules/husky && husky install || echo \"husky is not installed\"",
     "typeorm": "npx typeorm -d dist/src/config/typeorm.config.js",
     "gen:module": "ts-node tools/generate.ts",
-    "postinstall": "sh script/postinstall.sh",
     "migration:create": "cd src/migrations && npx typeorm migration:create",
     "migration:run": "sh script/migration.sh run",
     "migration:revert": "sh script/migration.sh revert",

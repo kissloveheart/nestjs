@@ -1,5 +1,5 @@
 import { PartialType } from '@nestjs/swagger';
-import { File } from '../entity/File.entity';
+import { File } from '../entity/file.entity';
 
 export class FileCreateDto extends PartialType(File) {}
 
