@@ -52,5 +52,6 @@ export class Hospitalization extends Card {
   @IsArray()
   @IsOptional()
   @ApiPropertyOptional()
+  @Exclude()
   attachments?: ObjectId[];
 }
