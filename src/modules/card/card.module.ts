@@ -20,6 +20,7 @@ import { Appointment } from './entity/child-entity/appointment.entity';
 import { ConditionService } from './condition/condition.service';
 import { ConditionController } from './condition/condition.controller';
 import { Condition } from './entity/child-entity/condition.entity';
+import { FileModule } from '@modules/file';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { Condition } from './entity/child-entity/condition.entity';
       Condition,
     ]),
     ProfileModule,
+    FileModule,
   ],
   controllers: [
     CardController,

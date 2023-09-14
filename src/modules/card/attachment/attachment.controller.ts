@@ -12,9 +12,12 @@ import {
   Post,
   Put,
   Query,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiConsumes, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { ParseObjectIdPipe } from '@pipe';
 import {
   ApiResponseObject,
@@ -22,9 +25,14 @@ import {
   PageRequest,
   PageRequestSync,
 } from '@types';
+import { fileTypeFilter } from '@utils';
 import { ObjectId } from 'mongodb';
 import { ClsService } from 'nestjs-cls';
-import { AttachmentDto, SyncAttachmentDto } from '../dto/attachment.dto';
+import {
+  AttachmentDto,
+  SaveAttachmentDto,
+  SyncAttachmentDto,
+} from '../dto/attachment.dto';
 import { Attachment } from '../entity/child-entity/attachment.entity';
 import { AttachmentService } from './attachment.service';
 
@@ -86,7 +94,7 @@ export class AttachmentController {
     type: String,
     example: '650183f53cc4911902a7a490',
   })
-  @ApiResponseObject(Attachment)
+  @ApiResponseObject(AttachmentDto)
   async getOneById(@Param('id', ParseObjectIdPipe) id: ObjectId) {
     const profile = this.cls.get<Profile>(PROFILE_TOKEN);
     return await this.attachmentService.getOne(profile, id);
@@ -102,9 +110,23 @@ export class AttachmentController {
     type: String,
     example: '6500113c1895a06e02ab3d87',
   })
+  @UseInterceptors(
+    FileInterceptor('file', {
+      limits: {
+        fileSize: 5000000,
+      },
+      fileFilter: fileTypeFilter,
+    }),
+  )
+  @ApiConsumes('multipart/form-data')
   @ApiResponseObject(Attachment)
-  async createPractitioner(@Body() payload: AttachmentDto) {
+  async createAttachment(
+    @Body() payload: SaveAttachmentDto,
+    @UploadedFile()
+    file?: Express.Multer.File,
+  ) {
     const profile = this.cls.get<Profile>(PROFILE_TOKEN);
+    payload.file = file;
     return await this.attachmentService.saveAttachment(profile, payload);
   }
 
@@ -122,13 +144,25 @@ export class AttachmentController {
     name: 'id',
     required: true,
     type: String,
-    example: '650183f53cc4911902a7a490',
+    example: '6502849da171fd99e3717366',
   })
+  @UseInterceptors(
+    FileInterceptor('file', {
+      limits: {
+        fileSize: 5000000,
+      },
+      fileFilter: fileTypeFilter,
+    }),
+  )
+  @ApiConsumes('multipart/form-data')
   @ApiResponseObject(Attachment)
-  async updatePractitioner(
+  async updateAttachment(
     @Param('id', ParseObjectIdPipe) id: ObjectId,
-    @Body() payload: AttachmentDto,
+    @Body() payload: SaveAttachmentDto,
+    @UploadedFile()
+    file?: Express.Multer.File,
   ) {
+    payload.file = file;
     const profile = this.cls.get<Profile>(PROFILE_TOKEN);
     return await this.attachmentService.saveAttachment(profile, payload, id);
   }
@@ -154,7 +188,7 @@ export class AttachmentController {
     await this.attachmentService.softDeleteCard(
       profile._id,
       id,
-      CardType.PRACTITIONERS,
+      CardType.ATTACHMENTS,
     );
   }
 }

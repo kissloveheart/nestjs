@@ -1,5 +1,4 @@
 import { ApiProperty, OmitType } from '@nestjs/swagger';
-import { Note } from '../entity/child-entity/note.entity';
 import { Practitioner } from '../entity/child-entity/practitioner.entity';
 
 export class PractitionerDto extends OmitType(Practitioner, [

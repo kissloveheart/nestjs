@@ -7,6 +7,7 @@ import { UploadService } from '@shared/upload';
 import { ObjectId } from 'mongodb';
 import slugify from 'slugify';
 import { MongoRepository } from 'typeorm';
+import { AppConfigService } from '@config';
 import { File } from './entity/file.entity';
 
 @Injectable()
@@ -16,6 +17,7 @@ export class FileService extends BaseService<File> {
     private readonly fileRepository: MongoRepository<File>,
     private readonly log: LogService,
     private readonly uploadService: UploadService,
+    private readonly configService: AppConfigService,
   ) {
     super(fileRepository, File.name);
     this.log.setContext(FileService.name);
@@ -27,7 +29,7 @@ export class FileService extends BaseService<File> {
     profile?: ObjectId,
     isAvatar?: boolean,
   ): Promise<File> {
-    const fileName = `${slugify(
+    const fileName = `${this.configService.google().bucketPrefix}/${slugify(
       file.originalname.replace(/\.[^.]+$/, ''),
     )}_${Date.now()}.${file.originalname.split('.').pop()}`;
 

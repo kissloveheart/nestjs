@@ -83,7 +83,8 @@ export class EmergencyContact {
 
   @Column()
   @ApiProperty()
-  @IsPhoneNumber('US')
+  @IsString()
+  // @IsPhoneNumber('US')
   phoneNumber: string;
 }
 

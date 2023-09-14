@@ -43,9 +43,9 @@ export abstract class Card extends AuditEntity {
 
   @Column()
   @IsBoolean()
-  @ApiProperty()
+  @ApiPropertyOptional({ required: false })
   @Transform(({ value }) => booleanTransform(value))
-  isFollowedUp: boolean = false;
+  isFollowedUp?: boolean = false;
 
   @Column()
   @IsDate()

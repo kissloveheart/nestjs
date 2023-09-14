@@ -72,6 +72,7 @@ export class AppConfigService {
   google() {
     return {
       bucketName: this.configService.get<string>('GOOGLE_BUCKET_NAME'),
+      bucketPrefix: this.configService.get<string>('GOOGLE_BUCKET_PREFIX'),
     };
   }
 
