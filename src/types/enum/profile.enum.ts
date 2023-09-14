@@ -110,3 +110,9 @@ export enum ConditionSeverity {
   MODERATE = 'Moderate',
   SEVERE = 'Severe',
 }
+
+export enum HospitalizationType {
+  EMERGENCY_ONLY = 'Emergency Only',
+  EMERGENCY_ADMITTED = 'Emergency to Admitted',
+  SCHEDULED_ADMITTED = 'Scheduled Admitted',
+}
