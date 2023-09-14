@@ -14,10 +14,19 @@ import { NoteController } from './note/note.controller';
 import { NoteService } from './note/note.service';
 import { PractitionerController } from './practititioner/practitioner.controller';
 import { PractitionerService } from './practititioner/practitioner.service';
+import { AppointmentService } from './appointment/appointment.service';
+import { AppointmentController } from './appointment/appointment.controller';
+import { Appointment } from './entity/child-entity/appointment.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Note, Allergy, Practitioner, Attachment]),
+    TypeOrmModule.forFeature([
+      Note,
+      Allergy,
+      Practitioner,
+      Attachment,
+      Appointment,
+    ]),
     ProfileModule,
   ],
   controllers: [
@@ -26,12 +35,14 @@ import { PractitionerService } from './practititioner/practitioner.service';
     AllergyController,
     PractitionerController,
     AttachmentController,
+    AppointmentController,
   ],
   providers: [
     NoteService,
     AllergyService,
     PractitionerService,
     AttachmentService,
+    AppointmentService,
   ],
 })
 export class CardModule {}
