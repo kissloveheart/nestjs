@@ -37,5 +37,5 @@ jobs:
       - name: SSH into GCE VM and deploy container
         run: |
           gcloud compute ssh knk-poc --zone asia-southeast1-b --command "docker system prune -f -a"
-          gcloud compute instances update-container knk-poc --zone asia-southeast1-b --container-image gcr.io/${{ secrets.GCE_PROJECT }}/knk:${{ github.sha }}
+          gcloud compute instances update-container knk-poc --zone asia-southeast1-b --container-image gcr.io/${{ secrets.GCE_PROJECT }}/knk:${{ github.sha }} --container-env DATABASE_URL=${{ secrets.MONGO_URL }}
     
