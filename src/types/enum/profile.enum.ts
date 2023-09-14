@@ -98,3 +98,15 @@ export enum AllergySeverity {
   MODERATE = 'Moderate',
   SEVERE = 'Severe',
 }
+
+export enum ConditionType {
+  ACUTE = 'Acute (Sudden or onset symptoms)',
+  CHRONIC = 'Chronic (Persistent or ongoing symptoms)',
+  EPISODIC = 'Episodic (Fluctuating symptoms)',
+}
+
+export enum ConditionSeverity {
+  MILD = 'Mild',
+  MODERATE = 'Moderate',
+  SEVERE = 'Severe',
+}

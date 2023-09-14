@@ -75,7 +75,7 @@ export class PractitionerService extends BaseService<Practitioner> {
       order: { [orderBy]: order },
     };
 
-    const [practitioners, count] = await this.findAnfCountMongo(filter);
+    const [practitioners, count] = await this.findAndCountMongo(filter);
     const syncPractitioners = practitioners.map(
       (practitioner) => new SyncPractitionerDto(practitioner),
     );

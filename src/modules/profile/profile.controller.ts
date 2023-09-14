@@ -32,8 +32,8 @@ import { BloodType, Pronouns } from '@enum';
 import { Sex } from '@enum';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { imageTypeFilter } from '@utils';
-import { ProfileService } from './profile.service';
 import { Profile } from './entity/profile.entity';
+import { ProfileService } from './profile.service';
 
 @Controller('profile')
 @ApiTags('Profile')

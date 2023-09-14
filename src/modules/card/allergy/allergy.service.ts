@@ -69,7 +69,7 @@ export class AllergyService extends BaseService<Allergy> {
       order: { [orderBy]: order },
     };
 
-    const [allergies, count] = await this.findAnfCountMongo(filter);
+    const [allergies, count] = await this.findAndCountMongo(filter);
     const syncAllergies = allergies.map(
       (allergy) => new SyncAllergyDto(allergy),
     );

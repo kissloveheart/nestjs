@@ -73,7 +73,7 @@ export class AttachmentService extends BaseService<Attachment> {
       order: { [orderBy]: order },
     };
 
-    const [attachments, count] = await this.findAnfCountMongo(filter);
+    const [attachments, count] = await this.findAndCountMongo(filter);
     const syncAttachment = attachments.map(
       (attachment) => new SyncAttachmentDto(attachment),
     );
