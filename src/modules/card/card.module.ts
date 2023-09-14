@@ -12,11 +12,14 @@ import { Note } from './entity/child-entity/note.entity';
 import { Practitioner } from './entity/child-entity/practitioner.entity';
 import { NoteController } from './note/note.controller';
 import { NoteService } from './note/note.service';
-import { PractitionerController } from './practititioner/practitioner.controller';
-import { PractitionerService } from './practititioner/practitioner.service';
+import { PractitionerController } from './practitioner/practitioner.controller';
+import { PractitionerService } from './practitioner/practitioner.service';
 import { AppointmentService } from './appointment/appointment.service';
 import { AppointmentController } from './appointment/appointment.controller';
 import { Appointment } from './entity/child-entity/appointment.entity';
+import { ConditionService } from './condition/condition.service';
+import { ConditionController } from './condition/condition.controller';
+import { Condition } from './entity/child-entity/condition.entity';
 
 @Module({
   imports: [
@@ -26,6 +29,7 @@ import { Appointment } from './entity/child-entity/appointment.entity';
       Practitioner,
       Attachment,
       Appointment,
+      Condition,
     ]),
     ProfileModule,
   ],
@@ -36,6 +40,7 @@ import { Appointment } from './entity/child-entity/appointment.entity';
     PractitionerController,
     AttachmentController,
     AppointmentController,
+    ConditionController,
   ],
   providers: [
     NoteService,
@@ -43,6 +48,7 @@ import { Appointment } from './entity/child-entity/appointment.entity';
     PractitionerService,
     AttachmentService,
     AppointmentService,
+    ConditionService,
   ],
 })
 export class CardModule {}

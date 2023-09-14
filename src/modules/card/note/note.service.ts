@@ -69,7 +69,7 @@ export class NoteService extends BaseService<Note> {
       order: { [orderBy]: order },
     };
 
-    const [notes, count] = await this.findAnfCountMongo(filter);
+    const [notes, count] = await this.findAndCountMongo(filter);
     const syncNotes = notes.map((note) => new SyncNoteDto(note));
     return new Pageable(syncNotes, { size, page, count });
   }

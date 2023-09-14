@@ -48,7 +48,7 @@ export class ProfileService extends BaseService<Profile> {
       order: { [orderBy]: order },
     };
 
-    const [profiles, count] = await this.findAnfCountMongo(filter);
+    const [profiles, count] = await this.findAndCountMongo(filter);
     const profilesSyncDto = profiles.map(
       (profile) => new SyncProfileDto(profile),
     );

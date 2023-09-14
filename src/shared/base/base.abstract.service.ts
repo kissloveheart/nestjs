@@ -45,7 +45,7 @@ export abstract class BaseService<T extends AuditEntity> {
     return await this.repository.findAndCount(filter);
   }
 
-  async findAnfCountMongo(
+  async findAndCountMongo(
     filter?: FindManyOptions<T> | FilterOperators<T>,
   ): Promise<[T[], number]> {
     const data = await this.find(filter);

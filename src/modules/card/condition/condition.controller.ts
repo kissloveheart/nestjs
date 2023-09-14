@@ -24,23 +24,23 @@ import {
 } from '@types';
 import { ObjectId } from 'mongodb';
 import { ClsService } from 'nestjs-cls';
-import { AppointmentService } from './appointment.service';
-import { Appointment } from '../entity/child-entity/appointment.entity';
-import { AppointmentDto, SyncAppointmentDto } from '../dto/appointment.dto';
+import { ConditionService } from './condition.service';
+import { Condition } from '../entity/child-entity/condition.entity';
+import { ConditionDto, SyncConditionDto } from '../dto/condition.dto';
 
-@Controller('profile/:profileId/card/appointment')
-@ApiTags('Appointment')
+@Controller('profile/:profileId/card/condition')
+@ApiTags('Condition')
 @Public()
 @UseGuards(ProfileGuard)
-export class AppointmentController {
+export class ConditionController {
   constructor(
-    private readonly appointmentService: AppointmentService,
+    private readonly conditionService: ConditionService,
     private readonly cls: ClsService,
   ) {}
 
   @Get()
   @ApiOperation({
-    summary: 'Get all appointments of profile',
+    summary: 'Get all conditions of profile',
   })
   @ApiParam({
     name: 'profileId',
@@ -48,15 +48,15 @@ export class AppointmentController {
     type: String,
     example: '6500113c1895a06e02ab3d87',
   })
-  @ApiResponsePagination(Appointment)
+  @ApiResponsePagination(Condition)
   async getAll(@Query() pageRequest: PageRequest) {
     const profile = this.cls.get<Profile>(PROFILE_TOKEN);
-    return await this.appointmentService.getAll(profile, pageRequest);
+    return await this.conditionService.getAll(profile, pageRequest);
   }
 
   @Get('sync')
   @ApiOperation({
-    summary: 'Get all appointments of profile from last sync time',
+    summary: 'Get all conditions of profile from last sync time',
   })
   @ApiParam({
     name: 'profileId',
@@ -64,15 +64,15 @@ export class AppointmentController {
     type: String,
     example: '6500113c1895a06e02ab3d87',
   })
-  @ApiResponsePagination(SyncAppointmentDto)
+  @ApiResponsePagination(SyncConditionDto)
   async getAllSync(@Query() pageRequest: PageRequestSync) {
     const profile = this.cls.get<Profile>(PROFILE_TOKEN);
-    return await this.appointmentService.getAllSync(profile, pageRequest);
+    return await this.conditionService.getAllSync(profile, pageRequest);
   }
 
   @Get(':id')
   @ApiOperation({
-    summary: 'Get appointment by ID',
+    summary: 'Get condition by ID',
   })
   @ApiParam({
     name: 'profileId',
@@ -84,17 +84,17 @@ export class AppointmentController {
     name: 'id',
     required: true,
     type: String,
-    example: '650183f53cc4911902a7a490',
+    example: '650156e338b8a56d37856604',
   })
-  @ApiResponseObject(Appointment)
+  @ApiResponseObject(Condition)
   async getOneById(@Param('id', ParseObjectIdPipe) id: ObjectId) {
     const profile = this.cls.get<Profile>(PROFILE_TOKEN);
-    return await this.appointmentService.getOne(profile, id);
+    return await this.conditionService.getOne(profile, id);
   }
 
   @Post()
   @ApiOperation({
-    summary: 'Create appointment',
+    summary: 'Create condition',
   })
   @ApiParam({
     name: 'profileId',
@@ -102,15 +102,15 @@ export class AppointmentController {
     type: String,
     example: '6500113c1895a06e02ab3d87',
   })
-  @ApiResponseObject(Appointment)
-  async createAppointment(@Body() payload: AppointmentDto) {
+  @ApiResponseObject(Condition)
+  async createCondition(@Body() payload: ConditionDto) {
     const profile = this.cls.get<Profile>(PROFILE_TOKEN);
-    return await this.appointmentService.saveAppointment(profile, payload);
+    return await this.conditionService.saveCondition(profile, payload);
   }
 
   @Put(':id')
   @ApiOperation({
-    summary: 'Update appointment',
+    summary: 'Update condition',
   })
   @ApiParam({
     name: 'profileId',
@@ -122,20 +122,20 @@ export class AppointmentController {
     name: 'id',
     required: true,
     type: String,
-    example: '650183f53cc4911902a7a490',
+    example: '65016e6f5622844ace07e5a2',
   })
-  @ApiResponseObject(Appointment)
-  async updateAppointment(
+  @ApiResponseObject(Condition)
+  async updateCondition(
     @Param('id', ParseObjectIdPipe) id: ObjectId,
-    @Body() payload: AppointmentDto,
+    @Body() payload: ConditionDto,
   ) {
     const profile = this.cls.get<Profile>(PROFILE_TOKEN);
-    return await this.appointmentService.saveAppointment(profile, payload, id);
+    return await this.conditionService.saveCondition(profile, payload, id);
   }
 
   @Delete(':id')
   @ApiOperation({
-    summary: 'Delete appointment by Id',
+    summary: 'Delete condition by Id',
   })
   @ApiParam({
     name: 'profileId',
@@ -147,14 +147,14 @@ export class AppointmentController {
     name: 'id',
     required: true,
     type: String,
-    example: '650183f53cc4911902a7a490',
+    example: '65016e6f5622844ace07e5a2',
   })
   async softDelete(@Param('id', ParseObjectIdPipe) id: ObjectId) {
     const profile = this.cls.get<Profile>(PROFILE_TOKEN);
-    await this.appointmentService.softDeleteCard(
+    await this.conditionService.softDeleteCard(
       profile._id,
       id,
-      CardType.APPOINTMENTS,
+      CardType.CONDITIONS,
     );
   }
 }

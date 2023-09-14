@@ -74,8 +74,8 @@ export class AppointmentService extends BaseService<Appointment> {
         order: { [orderBy]: order },
       };
 
-    const [appointment, count] = await this.findAnfCountMongo(filter);
-    const syncAppointment = appointment.map(
+    const [appointments, count] = await this.findAndCountMongo(filter);
+    const syncAppointment = appointments.map(
       (appointment) => new SyncAppointmentDto(appointment),
     );
     return new Pageable(syncAppointment, { size, page, count });
