@@ -36,9 +36,5 @@ jobs:
 
       - name: SSH into GCE VM and deploy container
         run: |
-          gcloud compute ssh knk-poc --zone asia-southeast1-b --command "docker \ 
-          pull gcr.io/${{ secrets.GCE_PROJECT }}/knk:${{ github.sha }} \
-          && docker run -d -p 80:4001 --name klt-knk-poc-efnd \
-          -e DATABASE_URL=${{ secrets.MONGO_URL }}
-          gcr.io/${{ secrets.GCE_PROJECT }}/knk:${{ github.sha }}"
+          gcloud compute ssh knk-poc --zone asia-southeast1-b --command "docker pull gcr.io/${{ secrets.GCE_PROJECT }}/knk:${{ github.sha }} && docker run -d -p 80:4001 --name klt-knk-poc-efnd -e DATABASE_URL=${{ secrets.MONGO_URL }} gcr.io/${{ secrets.GCE_PROJECT }}/knk:${{ github.sha }}"
     
