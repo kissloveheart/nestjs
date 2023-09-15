@@ -116,3 +116,9 @@ export enum HospitalizationType {
   EMERGENCY_ADMITTED = 'Emergency to Admitted',
   SCHEDULED_ADMITTED = 'Scheduled Admitted',
 }
+
+export enum QuestionStatus {
+  UNANSWERED = 'Unanswered',
+  ANSWERED = 'Answered',
+  NO_LONGER_RELEVANT = 'No longer relevant',
+}
