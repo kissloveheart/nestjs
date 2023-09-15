@@ -30,9 +30,6 @@ import { Question } from './entity/child-entity/question.entity';
 import { IDCard } from './entity/child-entity/idCard.entity';
 import { IDCardController } from './id-card/idCard.controller';
 import { IDCardService } from './id-card/idCard.service';
-import { QuestionService } from './question/question.service';
-import { QuestionController } from './question/question.controller';
-import { Question } from './entity/child-entity/question.entity';
 
 @Module({
   imports: [
@@ -46,7 +43,6 @@ import { Question } from './entity/child-entity/question.entity';
       Hospitalization,
       Question,
       IDCard,
-      Question,
     ]),
     ProfileModule,
     FileModule,
@@ -62,7 +58,6 @@ import { Question } from './entity/child-entity/question.entity';
     HospitalizationController,
     QuestionController,
     IDCardController,
-    QuestionController,
   ],
   providers: [
     NoteService,
@@ -74,7 +69,6 @@ import { Question } from './entity/child-entity/question.entity';
     HospitalizationService,
     QuestionService,
     IDCardService,
-    QuestionService,
   ],
 })
 export class CardModule {}
