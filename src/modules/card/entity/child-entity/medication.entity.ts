@@ -56,13 +56,6 @@ export class Medication extends Card {
   @Column()
   @IsArray()
   @IsOptional()
-  @ApiHideProperty()
-  @Exclude()
-  file?: ObjectId[];
-
-  @Column()
-  @IsArray()
-  @IsOptional()
   @ApiPropertyOptional()
   @Exclude()
   attachments?: ObjectId[];
