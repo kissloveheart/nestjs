@@ -122,3 +122,10 @@ export enum QuestionStatus {
   ANSWERED = 'Answered',
   NO_LONGER_RELEVANT = 'No longer relevant',
 }
+
+export enum IDCardType {
+  GOV_ID = 'Gov. ID',
+  INSURANCE = 'Insurance',
+  SCHOOL = 'School',
+  WORK = 'Work',
+}
