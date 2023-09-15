@@ -86,6 +86,9 @@ export class ProfileService extends BaseService<Profile> {
     const avatar = await this.fileService.upload(file, null, profile._id, true);
     profile.avatar = avatar.path;
     await this.save(profile);
-    return formatUrlBucket(avatar.path);
+    return {
+      url: formatUrlBucket(avatar.path),
+      fileName: avatar.name,
+    };
   }
 }
