@@ -7,7 +7,6 @@ export class MedicationDto extends OmitType(Medication, [
   'cardType',
   'attachments',
   'prescription',
-  'file',
 ] as const) {}
 
 export class SyncMedicationDto extends OmitType(Medication, [
