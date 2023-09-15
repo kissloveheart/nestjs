@@ -1,4 +1,4 @@
-FROM node:18-alpine as development
+FROM node:18-alpine 
 
 WORKDIR /usr/src/app
 
@@ -10,7 +10,5 @@ RUN yarn install
 COPY . .
 
 RUN yarn build
-
-EXPOSE 80
 
 CMD ["yarn", "start:dev"]
