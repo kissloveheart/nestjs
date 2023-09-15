@@ -19,13 +19,20 @@ export class LoggerConfig {
       exitOnError: false,
     };
 
-    this.options = {
-      ...this.options,
-      transports: [
-        this.transportConsole(configService),
-        this.transportRotateFile(configService),
-      ],
-    };
+    if (configService.isUseLogFile()) {
+      this.options = {
+        ...this.options,
+        transports: [
+          this.transportConsole(configService),
+          this.transportRotateFile(configService),
+        ],
+      };
+    } else {
+      this.options = {
+        ...this.options,
+        transports: this.transportConsole(configService),
+      };
+    }
   }
 
   public transports(): object {
