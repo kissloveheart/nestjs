@@ -24,6 +24,9 @@ import { FileModule } from '@modules/file';
 import { Hospitalization } from './entity/child-entity/hospitalization.entity';
 import { HospitalizationController } from './hospitalization/hospitalization.controller';
 import { HospitalizationService } from './hospitalization/hospitalization.service';
+import { Medication } from './entity/child-entity/medication.entity';
+import { MedicationController } from './medication/medication.controller';
+import { MedicationService } from './medication/medication.service';
 
 @Module({
   imports: [
@@ -35,6 +38,7 @@ import { HospitalizationService } from './hospitalization/hospitalization.servic
       Appointment,
       Condition,
       Hospitalization,
+      Medication,
     ]),
     ProfileModule,
     FileModule,
@@ -48,6 +52,7 @@ import { HospitalizationService } from './hospitalization/hospitalization.servic
     AppointmentController,
     ConditionController,
     HospitalizationController,
+    MedicationController,
   ],
   providers: [
     NoteService,
@@ -57,6 +62,7 @@ import { HospitalizationService } from './hospitalization/hospitalization.servic
     AppointmentService,
     ConditionService,
     HospitalizationService,
+    MedicationService,
   ],
 })
 export class CardModule {}

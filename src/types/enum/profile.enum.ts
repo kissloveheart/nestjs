@@ -116,3 +116,7 @@ export enum HospitalizationType {
   EMERGENCY_ADMITTED = 'Emergency to Admitted',
   SCHEDULED_ADMITTED = 'Scheduled Admitted',
 }
+
+export enum MedicationType {
+  TABLET = 'Tablet',
+}
