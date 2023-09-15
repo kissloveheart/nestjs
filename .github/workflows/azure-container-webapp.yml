@@ -3,6 +3,7 @@ name: Build and deploy a container to an Azure Web App
 
 env:
   AZURE_WEBAPP_NAME: api-be-knk
+  GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCE_SA_KEY }}
 
 on:
   push:
