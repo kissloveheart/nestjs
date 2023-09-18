@@ -28,7 +28,9 @@ async function bootstrap() {
     defaultVersion: '1',
   });
 
-  swaggerConfig(app);
+  if (!configService.isProduction()) {
+    swaggerConfig(app);
+  }
   const port = configService.port();
   await app.listen(port, '0.0.0.0');
   Logger.log(`Server is listening on ${await app.getUrl()}`, 'Bootstrap');

@@ -1,0 +1,55 @@
+
+name: Build and deploy a container to an Azure Web App
+
+env:
+  AZURE_WEBAPP_NAME: api-be-knk
+  GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCE_SA_KEY }}
+
+on:
+  push:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v3
+
+      - name: export service account to file
+        run: |
+          echo "$GOOGLE_APPLICATION_CREDENTIALS" > ./firebase-admin.json
+
+      - name: 'Docker Login'
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+          
+      - name: Build the BE image and push it to ACR
+        run: |
+          docker build . -t sgknk.azurecr.io/api-knk:${{ github.sha }}
+          docker push sgknk.azurecr.io/api-knk:${{ github.sha }} 
+
+  deploy:
+    permissions:
+      contents: none
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: 'Development'
+      
+    steps:
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          images: 'sgknk.azurecr.io/api-knk:${{ github.sha }}'

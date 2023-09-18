@@ -1,0 +1,88 @@
+import { CardType } from '@enum';
+import { LogService } from '@log';
+import { Profile } from '@modules/profile';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { BaseService } from '@shared/base';
+import { PageRequest, PageRequestSync, Pageable } from '@types';
+import { ObjectId } from 'mongodb';
+import { FilterOperators, FindManyOptions, MongoRepository } from 'typeorm';
+
+import { IDCard } from '../entity/child-entity/idCard.entity';
+import { IDCardDto, SyncIDCardDto } from '../dto/idCard.dto';
+
+@Injectable()
+export class IDCardService extends BaseService<IDCard> {
+  constructor(
+    @InjectRepository(IDCard)
+    private readonly idCardRepository: MongoRepository<IDCard>,
+    private readonly log: LogService,
+  ) {
+    super(idCardRepository, IDCard.name);
+    this.log.setContext(IDCardService.name);
+  }
+
+  async saveIDCard(profile: Profile, payload: IDCardDto, id?: ObjectId) {
+    let idCard = id
+      ? await this.findOneCardWithDeletedTimeNull(
+          profile._id,
+          id,
+          CardType.ID_CARD,
+        )
+      : null;
+    if (!idCard) {
+      idCard = this.create(payload);
+      idCard.profile = profile._id;
+      idCard.cardType = CardType.ID_CARD;
+    }
+
+    const data = await this.save({ ...idCard, ...payload });
+    return data;
+  }
+
+  async getAll(profile: Profile, pageRequest: PageRequest) {
+    const { page, size, skip, order, orderBy } = pageRequest;
+    const filter: FindManyOptions<IDCard> = {
+      where: {
+        deletedTime: null,
+        profile: profile._id,
+        cardType: CardType.ID_CARD,
+      },
+      take: size,
+      skip,
+      order: { [orderBy]: order },
+    };
+
+    const [idCards, count] = await this.findAndCount(filter);
+    return new Pageable(idCards, { size, page, count });
+  }
+
+  async getAllSync(profile: Profile, pageRequest: PageRequestSync) {
+    const { page, size, skip, order, orderBy, lastSyncTime } = pageRequest;
+    const filter: FindManyOptions<IDCard> | FilterOperators<IDCard> = {
+      where: {
+        updatedTime: { $gt: lastSyncTime },
+        profile: profile._id,
+        cardType: CardType.ID_CARD,
+      },
+      take: size,
+      skip,
+      order: { [orderBy]: order },
+    };
+
+    const [idCards, count] = await this.findAndCountMongo(filter);
+    const syncIDCards = idCards.map((idCard) => new SyncIDCardDto(idCard));
+    return new Pageable(syncIDCards, { size, page, count });
+  }
+
+  async getOne(profile: Profile, id: ObjectId) {
+    const idCard = await this.findOneCardWithDeletedTimeNull(
+      profile._id,
+      id,
+      CardType.ID_CARD,
+    );
+    if (!idCard)
+      throw new NotFoundException(`IDCard ${id.toString()} does not exist`);
+    return idCard;
+  }
+}

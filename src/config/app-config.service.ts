@@ -18,6 +18,10 @@ export class AppConfigService {
     return this.configService.get<string>('LOG_FILE_LEVEL');
   }
 
+  isUseLogFile() {
+    return this.configService.get<string>('LOG_FILE_USE') === 'true';
+  }
+
   consoleLogLevel() {
     return this.configService.get<string>('LOG_CONSOLE_LEVEL');
   }
