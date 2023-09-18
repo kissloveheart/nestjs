@@ -27,6 +27,18 @@ import { HospitalizationService } from './hospitalization/hospitalization.servic
 import { Medication } from './entity/child-entity/medication.entity';
 import { MedicationController } from './medication/medication.controller';
 import { MedicationService } from './medication/medication.service';
+import { Vaccination } from './entity/child-entity/vaccination.entity';
+import { Question } from './entity/child-entity/question.entity';
+import { Procedure } from './entity/child-entity/procedure.entity';
+import { QuestionController } from './question/question.controller';
+import { ProcedureController } from './procedure/procedure.controller';
+import { VaccinationController } from './vaccination/vaccination.controller';
+import { IDCard } from './entity/child-entity/idCard.entity';
+import { IDCardController } from './id-card/idCard.controller';
+import { IDCardService } from './id-card/idCard.service';
+import { VaccinationService } from './vaccination/vaccination.service';
+import { ProcedureService } from './procedure/procedure.service';
+import { QuestionService } from './question/question.service';
 
 @Module({
   imports: [
@@ -38,7 +50,11 @@ import { MedicationService } from './medication/medication.service';
       Appointment,
       Condition,
       Hospitalization,
+      Vaccination,
+      Question,
+      Procedure,
       Medication,
+      IDCard,
     ]),
     ProfileModule,
     FileModule,
@@ -53,6 +69,10 @@ import { MedicationService } from './medication/medication.service';
     ConditionController,
     HospitalizationController,
     MedicationController,
+    QuestionController,
+    ProcedureController,
+    VaccinationController,
+    IDCardController,
   ],
   providers: [
     NoteService,
@@ -63,6 +83,10 @@ import { MedicationService } from './medication/medication.service';
     ConditionService,
     HospitalizationService,
     MedicationService,
+    IDCardService,
+    VaccinationService,
+    ProcedureService,
+    QuestionService,
   ],
 })
 export class CardModule {}
