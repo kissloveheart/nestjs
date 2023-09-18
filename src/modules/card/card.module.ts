@@ -24,9 +24,21 @@ import { FileModule } from '@modules/file';
 import { Hospitalization } from './entity/child-entity/hospitalization.entity';
 import { HospitalizationController } from './hospitalization/hospitalization.controller';
 import { HospitalizationService } from './hospitalization/hospitalization.service';
-import { VaccinationController } from './vaccination/vaccination.controller';
-import { VaccinationService } from './vaccination/vaccination.service';
+import { Medication } from './entity/child-entity/medication.entity';
+import { MedicationController } from './medication/medication.controller';
+import { MedicationService } from './medication/medication.service';
 import { Vaccination } from './entity/child-entity/vaccination.entity';
+import { Question } from './entity/child-entity/question.entity';
+import { Procedure } from './entity/child-entity/procedure.entity';
+import { QuestionController } from './question/question.controller';
+import { ProcedureController } from './procedure/procedure.controller';
+import { VaccinationController } from './vaccination/vaccination.controller';
+import { IDCard } from './entity/child-entity/idCard.entity';
+import { IDCardController } from './id-card/idCard.controller';
+import { IDCardService } from './id-card/idCard.service';
+import { VaccinationService } from './vaccination/vaccination.service';
+import { ProcedureService } from './procedure/procedure.service';
+import { QuestionService } from './question/question.service';
 
 @Module({
   imports: [
@@ -39,6 +51,10 @@ import { Vaccination } from './entity/child-entity/vaccination.entity';
       Condition,
       Hospitalization,
       Vaccination,
+      Question,
+      Procedure,
+      Medication,
+      IDCard,
     ]),
     ProfileModule,
     FileModule,
@@ -52,7 +68,11 @@ import { Vaccination } from './entity/child-entity/vaccination.entity';
     AppointmentController,
     ConditionController,
     HospitalizationController,
+    MedicationController,
+    QuestionController,
+    ProcedureController,
     VaccinationController,
+    IDCardController,
   ],
   providers: [
     NoteService,
@@ -62,7 +82,11 @@ import { Vaccination } from './entity/child-entity/vaccination.entity';
     AppointmentService,
     ConditionService,
     HospitalizationService,
+    MedicationService,
+    IDCardService,
     VaccinationService,
+    ProcedureService,
+    QuestionService,
   ],
 })
 export class CardModule {}
