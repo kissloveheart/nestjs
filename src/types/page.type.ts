@@ -66,13 +66,13 @@ export class PageRequest {
 
   @ApiPropertyOptional({
     minimum: 1,
-    maximum: 50,
+    maximum: 100,
     default: 10,
   })
   @IsOptional()
   @IsInt()
   @Min(1)
-  @Max(50)
+  @Max(1000)
   @Type(() => Number)
   size?: number = 10;
 

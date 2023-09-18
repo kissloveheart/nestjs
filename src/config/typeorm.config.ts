@@ -19,6 +19,7 @@ export class TypeOrmModuleConfig implements TypeOrmOptionsFactory {
       useUnifiedTopology: true,
       synchronize: false,
       migrationsRun: !this.configService.isProduction(),
+      retryWrites: false,
     };
   }
 }
@@ -33,4 +34,5 @@ export default new DataSource({
   useNewUrlParser: true,
   useUnifiedTopology: true,
   synchronize: false,
+  retryWrites: false,
 });
