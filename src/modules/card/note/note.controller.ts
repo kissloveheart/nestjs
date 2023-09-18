@@ -25,7 +25,7 @@ import {
 } from '@types';
 import { NoteService } from './note.service';
 import { Note } from '../entity/child-entity/note.entity';
-import { NoteDto, SyncNoteDto } from '../dto/note.dto';
+import { SaveNoteDto, SyncNoteDto } from '../dto/note.dto';
 import { CardType } from '@enum';
 
 @Controller('profile/:profileId/card/note')
@@ -103,7 +103,7 @@ export class NoteController {
     example: '6500113c1895a06e02ab3d87',
   })
   @ApiResponseObject(Note)
-  async createNote(@Body() payload: NoteDto) {
+  async createNote(@Body() payload: SaveNoteDto) {
     const profile = this.cls.get<Profile>(PROFILE_TOKEN);
     return await this.noteService.saveNote(profile, payload);
   }
@@ -127,7 +127,7 @@ export class NoteController {
   @ApiResponseObject(Note)
   async updateNote(
     @Param('id', ParseObjectIdPipe) id: ObjectId,
-    @Body() payload: NoteDto,
+    @Body() payload: SaveNoteDto,
   ) {
     const profile = this.cls.get<Profile>(PROFILE_TOKEN);
     return await this.noteService.saveNote(profile, payload, id);

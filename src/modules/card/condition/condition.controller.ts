@@ -26,7 +26,7 @@ import { ObjectId } from 'mongodb';
 import { ClsService } from 'nestjs-cls';
 import { ConditionService } from './condition.service';
 import { Condition } from '../entity/child-entity/condition.entity';
-import { ConditionDto, SyncConditionDto } from '../dto/condition.dto';
+import { SaveConditionDto, SyncConditionDto } from '../dto/condition.dto';
 
 @Controller('profile/:profileId/card/condition')
 @ApiTags('Condition')
@@ -103,7 +103,7 @@ export class ConditionController {
     example: '6500113c1895a06e02ab3d87',
   })
   @ApiResponseObject(Condition)
-  async createCondition(@Body() payload: ConditionDto) {
+  async createCondition(@Body() payload: SaveConditionDto) {
     const profile = this.cls.get<Profile>(PROFILE_TOKEN);
     return await this.conditionService.saveCondition(profile, payload);
   }
@@ -127,7 +127,7 @@ export class ConditionController {
   @ApiResponseObject(Condition)
   async updateCondition(
     @Param('id', ParseObjectIdPipe) id: ObjectId,
-    @Body() payload: ConditionDto,
+    @Body() payload: SaveConditionDto,
   ) {
     const profile = this.cls.get<Profile>(PROFILE_TOKEN);
     return await this.conditionService.saveCondition(profile, payload, id);

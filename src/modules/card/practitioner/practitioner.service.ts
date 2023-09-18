@@ -7,7 +7,10 @@ import { BaseService } from '@shared/base';
 import { PageRequest, PageRequestSync, Pageable } from '@types';
 import { ObjectId } from 'mongodb';
 import { FilterOperators, FindManyOptions, MongoRepository } from 'typeorm';
-import { PractitionerDto, SyncPractitionerDto } from '../dto/practitioner.dto';
+import {
+  SavePractitionerDto,
+  SyncPractitionerDto,
+} from '../dto/practitioner.dto';
 import { Practitioner } from '../entity/child-entity/practitioner.entity';
 
 @Injectable()
@@ -23,7 +26,7 @@ export class PractitionerService extends BaseService<Practitioner> {
 
   async savePractitioner(
     profile: Profile,
-    payload: PractitionerDto,
+    payload: SavePractitionerDto,
     id?: ObjectId,
   ) {
     let practitioner = id

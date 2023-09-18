@@ -8,7 +8,7 @@ import { PageRequest, PageRequestSync, Pageable } from '@types';
 import { ObjectId } from 'mongodb';
 import { FilterOperators, FindManyOptions, MongoRepository } from 'typeorm';
 import { Question } from '../entity/child-entity/question.entity';
-import { QuestionDto, SyncQuestionDto } from '../dto/question.dto';
+import { SaveQuestionDto, SyncQuestionDto } from '../dto/question.dto';
 
 @Injectable()
 export class QuestionService extends BaseService<Question> {
@@ -21,7 +21,11 @@ export class QuestionService extends BaseService<Question> {
     this.log.setContext(QuestionService.name);
   }
 
-  async saveQuestion(profile: Profile, payload: QuestionDto, id?: ObjectId) {
+  async saveQuestion(
+    profile: Profile,
+    payload: SaveQuestionDto,
+    id?: ObjectId,
+  ) {
     let question = id
       ? await this.findOneCardWithDeletedTimeNull(
           profile._id,

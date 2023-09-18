@@ -26,7 +26,7 @@ import {
 } from '@types';
 import { Public } from '@decorators';
 import { ParseObjectIdPipe } from '@pipe';
-import { ProfileDto, SyncProfileDto } from './dto/profile.dto';
+import { SaveProfileDto, SyncProfileDto } from './dto/profile.dto';
 import { ObjectId } from 'mongodb';
 import { BloodType, Pronouns } from '@enum';
 import { Sex } from '@enum';
@@ -124,7 +124,7 @@ export class ProfileController {
     example: '64ffe83747f39d675a067299',
   })
   @ApiBody({
-    type: ProfileDto,
+    type: SaveProfileDto,
     examples: {
       profile: {
         value: {
@@ -157,7 +157,7 @@ export class ProfileController {
   @ApiResponseObject(Profile)
   async update(
     @Param('id', ParseObjectIdPipe) id: ObjectId,
-    @Body() payload: ProfileDto,
+    @Body() payload: SaveProfileDto,
   ) {
     return await this.profileService.saveProfile(payload, id);
   }
@@ -167,7 +167,7 @@ export class ProfileController {
     summary: 'Create profile',
   })
   @ApiBody({
-    type: ProfileDto,
+    type: SaveProfileDto,
     examples: {
       profile: {
         value: {
@@ -198,7 +198,7 @@ export class ProfileController {
     },
   })
   @ApiResponseObject(Profile)
-  async create(@Body() payload: ProfileDto) {
+  async create(@Body() payload: SaveProfileDto) {
     return await this.profileService.saveProfile(payload);
   }
 

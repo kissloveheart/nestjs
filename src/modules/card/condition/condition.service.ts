@@ -8,7 +8,7 @@ import { PageRequest, PageRequestSync, Pageable } from '@types';
 import { ObjectId } from 'mongodb';
 import { FilterOperators, FindManyOptions, MongoRepository } from 'typeorm';
 import { Condition } from '../entity/child-entity/condition.entity';
-import { ConditionDto, SyncConditionDto } from '../dto/condition.dto';
+import { SaveConditionDto, SyncConditionDto } from '../dto/condition.dto';
 
 @Injectable()
 export class ConditionService extends BaseService<Condition> {
@@ -21,7 +21,11 @@ export class ConditionService extends BaseService<Condition> {
     this.log.setContext(ConditionService.name);
   }
 
-  async saveCondition(profile: Profile, payload: ConditionDto, id?: ObjectId) {
+  async saveCondition(
+    profile: Profile,
+    payload: SaveConditionDto,
+    id?: ObjectId,
+  ) {
     let condition = id
       ? await this.findOneCardWithDeletedTimeNull(
           profile._id,

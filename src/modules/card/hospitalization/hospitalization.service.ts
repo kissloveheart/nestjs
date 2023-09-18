@@ -9,7 +9,7 @@ import { ObjectId } from 'mongodb';
 import { FilterOperators, FindManyOptions, MongoRepository } from 'typeorm';
 import { Hospitalization } from '../entity/child-entity/hospitalization.entity';
 import {
-  HospitalizationDto,
+  SaveHospitalizationDto,
   SyncHospitalizationDto,
 } from '../dto/hospitalization.dto';
 
@@ -26,7 +26,7 @@ export class HospitalizationService extends BaseService<Hospitalization> {
 
   async saveHospitalization(
     profile: Profile,
-    payload: HospitalizationDto,
+    payload: SaveHospitalizationDto,
     id?: ObjectId,
   ) {
     let hospitalization = id

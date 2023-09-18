@@ -7,7 +7,7 @@ import { BaseService } from '@shared/base';
 import { PageRequest, PageRequestSync, Pageable } from '@types';
 import { ObjectId } from 'mongodb';
 import { FilterOperators, FindManyOptions, MongoRepository } from 'typeorm';
-import { NoteDto, SyncNoteDto } from '../dto/note.dto';
+import { SaveNoteDto, SyncNoteDto } from '../dto/note.dto';
 import { Note } from '../entity/child-entity/note.entity';
 
 @Injectable()
@@ -21,7 +21,7 @@ export class NoteService extends BaseService<Note> {
     this.log.setContext(NoteService.name);
   }
 
-  async saveNote(profile: Profile, payload: NoteDto, id?: ObjectId) {
+  async saveNote(profile: Profile, payload: SaveNoteDto, id?: ObjectId) {
     let note = id
       ? await this.findOneCardWithDeletedTimeNull(
           profile._id,

@@ -9,7 +9,7 @@ import { ObjectId } from 'mongodb';
 import { FilterOperators, FindManyOptions, MongoRepository } from 'typeorm';
 
 import { Procedure } from '../entity/child-entity/procedure.entity';
-import { ProcedureDto, SyncProcedureDto } from '../dto/procedure.dto';
+import { SaveProcedureDto, SyncProcedureDto } from '../dto/procedure.dto';
 
 @Injectable()
 export class ProcedureService extends BaseService<Procedure> {
@@ -22,7 +22,11 @@ export class ProcedureService extends BaseService<Procedure> {
     this.log.setContext(ProcedureService.name);
   }
 
-  async saveProcedure(profile: Profile, payload: ProcedureDto, id?: ObjectId) {
+  async saveProcedure(
+    profile: Profile,
+    payload: SaveProcedureDto,
+    id?: ObjectId,
+  ) {
     let procedure = id
       ? await this.findOneCardWithDeletedTimeNull(
           profile._id,

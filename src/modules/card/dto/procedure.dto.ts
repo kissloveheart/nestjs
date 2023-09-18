@@ -1,7 +1,8 @@
 import { ApiProperty, OmitType } from '@nestjs/swagger';
 import { Procedure } from '../entity/child-entity/procedure.entity';
 
-export class ProcedureDto extends OmitType(Procedure, [
+export class SaveProcedureDto extends OmitType(Procedure, [
+  '_id',
   'topics',
   'profile',
   'cardType',

@@ -26,7 +26,7 @@ import { ObjectId } from 'mongodb';
 import { ClsService } from 'nestjs-cls';
 import { AppointmentService } from './appointment.service';
 import { Appointment } from '../entity/child-entity/appointment.entity';
-import { AppointmentDto, SyncAppointmentDto } from '../dto/appointment.dto';
+import { SaveAppointmentDto, SyncAppointmentDto } from '../dto/appointment.dto';
 
 @Controller('profile/:profileId/card/appointment')
 @ApiTags('Appointment')
@@ -103,7 +103,7 @@ export class AppointmentController {
     example: '6500113c1895a06e02ab3d87',
   })
   @ApiResponseObject(Appointment)
-  async createAppointment(@Body() payload: AppointmentDto) {
+  async createAppointment(@Body() payload: SaveAppointmentDto) {
     const profile = this.cls.get<Profile>(PROFILE_TOKEN);
     return await this.appointmentService.saveAppointment(profile, payload);
   }
@@ -127,7 +127,7 @@ export class AppointmentController {
   @ApiResponseObject(Appointment)
   async updateAppointment(
     @Param('id', ParseObjectIdPipe) id: ObjectId,
-    @Body() payload: AppointmentDto,
+    @Body() payload: SaveAppointmentDto,
   ) {
     const profile = this.cls.get<Profile>(PROFILE_TOKEN);
     return await this.appointmentService.saveAppointment(profile, payload, id);

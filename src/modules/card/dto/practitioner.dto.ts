@@ -1,7 +1,8 @@
 import { ApiProperty, OmitType } from '@nestjs/swagger';
 import { Practitioner } from '../entity/child-entity/practitioner.entity';
 
-export class PractitionerDto extends OmitType(Practitioner, [
+export class SavePractitionerDto extends OmitType(Practitioner, [
+  '_id',
   'topics',
   'profile',
   'cardType',

@@ -26,7 +26,7 @@ import { ObjectId } from 'mongodb';
 import { ClsService } from 'nestjs-cls';
 import { MedicationService } from './medication.service';
 import { Medication } from '../entity/child-entity/medication.entity';
-import { MedicationDto, SyncMedicationDto } from '../dto/medication.dto';
+import { SaveMedicationDto, SyncMedicationDto } from '../dto/medication.dto';
 
 @Controller('profile/:profileId/card/medication')
 @ApiTags('Medication')
@@ -103,7 +103,7 @@ export class MedicationController {
     example: '6500113c1895a06e02ab3d87',
   })
   @ApiResponseObject(Medication)
-  async createMedication(@Body() payload: MedicationDto) {
+  async createMedication(@Body() payload: SaveMedicationDto) {
     const profile = this.cls.get<Profile>(PROFILE_TOKEN);
     return await this.medicationService.saveMedication(profile, payload);
   }
@@ -124,10 +124,10 @@ export class MedicationController {
     type: String,
     example: '65016e6f5622844ace07e5a2',
   })
-  @ApiResponseObject(MedicationDto)
+  @ApiResponseObject(SaveMedicationDto)
   async updateMedication(
     @Param('id', ParseObjectIdPipe) id: ObjectId,
-    @Body() payload: MedicationDto,
+    @Body() payload: SaveMedicationDto,
   ) {
     const profile = this.cls.get<Profile>(PROFILE_TOKEN);
     return await this.medicationService.saveMedication(profile, payload, id);

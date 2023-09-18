@@ -26,7 +26,7 @@ import { ObjectId } from 'mongodb';
 import { ClsService } from 'nestjs-cls';
 import { ProcedureService } from './procedure.service';
 import { Procedure } from '../entity/child-entity/procedure.entity';
-import { ProcedureDto, SyncProcedureDto } from '../dto/procedure.dto';
+import { SaveProcedureDto, SyncProcedureDto } from '../dto/procedure.dto';
 
 @Controller('profile/:profileId/card/procedure')
 @ApiTags('Procedure')
@@ -103,7 +103,7 @@ export class ProcedureController {
     example: '6500113c1895a06e02ab3d87',
   })
   @ApiResponseObject(Procedure)
-  async createProcedure(@Body() payload: ProcedureDto) {
+  async createProcedure(@Body() payload: SaveProcedureDto) {
     const profile = this.cls.get<Profile>(PROFILE_TOKEN);
     return await this.procedureService.saveProcedure(profile, payload);
   }
@@ -127,7 +127,7 @@ export class ProcedureController {
   @ApiResponseObject(Procedure)
   async updateProcedure(
     @Param('id', ParseObjectIdPipe) id: ObjectId,
-    @Body() payload: ProcedureDto,
+    @Body() payload: SaveProcedureDto,
   ) {
     const profile = this.cls.get<Profile>(PROFILE_TOKEN);
     return await this.procedureService.saveProcedure(profile, payload, id);

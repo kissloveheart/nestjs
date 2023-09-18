@@ -9,7 +9,7 @@ import { ObjectId } from 'mongodb';
 import { FilterOperators, FindManyOptions, MongoRepository } from 'typeorm';
 
 import { IDCard } from '../entity/child-entity/idCard.entity';
-import { IDCardDto, SyncIDCardDto } from '../dto/idCard.dto';
+import { SaveIDCardDto, SyncIDCardDto } from '../dto/id-card.dto';
 
 @Injectable()
 export class IDCardService extends BaseService<IDCard> {
@@ -22,7 +22,7 @@ export class IDCardService extends BaseService<IDCard> {
     this.log.setContext(IDCardService.name);
   }
 
-  async saveIDCard(profile: Profile, payload: IDCardDto, id?: ObjectId) {
+  async saveIDCard(profile: Profile, payload: SaveIDCardDto, id?: ObjectId) {
     let idCard = id
       ? await this.findOneCardWithDeletedTimeNull(
           profile._id,

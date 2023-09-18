@@ -1,7 +1,8 @@
 import { ApiProperty, OmitType } from '@nestjs/swagger';
 import { Condition } from '../entity/child-entity/condition.entity';
 
-export class ConditionDto extends OmitType(Condition, [
+export class SaveConditionDto extends OmitType(Condition, [
+  '_id',
   'topics',
   'profile',
   'cardType',

@@ -1,7 +1,8 @@
 import { ApiProperty, OmitType } from '@nestjs/swagger';
 import { Profile } from '../entity/profile.entity';
 
-export class ProfileDto extends OmitType(Profile, [
+export class SaveProfileDto extends OmitType(Profile, [
+  '_id',
   'acl',
   'avatar',
   'owner',

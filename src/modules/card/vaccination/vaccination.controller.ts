@@ -26,7 +26,7 @@ import { ObjectId } from 'mongodb';
 import { ClsService } from 'nestjs-cls';
 import { VaccinationService } from './vaccination.service';
 import { Vaccination } from '../entity/child-entity/vaccination.entity';
-import { SyncVaccinationDto, VaccinationDto } from '../dto/vaccination.dto';
+import { SyncVaccinationDto, SaveVaccinationDto } from '../dto/vaccination.dto';
 
 @Controller('profile/:profileId/card/vaccination')
 @ApiTags('Vaccination')
@@ -103,7 +103,7 @@ export class VaccinationController {
     example: '6500113c1895a06e02ab3d87',
   })
   @ApiResponseObject(Vaccination)
-  async createVaccination(@Body() payload: VaccinationDto) {
+  async createVaccination(@Body() payload: SaveVaccinationDto) {
     const profile = this.cls.get<Profile>(PROFILE_TOKEN);
     return await this.vaccinationService.saveVaccination(profile, payload);
   }

@@ -27,7 +27,7 @@ import { ClsService } from 'nestjs-cls';
 import { HospitalizationService } from './hospitalization.service';
 import { Hospitalization } from '../entity/child-entity/hospitalization.entity';
 import {
-  HospitalizationDto,
+  SaveHospitalizationDto,
   SyncHospitalizationDto,
 } from '../dto/hospitalization.dto';
 
@@ -106,7 +106,7 @@ export class HospitalizationController {
     example: '6500113c1895a06e02ab3d87',
   })
   @ApiResponseObject(Hospitalization)
-  async createHospitalization(@Body() payload: HospitalizationDto) {
+  async createHospitalization(@Body() payload: SaveHospitalizationDto) {
     const profile = this.cls.get<Profile>(PROFILE_TOKEN);
     return await this.hospitalizationService.saveHospitalization(
       profile,
@@ -133,7 +133,7 @@ export class HospitalizationController {
   @ApiResponseObject(Hospitalization)
   async updateHospitalization(
     @Param('id', ParseObjectIdPipe) id: ObjectId,
-    @Body() payload: HospitalizationDto,
+    @Body() payload: SaveHospitalizationDto,
   ) {
     const profile = this.cls.get<Profile>(PROFILE_TOKEN);
     return await this.hospitalizationService.saveHospitalization(

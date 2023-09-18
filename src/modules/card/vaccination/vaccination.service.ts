@@ -8,7 +8,7 @@ import { PageRequest, PageRequestSync, Pageable } from '@types';
 import { ObjectId } from 'mongodb';
 import { FilterOperators, FindManyOptions, MongoRepository } from 'typeorm';
 import { Vaccination } from '../entity/child-entity/vaccination.entity';
-import { SyncVaccinationDto, VaccinationDto } from '../dto/vaccination.dto';
+import { SyncVaccinationDto, SaveVaccinationDto } from '../dto/vaccination.dto';
 
 @Injectable()
 export class VaccinationService extends BaseService<Vaccination> {
@@ -23,7 +23,7 @@ export class VaccinationService extends BaseService<Vaccination> {
 
   async saveVaccination(
     profile: Profile,
-    payload: VaccinationDto,
+    payload: SaveVaccinationDto,
     id?: ObjectId,
   ) {
     let vaccination = id

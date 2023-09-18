@@ -1,7 +1,8 @@
 import { ApiProperty, OmitType } from '@nestjs/swagger';
 import { IDCard } from '../entity/child-entity/idCard.entity';
 
-export class IDCardDto extends OmitType(IDCard, [
+export class SaveIDCardDto extends OmitType(IDCard, [
+  '_id',
   'topics',
   'profile',
   'cardType',

@@ -1,7 +1,8 @@
 import { ApiProperty, OmitType } from '@nestjs/swagger';
 import { Appointment } from '../entity/child-entity/appointment.entity';
 
-export class AppointmentDto extends OmitType(Appointment, [
+export class SaveAppointmentDto extends OmitType(Appointment, [
+  '_id',
   'topics',
   'profile',
   'cardType',

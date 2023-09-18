@@ -8,7 +8,7 @@ import { PageRequest, PageRequestSync, Pageable } from '@types';
 import { ObjectId } from 'mongodb';
 import { FilterOperators, FindManyOptions, MongoRepository } from 'typeorm';
 import { Appointment } from '../entity/child-entity/appointment.entity';
-import { AppointmentDto, SyncAppointmentDto } from '../dto/appointment.dto';
+import { SaveAppointmentDto, SyncAppointmentDto } from '../dto/appointment.dto';
 
 @Injectable()
 export class AppointmentService extends BaseService<Appointment> {
@@ -23,7 +23,7 @@ export class AppointmentService extends BaseService<Appointment> {
 
   async saveAppointment(
     profile: Profile,
-    payload: AppointmentDto,
+    payload: SaveAppointmentDto,
     id?: ObjectId,
   ) {
     let appointment = id

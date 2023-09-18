@@ -7,7 +7,7 @@ import { PageRequest, PageRequestSync, Pageable } from '@types';
 import { formatUrlBucket } from '@utils';
 import { ObjectId } from 'mongodb';
 import { FilterOperators, FindManyOptions, MongoRepository } from 'typeorm';
-import { ProfileDto, SyncProfileDto } from './dto/profile.dto';
+import { SaveProfileDto, SyncProfileDto } from './dto/profile.dto';
 import { Profile } from './entity/profile.entity';
 
 @Injectable()
@@ -67,7 +67,7 @@ export class ProfileService extends BaseService<Profile> {
     return profile;
   }
 
-  async saveProfile(payload: ProfileDto, id?: ObjectId): Promise<Profile> {
+  async saveProfile(payload: SaveProfileDto, id?: ObjectId): Promise<Profile> {
     let profile = id ? await this.getOne(id) : null;
     if (!profile) {
       profile = this.create(payload);

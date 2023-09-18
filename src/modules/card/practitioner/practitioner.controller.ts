@@ -24,7 +24,10 @@ import {
 } from '@types';
 import { ObjectId } from 'mongodb';
 import { ClsService } from 'nestjs-cls';
-import { PractitionerDto, SyncPractitionerDto } from '../dto/practitioner.dto';
+import {
+  SavePractitionerDto,
+  SyncPractitionerDto,
+} from '../dto/practitioner.dto';
 import { Practitioner } from '../entity/child-entity/practitioner.entity';
 import { PractitionerService } from './practitioner.service';
 
@@ -103,7 +106,7 @@ export class PractitionerController {
     example: '6500113c1895a06e02ab3d87',
   })
   @ApiResponseObject(Practitioner)
-  async createPractitioner(@Body() payload: PractitionerDto) {
+  async createPractitioner(@Body() payload: SavePractitionerDto) {
     const profile = this.cls.get<Profile>(PROFILE_TOKEN);
     return await this.practitionerService.savePractitioner(profile, payload);
   }
@@ -127,7 +130,7 @@ export class PractitionerController {
   @ApiResponseObject(Practitioner)
   async updatePractitioner(
     @Param('id', ParseObjectIdPipe) id: ObjectId,
-    @Body() payload: PractitionerDto,
+    @Body() payload: SavePractitionerDto,
   ) {
     const profile = this.cls.get<Profile>(PROFILE_TOKEN);
     return await this.practitionerService.savePractitioner(

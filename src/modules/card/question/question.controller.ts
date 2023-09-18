@@ -26,7 +26,7 @@ import { ObjectId } from 'mongodb';
 import { ClsService } from 'nestjs-cls';
 import { QuestionService } from './question.service';
 import { Question } from '../entity/child-entity/question.entity';
-import { QuestionDto, SyncQuestionDto } from '../dto/question.dto';
+import { SaveQuestionDto, SyncQuestionDto } from '../dto/question.dto';
 
 @Controller('profile/:profileId/card/question')
 @ApiTags('Question')
@@ -103,7 +103,7 @@ export class QuestionController {
     example: '6500113c1895a06e02ab3d87',
   })
   @ApiResponseObject(Question)
-  async createQuestion(@Body() payload: QuestionDto) {
+  async createQuestion(@Body() payload: SaveQuestionDto) {
     const profile = this.cls.get<Profile>(PROFILE_TOKEN);
     return await this.questionService.saveQuestion(profile, payload);
   }
@@ -127,7 +127,7 @@ export class QuestionController {
   @ApiResponseObject(Question)
   async updateQuestion(
     @Param('id', ParseObjectIdPipe) id: ObjectId,
-    @Body() payload: QuestionDto,
+    @Body() payload: SaveQuestionDto,
   ) {
     const profile = this.cls.get<Profile>(PROFILE_TOKEN);
     return await this.questionService.saveQuestion(profile, payload, id);
