@@ -23,7 +23,7 @@ import { AllergyService } from '../modules/card/allergy/allergy.service';
 
 export class SeedProfile1694490729073 implements MigrationInterface {
   public async up(queryRunner: MongoQueryRunner): Promise<void> {
-    if (process.env.SUFFIX_ENV_NAME !== 'local') return;
+    // if (process.env.SUFFIX_ENV_NAME !== 'local') return;
     const profilesToInsert = [];
     for (let i = 1; i <= 1000; i++) {
       const profile = plainToClass(Profile, {
