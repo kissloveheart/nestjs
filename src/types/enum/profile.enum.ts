@@ -122,3 +122,16 @@ export enum ProcedureType {
   OUTPATIENT = 'Outpatient',
   OTHER = 'Other',
 }
+
+export enum IDCardType {
+  GOV_ID = 'Gov. ID',
+  INSURANCE = 'Insurance',
+  SCHOOL = 'School',
+  WORK = 'Work',
+}
+
+export enum QuestionStatus {
+  UNANSWERED = 'Unanswered',
+  ANSWERED = 'Answered',
+  NO_LONGER_RELEVANT = 'No longer relevant',
+}
