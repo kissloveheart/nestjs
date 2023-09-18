@@ -7,17 +7,28 @@ import {
   HealthDetail,
   Profile,
 } from '@modules/profile';
-import { BloodType, Pronouns, Sex } from '@enum';
+import {
+  AllergySeverity,
+  AllergyType,
+  BloodType,
+  CardType,
+  Pronouns,
+  Sex,
+} from '@enum';
 import { faker } from '@faker-js/faker';
-import { plainToInstance } from 'class-transformer';
+import { plainToClass, plainToInstance } from 'class-transformer';
+import { Note } from '../modules/card/entity/child-entity/note.entity';
+import { Allergy } from '../modules/card/entity/child-entity/allergy.entity';
+import { AllergyService } from '../modules/card/allergy/allergy.service';
 
 export class SeedProfile1694490729073 implements MigrationInterface {
   public async up(queryRunner: MongoQueryRunner): Promise<void> {
+    if (process.env.SUFFIX_ENV_NAME !== 'local') return;
     const profilesToInsert = [];
     for (let i = 1; i <= 1000; i++) {
-      const profile = plainToInstance(Profile, {
+      const profile = plainToClass(Profile, {
         owner: new ObjectId(i), // Replace with the owner's ObjectId
-        basicInformation: plainToInstance(BasicInformation, {
+        basicInformation: plainToClass(BasicInformation, {
           firstName: faker.person.firstName(),
           lastName: faker.person.lastName(),
           birthDate: faker.date.birthdate(),
@@ -25,14 +36,14 @@ export class SeedProfile1694490729073 implements MigrationInterface {
           sex: Sex.MALE,
           SSN: '123-45-6789',
         }),
-        healthDetail: plainToInstance(HealthDetail, {
+        healthDetail: plainToClass(HealthDetail, {
           height: '175 cm',
           weight: '70 kg',
           bloodType: BloodType.A_POSITIVE,
           isOrganDonor: true,
         }),
         emergencyContacts: [
-          plainToInstance(EmergencyContact, {
+          plainToClass(EmergencyContact, {
             _id: new ObjectId(i),
             firstName: faker.person.firstName(),
             lastName: faker.person.lastName(),
@@ -46,6 +57,42 @@ export class SeedProfile1694490729073 implements MigrationInterface {
     await queryRunner.insertMany('profile', profilesToInsert, {
       forceServerObjectId: true,
     });
+
+    const profiles = queryRunner.cursor('profile', {});
+    while (await profiles.hasNext()) {
+      const profile = await profiles.next();
+      const notes = [];
+      for (let j = 1; j <= 100; j++) {
+        const note = plainToClass(Note, {
+          title: faker.animal.bird(),
+          cardType: CardType.NOTES,
+          startTime: new Date(),
+          description: faker.person.jobDescriptor(),
+        });
+        note.profile = new ObjectId(profile._id.toString());
+        notes.push(note);
+      }
+      await queryRunner.insertMany('card', notes, {
+        forceServerObjectId: true,
+      });
+
+      const allergies = [];
+      for (let j = 1; j <= 100; j++) {
+        const allergy = plainToClass(Allergy, {
+          title: faker.animal.bird(),
+          cardType: CardType.ALLERGIES,
+          startTime: new Date(),
+          description: faker.person.jobDescriptor(),
+          type: AllergyType.FOOD,
+          allergySeverity: AllergySeverity.MILD,
+        });
+        allergy.profile = new ObjectId(profile._id.toString());
+        allergies.push(allergy);
+      }
+      await queryRunner.insertMany('card', allergies, {
+        forceServerObjectId: true,
+      });
+    }
   }
 
   public async down(queryRunner: MongoQueryRunner): Promise<void> {}
