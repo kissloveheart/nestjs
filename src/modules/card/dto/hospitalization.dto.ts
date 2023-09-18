@@ -2,7 +2,6 @@ import { ApiProperty, OmitType } from '@nestjs/swagger';
 import { Hospitalization } from '../entity/child-entity/hospitalization.entity';
 
 export class SaveHospitalizationDto extends OmitType(Hospitalization, [
-  '_id',
   'topics',
   'profile',
   'cardType',
