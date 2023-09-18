@@ -10,10 +10,14 @@ export class CreateIndexEmailUser1691563105312 implements MigrationInterface {
     );
     await queryRunner.createCollectionIndex('profile', {
       createdTime: 1,
+    });
+    await queryRunner.createCollectionIndex('profile', {
       updatedTime: 1,
     });
     await queryRunner.createCollectionIndex('card', {
       createdTime: 1,
+    });
+    await queryRunner.createCollectionIndex('card', {
       updatedTime: 1,
     });
   }
