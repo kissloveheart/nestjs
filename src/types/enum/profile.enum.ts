@@ -117,10 +117,10 @@ export enum HospitalizationType {
   SCHEDULED_ADMITTED = 'Scheduled Admitted',
 }
 
-export enum ProcedureType {
-  INPATIENT = 'Inpatient',
-  OUTPATIENT = 'Outpatient',
-  OTHER = 'Other',
+export enum QuestionStatus {
+  UNANSWERED = 'Unanswered',
+  ANSWERED = 'Answered',
+  NO_LONGER_RELEVANT = 'No longer relevant',
 }
 
 export enum IDCardType {
@@ -130,8 +130,12 @@ export enum IDCardType {
   WORK = 'Work',
 }
 
-export enum QuestionStatus {
-  UNANSWERED = 'Unanswered',
-  ANSWERED = 'Answered',
-  NO_LONGER_RELEVANT = 'No longer relevant',
+export enum ProcedureType {
+  INPATIENT = 'Inpatient',
+  OUTPATIENT = 'Outpatient',
+  OTHER = 'Other',
+}
+
+export enum MedicationType {
+  TABLET = 'Tablet',
 }
