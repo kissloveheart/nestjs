@@ -117,15 +117,8 @@ export enum HospitalizationType {
   SCHEDULED_ADMITTED = 'Scheduled Admitted',
 }
 
-export enum QuestionStatus {
-  UNANSWERED = 'Unanswered',
-  ANSWERED = 'Answered',
-  NO_LONGER_RELEVANT = 'No longer relevant',
-}
-
-export enum IDCardType {
-  GOV_ID = 'Gov. ID',
-  INSURANCE = 'Insurance',
-  SCHOOL = 'School',
-  WORK = 'Work',
+export enum ProcedureType {
+  INPATIENT = 'Inpatient',
+  OUTPATIENT = 'Outpatient',
+  OTHER = 'Other',
 }
