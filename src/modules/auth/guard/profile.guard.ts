@@ -22,7 +22,9 @@ export class ProfileGuard implements CanActivate {
     const profileId = request.params.profileId;
     if (!ObjectId.isValid(profileId))
       throw new BadRequestException(`Invalid profile id ${profileId}`);
-    const profile = await this.profileService.getOne(new ObjectId(profileId));
+    const profile = await this.profileService.findProfileWithOutDeletedTimeNull(
+      new ObjectId(profileId),
+    );
     this.cls.set(PROFILE_TOKEN, profile);
     return true;
   }
