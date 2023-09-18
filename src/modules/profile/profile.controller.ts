@@ -71,7 +71,7 @@ export class ProfileController {
   })
   @ApiResponseObject(Profile)
   async getOneById(@Param('id', ParseObjectIdPipe) id: ObjectId) {
-    return await this.profileService.getOne(id);
+    return await this.profileService.findProfileWithOutDeletedTimeNull(id);
   }
 
   @Put(':id/avatar')

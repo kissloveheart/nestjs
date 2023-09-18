@@ -1,6 +1,10 @@
 import { LogService } from '@log';
 import { FileService } from '@modules/file';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from '@shared/base';
 import { PageRequest, PageRequestSync, Pageable } from '@types';
@@ -55,7 +59,7 @@ export class ProfileService extends BaseService<Profile> {
     return new Pageable(profilesSyncDto, { size, page, count });
   }
 
-  async getOne(id: ObjectId) {
+  async findProfileWithOutDeletedTimeNull(id: ObjectId) {
     const profile = await this.findOne({
       where: {
         _id: id,
@@ -68,8 +72,21 @@ export class ProfileService extends BaseService<Profile> {
   }
 
   async saveProfile(payload: SaveProfileDto, id?: ObjectId): Promise<Profile> {
-    let profile = id ? await this.getOne(id) : null;
-    if (!profile) {
+    let profile: Profile;
+    if (id) {
+      profile = await this.findProfileWithOutDeletedTimeNull(id);
+      delete payload._id;
+    } else {
+      if (payload?._id) {
+        const existProfile = await this.findOne({
+          where: {
+            _id: payload._id,
+            deletedTime: null,
+          },
+        });
+        if (existProfile)
+          throw new ConflictException(`Profile ${payload._id} already exist`);
+      }
       profile = this.create(payload);
     }
     payload.emergencyContacts?.map((emergencyContact) => {
@@ -82,7 +99,7 @@ export class ProfileService extends BaseService<Profile> {
   }
 
   async changeAvatar(id: ObjectId, file: Express.Multer.File) {
-    const profile = await this.getOne(id);
+    const profile = await this.findProfileWithOutDeletedTimeNull(id);
     const avatar = await this.fileService.upload(file, null, profile._id, true);
     profile.avatar = avatar.path;
     await this.save(profile);
