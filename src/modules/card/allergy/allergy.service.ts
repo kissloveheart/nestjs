@@ -1,7 +1,12 @@
 import { CardType } from '@enum';
 import { LogService } from '@log';
 import { Profile } from '@modules/profile';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from '@shared/base';
 import { PageRequest, PageRequestSync, Pageable } from '@types';
@@ -22,14 +27,28 @@ export class AllergyService extends BaseService<Allergy> {
   }
 
   async saveAllergy(profile: Profile, payload: AllergyDto, id?: ObjectId) {
-    let allergy = id
-      ? await this.findOneCardWithDeletedTimeNull(
+    let allergy: Allergy;
+    if (id) {
+      allergy = await this.findOneCardWithDeletedTimeNull(
+        profile._id,
+        id,
+        CardType.ALLERGIES,
+      );
+      delete payload._id;
+      if (!allergy)
+        throw new BadRequestException(
+          `Allergy ${id.toString()} does not exist`,
+        );
+    } else {
+      if (payload?._id) {
+        const existAllergy = await this.findOneCardWithDeletedTimeNull(
           profile._id,
-          id,
+          payload._id,
           CardType.ALLERGIES,
-        )
-      : null;
-    if (!allergy) {
+        );
+        if (existAllergy)
+          throw new ConflictException(`Allergy ${payload._id} already exist`);
+      }
       allergy = this.create(payload);
       allergy.profile = profile._id;
       allergy.cardType = CardType.ALLERGIES;

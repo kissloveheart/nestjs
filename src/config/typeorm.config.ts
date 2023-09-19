@@ -18,7 +18,7 @@ export class TypeOrmModuleConfig implements TypeOrmOptionsFactory {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       synchronize: false,
-      migrationsRun: !this.configService.isProduction(),
+      migrationsRun: true,
       retryWrites: false,
     };
   }

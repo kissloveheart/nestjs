@@ -23,11 +23,11 @@ import { AllergyService } from '../modules/card/allergy/allergy.service';
 
 export class SeedProfile1694490729073 implements MigrationInterface {
   public async up(queryRunner: MongoQueryRunner): Promise<void> {
-    if (process.env.SUFFIX_ENV_NAME !== 'local') return;
+    // if (process.env.SUFFIX_ENV_NAME !== 'local') return;
     const profilesToInsert = [];
-    for (let i = 1; i <= 1000; i++) {
+    for (let i = 1; i <= 100; i++) {
       const profile = plainToClass(Profile, {
-        owner: new ObjectId(i), // Replace with the owner's ObjectId
+        owner: new ObjectId(), // Replace with the owner's ObjectId
         basicInformation: plainToClass(BasicInformation, {
           firstName: faker.person.firstName(),
           lastName: faker.person.lastName(),
@@ -44,7 +44,7 @@ export class SeedProfile1694490729073 implements MigrationInterface {
         }),
         emergencyContacts: [
           plainToClass(EmergencyContact, {
-            _id: new ObjectId(i),
+            _id: new ObjectId(),
             firstName: faker.person.firstName(),
             lastName: faker.person.lastName(),
             phoneNumber: faker.phone.number(),
@@ -54,11 +54,11 @@ export class SeedProfile1694490729073 implements MigrationInterface {
       });
       profilesToInsert.push(profile);
     }
-    await queryRunner.insertMany('profile', profilesToInsert, {
-      forceServerObjectId: true,
-    });
+    await queryRunner.insertMany('profile', profilesToInsert);
 
-    const profiles = queryRunner.cursor('profile', {});
+    const profiles = queryRunner.cursor('profile', {}).project({
+      _id: 1,
+    });
     while (await profiles.hasNext()) {
       const profile = await profiles.next();
       const notes = [];
@@ -69,12 +69,10 @@ export class SeedProfile1694490729073 implements MigrationInterface {
           startTime: new Date(),
           description: faker.person.jobDescriptor(),
         });
-        note.profile = new ObjectId(profile._id.toString());
+        note.profile = profile._id;
         notes.push(note);
       }
-      await queryRunner.insertMany('card', notes, {
-        forceServerObjectId: true,
-      });
+      await queryRunner.insertMany('card', notes);
 
       const allergies = [];
       for (let j = 1; j <= 100; j++) {
@@ -86,12 +84,10 @@ export class SeedProfile1694490729073 implements MigrationInterface {
           type: AllergyType.FOOD,
           allergySeverity: AllergySeverity.MILD,
         });
-        allergy.profile = new ObjectId(profile._id.toString());
+        allergy.profile = profile._id;
         allergies.push(allergy);
       }
-      await queryRunner.insertMany('card', allergies, {
-        forceServerObjectId: true,
-      });
+      await queryRunner.insertMany('card', allergies);
     }
   }
 

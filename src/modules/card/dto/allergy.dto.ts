@@ -2,7 +2,6 @@ import { ApiProperty, OmitType } from '@nestjs/swagger';
 import { Allergy } from '../entity/child-entity/allergy.entity';
 
 export class AllergyDto extends OmitType(Allergy, [
-  '_id',
   'topics',
   'profile',
   'cardType',

@@ -32,7 +32,8 @@
       "@log": ["src/common/log"],
       "@decorators": ["src/decorators"],
       "@transform": ["src/common/transform"],
-      "@utils": ["src/utils"]
+      "@utils": ["src/utils"],
+      "@test": ["test"]
     }
 	}
 }

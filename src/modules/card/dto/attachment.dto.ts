@@ -21,7 +21,6 @@ export class AttachmentDto extends OmitType(Attachment, [
 }
 
 export class SaveAttachmentDto extends OmitType(Attachment, [
-  '_id',
   'topics',
   'profile',
   'cardType',

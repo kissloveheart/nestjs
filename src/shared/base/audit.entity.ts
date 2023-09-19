@@ -1,4 +1,8 @@
-import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
+import {
+  ApiHideProperty,
+  ApiProperty,
+  ApiPropertyOptional,
+} from '@nestjs/swagger';
 import { Exclude, Transform, Type } from 'class-transformer';
 import { ObjectId } from 'mongodb';
 import {
@@ -8,12 +12,16 @@ import {
   UpdateDateColumn,
   VersionColumn,
 } from 'typeorm';
+import { objectIdTransform } from '@transform';
+import { IsOptional } from 'class-validator';
 
 export abstract class AuditEntity {
   @ObjectIdColumn()
-  @Transform(({ value }) => value.toString(), { toPlainOnly: true })
+  @IsOptional()
   @Type(() => ObjectId)
-  @ApiProperty({ type: String })
+  @Transform(({ value }) => value.toString(), { toPlainOnly: true })
+  @Transform(({ value }) => objectIdTransform(value), { toClassOnly: true })
+  @ApiPropertyOptional({ type: String })
   _id: ObjectId;
 
   @ApiHideProperty()
