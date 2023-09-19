@@ -23,7 +23,7 @@ describe('AllergyController', () => {
   let allergyController: AllergyController;
   let allergyService: AllergyService;
   let clsService: ClsService;
-  beforeAll(async () => {
+  beforeEach(async () => {
     const dataSource: DataSource = await initialTypeOrm();
     const module: TestingModule = await Test.createTestingModule({
       imports: [TypeOrmModule.forRoot(), TypeOrmModule.forFeature([Allergy])],
@@ -38,9 +38,6 @@ describe('AllergyController', () => {
     allergyController = module.get<AllergyController>(AllergyController);
     allergyService = module.get<AllergyService>(AllergyService);
     clsService = module.get<ClsService>(ClsService);
-  });
-
-  beforeEach(async () => {
     jest.resetAllMocks();
   });
 
