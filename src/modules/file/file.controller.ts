@@ -9,10 +9,12 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { imageTypeFilter } from '@utils';
 import { FileService } from './file.service';
+import { Public } from '@decorators';
 
 @Controller('File')
 @ApiTags('File')
 @ApiBearerAuth()
+@Public()
 export class FileController {
   constructor(private readonly fileService: FileService) {}
 
@@ -43,6 +45,6 @@ export class FileController {
     image: Express.Multer.File,
     @Req() request,
   ) {
-    await this.fileService.upload(image);
+    return await this.fileService.upload(image);
   }
 }

@@ -89,4 +89,20 @@ export class AppConfigService {
   port() {
     return this.configService.get<number>('PORT');
   }
+
+  azure() {
+    return {
+      storage: {
+        connectionString: this.configService.get<string>(
+          'AZURE_STORAGE_CONNECTION_STRING',
+        ),
+        containerName: this.configService.get<string>(
+          'AZURE_STORAGE_CONTAINER_NAME',
+        ),
+        sasExpiredDay: this.configService.get<number>(
+          'AZURE_STORAGE_SAS_EXPIRED_DAY',
+        ),
+      },
+    };
+  }
 }
