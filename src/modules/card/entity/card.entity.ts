@@ -38,7 +38,8 @@ export abstract class Card extends AuditEntity {
 
   @Column()
   @Type(() => ObjectId)
-  @Exclude()
+  @ApiProperty({ type: String })
+  @Transform(({ value }) => value.toString(), { toPlainOnly: true })
   profile: ObjectId;
 
   @Column()

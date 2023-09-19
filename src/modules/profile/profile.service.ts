@@ -101,10 +101,10 @@ export class ProfileService extends BaseService<Profile> {
   async changeAvatar(id: ObjectId, file: Express.Multer.File) {
     const profile = await this.findProfileWithOutDeletedTimeNull(id);
     const avatar = await this.fileService.upload(file, null, profile._id, true);
-    profile.avatar = avatar.path;
+    profile.avatar = avatar.name;
     await this.save(profile);
     return {
-      url: formatUrlBucket(avatar.path),
+      url: avatar.url,
       fileName: avatar.name,
     };
   }

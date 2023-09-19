@@ -1,10 +1,9 @@
+import { FileStatus } from '@enum';
 import { ApiProperty } from '@nestjs/swagger';
 import { AuditEntity } from '@shared/base';
+import { Exclude } from 'class-transformer';
 import { ObjectId } from 'mongodb';
 import { Column, Entity } from 'typeorm';
-import { FileStatus } from '@enum';
-import { formatUrlBucket } from '@utils';
-import { Exclude, Transform } from 'class-transformer';
 
 @Entity({ name: 'file' })
 export class File extends AuditEntity {
@@ -13,13 +12,18 @@ export class File extends AuditEntity {
   name: string;
 
   @Column()
-  @ApiProperty()
-  originalName: string;
+  @Exclude()
+  container: string;
 
   @Column()
   @ApiProperty()
-  @Transform(({ value }) => formatUrlBucket(value), { toPlainOnly: true })
-  path: string;
+  originalName: string;
+
+  @ApiProperty({
+    description: 'SAS url of Azure Blob Storage will be expired on next 7 days',
+  })
+  @Column()
+  url?: string;
 
   @Column()
   @ApiProperty()

@@ -248,7 +248,6 @@ export class Profile extends AuditEntity {
   @Column()
   @IsOptional()
   @ApiPropertyOptional()
-  @Transform(({ value }) => formatUrlBucket(value))
   avatar?: string;
 
   @Column()

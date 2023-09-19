@@ -1,14 +1,14 @@
 import { FileStatus } from '@enum';
 import { LogService } from '@log';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from '@shared/base';
 import { UploadService } from '@shared/upload';
 import { ObjectId } from 'mongodb';
 import slugify from 'slugify';
 import { MongoRepository } from 'typeorm';
-import { AppConfigService } from '@config';
 import { File } from './entity/file.entity';
+import { AppConfigService } from '@config';
 
 @Injectable()
 export class FileService extends BaseService<File> {
@@ -27,14 +27,19 @@ export class FileService extends BaseService<File> {
     file: Express.Multer.File,
     user?: ObjectId,
     profile?: ObjectId,
-    isAvatar?: boolean,
+    isAvatar = false,
   ): Promise<File> {
-    const fileName = `${this.configService.google().bucketPrefix}/${slugify(
+    const fileName = `${slugify(
       file.originalname.replace(/\.[^.]+$/, ''),
     )}_${Date.now()}.${file.originalname.split('.').pop()}`;
 
+    const containerName = isAvatar
+      ? this.configService.azure().storage.containerName + '-public'
+      : this.configService.azure().storage.containerName;
+
     let newFile = this.create({
       name: fileName,
+      container: containerName,
       originalName: file.originalname,
       mineType: file.mimetype,
       size: file.size,
@@ -47,16 +52,18 @@ export class FileService extends BaseService<File> {
     newFile = await this.save(newFile);
 
     try {
-      const path = await this.uploadService.uploadFile(
+      const url = await this.uploadService.upload(
         file.buffer,
         fileName,
+        containerName,
         newFile._id.toString(),
+        isAvatar,
       );
 
       newFile = {
         ...newFile,
         status: FileStatus.UPLOADED,
-        path,
+        url,
       };
 
       return await this.save(newFile);
@@ -65,5 +72,21 @@ export class FileService extends BaseService<File> {
       await this.save(newFile);
       throw err;
     }
+  }
+
+  async softDelete(id: ObjectId) {
+    const file = await this.findOne({
+      where: {
+        _id: id,
+        deletedTime: null,
+      },
+    });
+
+    if (!file)
+      throw new NotFoundException(`File ${id.toString()} does not exist`);
+
+    await this.uploadService.delete(file.container, file.name);
+    file.deletedTime = new Date();
+    await this.save(file);
   }
 }
