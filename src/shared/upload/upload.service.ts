@@ -29,9 +29,8 @@ export class UploadService implements OnModuleInit {
   }
 
   async getContainerClientPublic(containerName: string) {
-    const containerClient = this.blobServiceClient.getContainerClient(
-      `${containerName}-public`,
-    );
+    const containerClient =
+      this.blobServiceClient.getContainerClient(containerName);
     await containerClient.createIfNotExists({
       access: 'blob',
     });
