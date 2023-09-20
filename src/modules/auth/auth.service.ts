@@ -1,18 +1,28 @@
 import { AppConfigService } from '@config';
-import { LoginType } from '@enum';
+import { LoginType, ThirdPartyLogin } from '@enum';
 import { LogService } from '@log';
 import { User, UserService } from '@modules/user';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { EmailService } from '@shared/email';
 import { TwilioService } from '@shared/twilio';
+import { OAuth2Client } from 'google-auth-library';
+import verifyAppleTokenClient from 'verify-apple-id-token';
+import { ThirdPartyLoginPayload } from '@types';
 
 @Injectable()
 export class AuthService {
+  private googleClient = new OAuth2Client();
+
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
-    private readonly appConfigService: AppConfigService,
+    private readonly configService: AppConfigService,
     private readonly twilioService: TwilioService,
     private readonly emailService: EmailService,
     private readonly log: LogService,
@@ -22,7 +32,7 @@ export class AuthService {
     return this.jwtService.sign(
       { emailAddress },
       {
-        secret: this.appConfigService.jwt().secret,
+        secret: this.configService.jwt().secret,
       },
     );
   }
@@ -71,5 +81,64 @@ export class AuthService {
       user.phoneNumber,
       `Your Kith & Kin login code ${code}`,
     );
+  }
+
+  async verifyThirdPartyToken(
+    thirdParty: ThirdPartyLogin,
+    token: string,
+  ): Promise<ThirdPartyLoginPayload> {
+    switch (thirdParty) {
+      case ThirdPartyLogin.APPLE:
+        return this.verifyAppleToken(token);
+      case ThirdPartyLogin.GOOGLE:
+        return this.verifyGoogleToken(token);
+      default:
+        throw new BadRequestException(`Unknown third party ${thirdParty}`);
+    }
+  }
+
+  async verifyGoogleToken(token: string) {
+    try {
+      const ticket = await this.googleClient.verifyIdToken({
+        idToken: token,
+        audience: this.configService.google().clientId,
+      });
+      const payload = ticket.getPayload();
+      return {
+        email: payload.email,
+      };
+    } catch (err) {
+      this.log.error(err);
+      throw new UnauthorizedException('Invalid token');
+    }
+  }
+
+  async handleThirdPartyLogin(email: string) {
+    const user = await this.userService.findByEmail(email);
+    if (!user) {
+      // TODO need check flow google login to handle next action
+      throw new InternalServerErrorException(
+        "Method register haven't implemented yet",
+      );
+    }
+    const accessToken = await this.createAccessToken(email);
+    return {
+      accessToken,
+    };
+  }
+
+  async verifyAppleToken(token: string) {
+    try {
+      const jwtClaims = await verifyAppleTokenClient({
+        idToken: token,
+        clientId: this.configService.apple().clientId,
+      });
+      return {
+        email: jwtClaims.email,
+      };
+    } catch (err) {
+      this.log.error(err);
+      throw new UnauthorizedException('Invalid token');
+    }
   }
 }

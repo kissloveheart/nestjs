@@ -47,6 +47,7 @@
     "class-validator": "^0.14.0",
     "dotenv-cli": "^7.2.1",
     "firebase-admin": "^11.10.1",
+    "google-auth-library": "^9.0.0",
     "helmet": "^7.0.0",
     "joi": "^17.9.2",
     "moment": "^2.29.4",
@@ -64,6 +65,7 @@
     "twilio": "^4.15.0",
     "typeorm": "^0.3.17",
     "uuidv4": "^6.2.13",
+    "verify-apple-id-token": "^3.0.1",
     "winston": "^3.10.0",
     "winston-daily-rotate-file": "^4.7.1"
   },

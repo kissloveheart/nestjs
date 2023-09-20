@@ -13,6 +13,8 @@ import { OTPAuthGuard } from './guard/otp.guard';
 import { RoleGuard } from './guard/role.guard';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { OTPStrategy } from './strategies/otp.strategy';
+import { ThirdPartyStrategy } from './strategies/third-party.strategy';
+import { ThirdPartyAuthGuard } from './guard/third-party.guard';
 
 @Module({
   imports: [
@@ -28,6 +30,8 @@ import { OTPStrategy } from './strategies/otp.strategy';
     OTPAuthGuard,
     JwtStrategy,
     OTPStrategy,
+    ThirdPartyStrategy,
+    ThirdPartyAuthGuard,
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,

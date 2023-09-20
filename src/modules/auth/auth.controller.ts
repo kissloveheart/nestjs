@@ -1,5 +1,5 @@
 import { Public } from '@decorators';
-import { LoginType } from '@enum';
+import { LoginType, ThirdPartyLogin } from '@enum';
 import { User } from '@modules/user';
 import {
   Controller,
@@ -22,6 +22,7 @@ import { ApiResponseObject } from '@types';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/auth.dto';
 import { OTPAuthGuard } from './guard/otp.guard';
+import { ThirdPartyAuthGuard } from './guard/third-party.guard';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -37,6 +38,18 @@ export class AuthController {
   @UseGuards(OTPAuthGuard)
   async login(@Req() request) {
     return this.authService.login(request.user);
+  }
+
+  @Public()
+  @Post('third-party')
+  @ApiOperation({
+    summary: 'Verify third party token',
+  })
+  @ApiQuery({ name: 'type', required: true, enum: ThirdPartyLogin })
+  @ApiQuery({ name: 'token', required: true, type: String })
+  @UseGuards(ThirdPartyAuthGuard)
+  async thirdPartyLogin(@Req() request) {
+    return await this.authService.handleThirdPartyLogin(request.email);
   }
 
   @ApiResponseObject(User)
