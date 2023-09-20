@@ -59,9 +59,6 @@ describe('AllergyService', () => {
   describe('saveAllergy', () => {
     it('should create and save a new allergy when id is not provided', async () => {
       const countBefore = await allergyRepository.count();
-      allergyService.findOneCardWithDeletedTimeNull = jest
-        .fn()
-        .mockResolvedValue(null);
 
       const result = await allergyService.saveAllergy(
         mockProfile,
@@ -75,9 +72,6 @@ describe('AllergyService', () => {
     });
 
     it('should throw ConflictException when id is not provided but Allergy already exist', async () => {
-      allergyService.findOneCardWithDeletedTimeNull = jest
-        .fn()
-        .mockResolvedValue(true);
       try {
         await allergyService.saveAllergy(mockProfile, allergyPayload);
       } catch (error) {
@@ -103,11 +97,6 @@ describe('AllergyService', () => {
 
     it('should throw BadRequestException when id is provided but Allergy does not exist', async () => {
       const mockAllergyId = new ObjectId();
-
-      allergyService.findOneCardWithDeletedTimeNull = jest
-        .fn()
-        .mockResolvedValue(null);
-
       try {
         await allergyService.saveAllergy(
           mockProfile,
@@ -182,11 +171,6 @@ describe('AllergyService', () => {
 
     it('should throw NotFoundException if appointment does not exist', async () => {
       const mockAllergyId = new ObjectId();
-
-      jest
-        .spyOn(allergyService, 'findOneCardWithDeletedTimeNull')
-        .mockResolvedValue(null);
-
       try {
         await allergyService.getOne(mockProfile, mockAllergyId);
       } catch (error) {
