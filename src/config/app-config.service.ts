@@ -77,6 +77,7 @@ export class AppConfigService {
     return {
       bucketName: this.configService.get<string>('GOOGLE_BUCKET_NAME'),
       bucketPrefix: this.configService.get<string>('GOOGLE_BUCKET_PREFIX'),
+      clientId: this.configService.get<string>('GOOGLE_CLIENT_ID').split(COMMA),
     };
   }
 
@@ -103,6 +104,12 @@ export class AppConfigService {
           'AZURE_STORAGE_SAS_EXPIRED_DAY',
         ),
       },
+    };
+  }
+
+  apple() {
+    return {
+      clientId: this.configService.get<string>('APPLE_CLIENT_ID').split(COMMA),
     };
   }
 }

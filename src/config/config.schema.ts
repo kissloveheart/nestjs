@@ -23,4 +23,6 @@ export const configValidationSchema = Joi.object({
   AZURE_STORAGE_CONNECTION_STRING: Joi.string().required(),
   AZURE_STORAGE_CONTAINER_NAME: Joi.string().required(),
   AZURE_STORAGE_SAS_EXPIRED_DAY: Joi.number().required(),
+  GOOGLE_CLIENT_ID: Joi.string().required(),
+  APPLE_CLIENT_ID: Joi.string().required(),
 });
