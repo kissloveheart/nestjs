@@ -1,7 +1,12 @@
 import { CardType } from '@enum';
 import { LogService } from '@log';
 import { Profile } from '@modules/profile';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from '@shared/base';
 import { PageRequest, PageRequestSync, Pageable } from '@types';
@@ -27,14 +32,28 @@ export class ProcedureService extends BaseService<Procedure> {
     payload: SaveProcedureDto,
     id?: ObjectId,
   ) {
-    let procedure = id
-      ? await this.findOneCardWithDeletedTimeNull(
+    let procedure: Procedure;
+    if (id) {
+      procedure = await this.findOneCardWithDeletedTimeNull(
+        profile._id,
+        id,
+        CardType.PROCEDURES,
+      );
+      delete payload._id;
+      if (!procedure)
+        throw new BadRequestException(
+          `Procedure ${id.toString()} does not exist`,
+        );
+    } else {
+      if (payload?._id) {
+        const existNote = await this.findOneCardWithDeletedTimeNull(
           profile._id,
-          id,
-          CardType.PROCEDURES,
-        )
-      : null;
-    if (!procedure) {
+          payload._id,
+          CardType.NOTES,
+        );
+        if (existNote)
+          throw new ConflictException(`Procedure ${payload._id} already exist`);
+      }
       procedure = this.create(payload);
       procedure.profile = profile._id;
       procedure.cardType = CardType.PROCEDURES;

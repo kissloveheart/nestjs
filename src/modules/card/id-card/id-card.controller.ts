@@ -125,7 +125,7 @@ export class IDCardController {
     example: '65016e6f5622844ace07e5a2',
   })
   @ApiResponseObject(IDCard)
-  async updateHospitalization(
+  async updateIDCard(
     @Param('id', ParseObjectIdPipe) id: ObjectId,
     @Body() payload: SaveIDCardDto,
   ) {

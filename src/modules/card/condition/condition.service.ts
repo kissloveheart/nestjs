@@ -1,7 +1,12 @@
 import { CardType } from '@enum';
 import { LogService } from '@log';
 import { Profile } from '@modules/profile';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from '@shared/base';
 import { PageRequest, PageRequestSync, Pageable } from '@types';
@@ -26,14 +31,28 @@ export class ConditionService extends BaseService<Condition> {
     payload: SaveConditionDto,
     id?: ObjectId,
   ) {
-    let condition = id
-      ? await this.findOneCardWithDeletedTimeNull(
+    let condition: Condition;
+    if (id) {
+      condition = await this.findOneCardWithDeletedTimeNull(
+        profile._id,
+        id,
+        CardType.CONDITIONS,
+      );
+      delete payload._id;
+      if (!condition)
+        throw new BadRequestException(
+          `Condition ${id.toString()} does not exist`,
+        );
+    } else {
+      if (payload?._id) {
+        const existCondition = await this.findOneCardWithDeletedTimeNull(
           profile._id,
-          id,
+          payload._id,
           CardType.CONDITIONS,
-        )
-      : null;
-    if (!condition) {
+        );
+        if (existCondition)
+          throw new ConflictException(`Condition ${payload._id} already exist`);
+      }
       condition = this.create(payload);
       condition.profile = profile._id;
       condition.cardType = CardType.CONDITIONS;

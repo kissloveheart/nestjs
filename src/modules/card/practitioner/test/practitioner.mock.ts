@@ -1,6 +1,6 @@
-import { AllergySeverity, AllergyType, CardType } from '@enum';
+import { CardType } from '@enum';
 import { faker } from '@faker-js/faker';
-import { AllergyDto } from '@modules/card/dto/allergy.dto';
+import { SavePractitionerDto } from '@modules/card/dto/practitioner.dto';
 import { BasicInformation, Profile } from '@modules/profile';
 import { OrderDirection, PageRequest, PageRequestSync } from '@types';
 import { ObjectId } from 'mongodb';
@@ -26,26 +26,24 @@ mockPageRequestSync.order = OrderDirection.ASC;
 mockPageRequestSync.orderBy = 'createdAt';
 mockPageRequestSync.lastSyncTime = new Date(new Date().getTime() - 10 * 60000);
 
-export const allergyPayload = new AllergyDto();
-allergyPayload._id = new ObjectId('6500113c1895a06e02ab3d87');
-allergyPayload.isFollowedUp = true;
-allergyPayload.title = faker.animal.bird();
-allergyPayload.type = AllergyType.FOOD;
+export const practitionerPayload = new SavePractitionerDto();
+practitionerPayload._id = new ObjectId('6500113c1895a06e02ab3d87');
+practitionerPayload.isFollowedUp = true;
+practitionerPayload.title = faker.animal.bird();
+practitionerPayload.phone = faker.phone.number();
 
-export const createAllergyPayload = new AllergyDto();
-createAllergyPayload._id = new ObjectId('6500113c1895a06e02ab3d88');
-createAllergyPayload.isFollowedUp = true;
-createAllergyPayload.title = faker.animal.bird();
-createAllergyPayload.type = AllergyType.FOOD;
+export const createPractitionerPayload = new SavePractitionerDto();
+createPractitionerPayload._id = new ObjectId('6500113c1895a06e02ab3d88');
+createPractitionerPayload.isFollowedUp = true;
+createPractitionerPayload.phone = faker.phone.number();
+createPractitionerPayload.title = faker.animal.bird();
 
-export const allergyData = [
+export const practitionerData = [
   {
     _id: new ObjectId('6500113c1895a06e02ab3d87'),
-    type: AllergyType.FOOD,
-    allergySeverity: AllergySeverity.MILD,
-    isNoLongerExperiencing: false,
     title: faker.animal.bird(),
-    cardType: CardType.ALLERGIES,
+    cardType: CardType.PRACTITIONERS,
+    phone: faker.phone.number(),
     profile: new ObjectId('650156e338b8a56d37856611'),
     isFollowedUp: false,
     startTime: new Date(),
@@ -53,11 +51,10 @@ export const allergyData = [
   },
   {
     _id: new ObjectId('650156e338b8a56d37856604'),
-    type: AllergyType.OTHER,
-    allergySeverity: AllergySeverity.MODERATE,
     isNoLongerExperiencing: false,
     title: faker.animal.bird(),
-    cardType: CardType.ALLERGIES,
+    cardType: CardType.PRACTITIONERS,
+    phone: faker.phone.number(),
     profile: new ObjectId('650156e338b8a56d37856611'),
     isFollowedUp: false,
     startTime: new Date(),
@@ -65,11 +62,10 @@ export const allergyData = [
   },
   {
     _id: new ObjectId('650156e338b8a56d37856605'),
-    type: AllergyType.OTHER,
-    allergySeverity: AllergySeverity.MILD,
     isNoLongerExperiencing: false,
     title: faker.animal.bird(),
-    cardType: CardType.ALLERGIES,
+    cardType: CardType.PRACTITIONERS,
+    phone: faker.phone.number(),
     profile: new ObjectId('650156e338b8a56d37856611'),
     isFollowedUp: false,
     updatedTime: new Date(),
