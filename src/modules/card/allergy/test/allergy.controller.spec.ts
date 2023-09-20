@@ -14,7 +14,7 @@ import { DataSource } from 'typeorm';
 import { Allergy } from '@modules/card/entity/child-entity/allergy.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AllergyDto, SyncAllergyDto } from '@modules/card/dto/allergy.dto';
-import { Pageable } from '../../../../types/page.type';
+import { Pageable } from '@types';
 import { ObjectId } from 'mongodb';
 import { closeMongoConnection, initialTypeOrm } from '@test';
 import { CardType } from '@enum';

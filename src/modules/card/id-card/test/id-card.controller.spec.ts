@@ -5,7 +5,7 @@ import { PROFILE_TOKEN } from '@constant';
 import { NotFoundException } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Pageable } from '../../../../types/page.type';
+import { Pageable } from '@types';
 import { ObjectId } from 'mongodb';
 import { closeMongoConnection, initialTypeOrm } from '@test';
 import { CardType } from '@enum';
