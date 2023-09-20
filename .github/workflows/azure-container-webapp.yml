@@ -1,4 +1,3 @@
-
 name: Build and deploy a container to an Azure Web App
 
 env:
@@ -7,12 +6,12 @@ env:
 
 on:
   push:
-    branches: 
+    branches:
       - test111
   pull_request:
     types: [closed]
     branches:
-        - test111
+      - test111
 
 permissions:
   contents: read
@@ -35,11 +34,11 @@ jobs:
           login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
-          
+
       - name: Build the BE image and push it to ACR
         run: |
           docker build . -t sgknk.azurecr.io/api-knk:${{ github.sha }}
-          docker push sgknk.azurecr.io/api-knk:${{ github.sha }} 
+          docker push sgknk.azurecr.io/api-knk:${{ github.sha }}
 
   deploy:
     permissions:
@@ -48,7 +47,7 @@ jobs:
     needs: build
     environment:
       name: 'Development'
-      
+
     steps:
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
