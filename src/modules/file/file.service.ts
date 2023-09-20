@@ -74,7 +74,7 @@ export class FileService extends BaseService<File> {
     }
   }
 
-  async softDelete(id: ObjectId) {
+  async softDeleteFile(id: ObjectId) {
     const file = await this.findOne({
       where: {
         _id: id,

@@ -204,7 +204,7 @@ export class ProfileController {
 
   @Delete(':id')
   @ApiOperation({
-    summary: 'Delete profile',
+    summary: 'Soft Delete profile',
   })
   @ApiParam({
     name: 'id',
@@ -212,7 +212,10 @@ export class ProfileController {
     type: String,
     example: '64ffe83747f39d675a067299',
   })
-  async softDelete(@Param('id', ParseObjectIdPipe) id: ObjectId) {
-    await this.profileService.softDelete(id);
+  async softDelete(
+    @Req() request,
+    @Param('id', ParseObjectIdPipe) id: ObjectId,
+  ) {
+    await this.profileService.softDeleteProfile(request.user, id);
   }
 }

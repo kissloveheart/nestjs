@@ -1,15 +1,9 @@
 import { AppConfigModule, AppConfigService, swaggerConfig } from '@config';
-import {
-  ClassSerializerInterceptor,
-  Logger,
-  ValidationPipe,
-  VersioningType,
-} from '@nestjs/common';
-import { NestFactory, Reflector } from '@nestjs/core';
-import helmet from 'helmet';
+import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
+import { useContainer } from 'class-validator';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { AppModule } from './app.module';
-import { useContainer } from 'class-validator';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

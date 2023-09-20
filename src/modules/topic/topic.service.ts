@@ -13,6 +13,7 @@ import { Profile } from '@modules/profile';
 import { SyncTopicDto, TopicCreateDto } from './dto/topic.dto';
 import { ObjectId } from 'mongodb';
 import { PageRequest, PageRequestSync, Pageable } from '@types';
+import { SYSTEM } from '@constant';
 
 @Injectable()
 export class TopicService extends BaseService<Topic> {
@@ -90,5 +91,22 @@ export class TopicService extends BaseService<Topic> {
     if (!topic)
       throw new NotFoundException(`Topic ${id.toString()} does not exist`);
     return topic;
+  }
+
+  async softDeleteTopicOfProfile(userId: ObjectId, profileId: ObjectId) {
+    this.topicRepository.updateMany(
+      {
+        profile: profileId,
+        deletedTime: null,
+      },
+      {
+        $set: {
+          deletedTime: new Date(),
+          updatedTime: new Date(),
+          updatedBy: userId ? userId : SYSTEM,
+        },
+        $inc: { __v: 1 },
+      },
+    );
   }
 }

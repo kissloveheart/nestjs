@@ -1,4 +1,5 @@
 import { LogService } from '@log';
+import { CardService } from '@modules/card';
 import { FileService } from '@modules/file';
 import {
   ConflictException,
@@ -8,11 +9,12 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from '@shared/base';
 import { PageRequest, PageRequestSync, Pageable } from '@types';
-import { formatUrlBucket } from '@utils';
 import { ObjectId } from 'mongodb';
 import { FilterOperators, FindManyOptions, MongoRepository } from 'typeorm';
 import { SaveProfileDto, SyncProfileDto } from './dto/profile.dto';
 import { Profile } from './entity/profile.entity';
+import { User } from '@modules/user';
+import { TopicService } from '@modules/topic';
 
 @Injectable()
 export class ProfileService extends BaseService<Profile> {
@@ -20,6 +22,8 @@ export class ProfileService extends BaseService<Profile> {
     @InjectRepository(Profile)
     private readonly profileRepository: MongoRepository<Profile>,
     private readonly fileService: FileService,
+    private readonly cardService: CardService,
+    private readonly topicService: TopicService,
     private readonly log: LogService,
   ) {
     super(profileRepository, Profile.name);
@@ -107,5 +111,13 @@ export class ProfileService extends BaseService<Profile> {
       url: avatar.url,
       fileName: avatar.name,
     };
+  }
+
+  async softDeleteProfile(user: User, id: ObjectId) {
+    await this.softDelete(id);
+    await Promise.all([
+      this.cardService.softDeleteCardOfProfile(user?._id, id),
+      this.topicService.softDeleteTopicOfProfile(user?._id, id),
+    ]);
   }
 }

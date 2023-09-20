@@ -1,5 +1,5 @@
 import { ProfileModule } from '@modules/profile';
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AllergyController } from './allergy/allergy.controller';
 import { AllergyService } from './allergy/allergy.service';
@@ -39,10 +39,13 @@ import { ProcedureService } from './procedure/procedure.service';
 import { QuestionService } from './question/question.service';
 import { IDCardController } from './id-card/id-card.controller';
 import { IDCardService } from './id-card/id-card.service';
+import { Card } from './entity/card.entity';
+import { CardService } from './card.service';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
+      Card,
       Note,
       Allergy,
       Practitioner,
@@ -56,8 +59,8 @@ import { IDCardService } from './id-card/id-card.service';
       Medication,
       IDCard,
     ]),
-    ProfileModule,
     FileModule,
+    forwardRef(() => ProfileModule),
   ],
   controllers: [
     CardController,
@@ -75,6 +78,7 @@ import { IDCardService } from './id-card/id-card.service';
     IDCardController,
   ],
   providers: [
+    CardService,
     NoteService,
     AllergyService,
     PractitionerService,
@@ -88,5 +92,6 @@ import { IDCardService } from './id-card/id-card.service';
     ProcedureService,
     QuestionService,
   ],
+  exports: [CardService],
 })
 export class CardModule {}

@@ -86,7 +86,7 @@ export abstract class BaseService<T extends AuditEntity> {
     return await this.repository.delete(id);
   }
 
-  async softDelete(id: ObjectId) {
+  async softDelete(id: ObjectId): Promise<T> {
     const data = await this.findOne({
       where: {
         _id: id,
@@ -98,7 +98,7 @@ export abstract class BaseService<T extends AuditEntity> {
       throw new NotFoundException(`${this.entityName} ${id} does not exist`);
 
     data.deletedTime = new Date();
-    await this.save(data);
+    return await this.save(data);
   }
 
   async softDeleteCard(profileId: ObjectId, id: ObjectId, cardType: CardType) {

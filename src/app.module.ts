@@ -14,7 +14,7 @@ import { UploadModule } from '@shared/upload';
 import { FileModule } from '@modules/file';
 import { ProfileModule } from '@modules/profile';
 import { CardModule } from '@modules/card';
-import { TopicModule } from '@modules/topic/topic.module';
+import { TopicModule } from '@modules/topic';
 @Module({
   imports: [
     UserModule,
