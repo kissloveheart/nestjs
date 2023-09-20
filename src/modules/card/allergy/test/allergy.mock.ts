@@ -27,10 +27,16 @@ mockPageRequestSync.orderBy = 'createdAt';
 mockPageRequestSync.lastSyncTime = new Date(new Date().getTime() - 10 * 60000);
 
 export const allergyPayload = new AllergyDto();
-allergyPayload._id = new ObjectId('6500113c1895a06e02ab3d88');
+allergyPayload._id = new ObjectId('6500113c1895a06e02ab3d87');
 allergyPayload.isFollowedUp = true;
 allergyPayload.title = faker.animal.bird();
 allergyPayload.type = AllergyType.FOOD;
+
+export const createAllergyPayload = new AllergyDto();
+createAllergyPayload._id = new ObjectId('6500113c1895a06e02ab3d88');
+createAllergyPayload.isFollowedUp = true;
+createAllergyPayload.title = faker.animal.bird();
+createAllergyPayload.type = AllergyType.FOOD;
 
 export const allergyData = [
   {

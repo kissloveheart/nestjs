@@ -10,6 +10,7 @@ import {
   mockProfile,
   allergyPayload,
   allergyData,
+  createAllergyPayload,
 } from './allergy.mock';
 import { Pageable } from '@types';
 import { SyncAllergyDto } from '@modules/card/dto/allergy.dto';
@@ -62,12 +63,12 @@ describe('AllergyService', () => {
 
       const result = await allergyService.saveAllergy(
         mockProfile,
-        allergyPayload,
+        createAllergyPayload,
       );
       const countAfter = await allergyRepository.count();
-      expect(result._id).toEqual(allergyPayload._id);
-      expect(result.isFollowedUp).toBe(allergyPayload.isFollowedUp);
-      expect(result.type).toBe(allergyPayload.type);
+      expect(result._id).toEqual(createAllergyPayload._id);
+      expect(result.isFollowedUp).toBe(createAllergyPayload.isFollowedUp);
+      expect(result.type).toBe(createAllergyPayload.type);
       expect(countAfter).toBe(countBefore + 1);
     });
 
