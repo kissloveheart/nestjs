@@ -1,7 +1,12 @@
 import { CardType } from '@enum';
 import { LogService } from '@log';
 import { Profile } from '@modules/profile';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from '@shared/base';
 import { PageRequest, PageRequestSync, Pageable } from '@types';
@@ -23,14 +28,26 @@ export class IDCardService extends BaseService<IDCard> {
   }
 
   async saveIDCard(profile: Profile, payload: SaveIDCardDto, id?: ObjectId) {
-    let idCard = id
-      ? await this.findOneCardWithDeletedTimeNull(
+    let idCard: IDCard;
+    if (id) {
+      idCard = await this.findOneCardWithDeletedTimeNull(
+        profile._id,
+        id,
+        CardType.ID_CARD,
+      );
+      delete payload._id;
+      if (!idCard)
+        throw new BadRequestException(`IDCard ${id.toString()} does not exist`);
+    } else {
+      if (payload?._id) {
+        const existIDCard = await this.findOneCardWithDeletedTimeNull(
           profile._id,
-          id,
+          payload._id,
           CardType.ID_CARD,
-        )
-      : null;
-    if (!idCard) {
+        );
+        if (existIDCard)
+          throw new ConflictException(`IDCard ${payload._id} already exist`);
+      }
       idCard = this.create(payload);
       idCard.profile = profile._id;
       idCard.cardType = CardType.ID_CARD;

@@ -2,11 +2,15 @@ import { CardType } from '@enum';
 import { LogService } from '@log';
 import { FileService } from '@modules/file';
 import { Profile } from '@modules/profile';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from '@shared/base';
 import { PageRequest, PageRequestSync, Pageable } from '@types';
-import { plainToClass } from 'class-transformer';
 import { ObjectId } from 'mongodb';
 import { FilterOperators, FindManyOptions, MongoRepository } from 'typeorm';
 import {
@@ -33,27 +37,33 @@ export class AttachmentService extends BaseService<Attachment> {
     payload: SaveAttachmentDto,
     id?: ObjectId,
   ) {
-    let attachment = id
-      ? await this.findOneCardWithDeletedTimeNull(
+    let attachment: Attachment;
+    if (id) {
+      attachment = await this.findOneCardWithDeletedTimeNull(
+        profile._id,
+        id,
+        CardType.ATTACHMENTS,
+      );
+      delete payload._id;
+      if (!attachment)
+        throw new BadRequestException(
+          `Attachment ${id.toString()} does not exist`,
+        );
+    } else {
+      if (payload?._id) {
+        const existAttachment = await this.findOneCardWithDeletedTimeNull(
           profile._id,
-          id,
+          payload._id,
           CardType.ATTACHMENTS,
-        )
-      : null;
-    if (!attachment) {
+        );
+        if (existAttachment)
+          throw new ConflictException(
+            `Attachment ${payload._id} already exist`,
+          );
+      }
       attachment = this.create(payload);
       attachment.profile = profile._id;
       attachment.cardType = CardType.ATTACHMENTS;
-    }
-
-    if (payload.file) {
-      const file = await this.fileService.upload(
-        payload.file,
-        null,
-        profile._id,
-      );
-      attachment.files = [...attachment.files, file._id];
-      delete payload.file;
     }
 
     const data = await this.save({ ...attachment, ...payload });
@@ -119,10 +129,9 @@ export class AttachmentService extends BaseService<Attachment> {
         $unset: ['profile', 'user'],
       },
     ]);
-
     if (!(await cursor.hasNext()))
       throw new NotFoundException(`Attachment ${id.toString()} does not exist`);
 
-    return plainToClass(AttachmentDto, await cursor.next());
+    return new AttachmentDto(await cursor.next());
   }
 }

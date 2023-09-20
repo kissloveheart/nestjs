@@ -127,7 +127,7 @@ export class VaccinationController {
   @ApiResponseObject(Vaccination)
   async updateVaccination(
     @Param('id', ParseObjectIdPipe) id: ObjectId,
-    @Body() payload: Vaccination,
+    @Body() payload: SaveVaccinationDto,
   ) {
     const profile = this.cls.get<Profile>(PROFILE_TOKEN);
     return await this.vaccinationService.saveVaccination(profile, payload, id);

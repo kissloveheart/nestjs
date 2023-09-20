@@ -1,7 +1,12 @@
 import { CardType } from '@enum';
 import { LogService } from '@log';
 import { Profile } from '@modules/profile';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from '@shared/base';
 import { PageRequest, PageRequestSync, Pageable } from '@types';
@@ -26,14 +31,30 @@ export class VaccinationService extends BaseService<Vaccination> {
     payload: SaveVaccinationDto,
     id?: ObjectId,
   ) {
-    let vaccination = id
-      ? await this.findOneCardWithDeletedTimeNull(
+    let vaccination: Vaccination;
+    if (id) {
+      vaccination = await this.findOneCardWithDeletedTimeNull(
+        profile._id,
+        id,
+        CardType.VACCINATIONS,
+      );
+      delete payload._id;
+      if (!vaccination)
+        throw new BadRequestException(
+          `Vaccination ${id.toString()} does not exist`,
+        );
+    } else {
+      if (payload?._id) {
+        const existNote = await this.findOneCardWithDeletedTimeNull(
           profile._id,
-          id,
-          CardType.VACCINATIONS,
-        )
-      : null;
-    if (!vaccination) {
+          payload._id,
+          CardType.QUESTIONS,
+        );
+        if (existNote)
+          throw new ConflictException(
+            `Vaccination ${payload._id} already exist`,
+          );
+      }
       vaccination = this.create(payload);
       vaccination.profile = profile._id;
       vaccination.cardType = CardType.VACCINATIONS;
