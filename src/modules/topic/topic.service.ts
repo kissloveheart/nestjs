@@ -1,9 +1,19 @@
 import { LogService } from '@log';
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from '@shared/base';
-import { MongoRepository } from 'typeorm';
+import { FilterOperators, FindManyOptions, MongoRepository } from 'typeorm';
 import { Topic } from './entity/topic.entity';
+import { Profile } from '@modules/profile';
+import { SyncTopicDto, TopicCreateDto } from './dto/topic.dto';
+import { ObjectId } from 'mongodb';
+import { CardType } from '@enum';
+import { PageRequest, PageRequestSync, Pageable } from '@types';
 
 @Injectable()
 export class TopicService extends BaseService<Topic> {
@@ -14,5 +24,71 @@ export class TopicService extends BaseService<Topic> {
   ) {
     super(topicRepository, Topic.name);
     this.log.setContext(TopicService.name);
+  }
+
+  async saveTopic(profile: Profile, payload: TopicCreateDto, id?: ObjectId) {
+    let topic: Topic;
+    if (id) {
+      topic = await this.findById(id);
+      delete payload._id;
+      if (!topic)
+        throw new BadRequestException(`Topic ${id.toString()} does not exist`);
+    } else {
+      if (payload?._id) {
+        const existTopic = await this.findById(payload._id);
+        if (existTopic)
+          throw new ConflictException(`Topic ${payload._id} already exist`);
+      }
+      topic = this.create(payload);
+      topic.profile = profile._id;
+    }
+
+    const data = await this.save({ ...topic, ...payload });
+    return data;
+  }
+
+  async getAll(profile: Profile, pageRequest: PageRequest) {
+    const { page, size, skip, order, orderBy } = pageRequest;
+    const filter: FindManyOptions<Topic> = {
+      where: {
+        deletedTime: null,
+        profile: profile._id,
+      },
+      take: size,
+      skip,
+      order: { [orderBy]: order },
+    };
+
+    const [topics, count] = await this.findAndCount(filter);
+    return new Pageable(topics, { size, page, count });
+  }
+
+  async getAllSync(profile: Profile, pageRequest: PageRequestSync) {
+    const { page, size, skip, order, orderBy, lastSyncTime } = pageRequest;
+    const filter: FindManyOptions<Topic> | FilterOperators<Topic> = {
+      where: {
+        updatedTime: { $gt: lastSyncTime },
+        profile: profile._id,
+      },
+      take: size,
+      skip,
+      order: { [orderBy]: order },
+    };
+
+    const [topics, count] = await this.findAndCountMongo(filter);
+    const syncTopics = topics.map((allergy) => new SyncTopicDto(allergy));
+    return new Pageable(syncTopics, { size, page, count });
+  }
+
+  async getOne(profile: Profile, id: ObjectId) {
+    const topic = await this.findOne({
+      where: {
+        _id: id,
+        profile: profile._id,
+      },
+    });
+    if (!topic)
+      throw new NotFoundException(`Topic ${id.toString()} does not exist`);
+    return topic;
   }
 }
