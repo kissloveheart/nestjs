@@ -12,7 +12,6 @@ import { Topic } from './entity/topic.entity';
 import { Profile } from '@modules/profile';
 import { SyncTopicDto, TopicCreateDto } from './dto/topic.dto';
 import { ObjectId } from 'mongodb';
-import { CardType } from '@enum';
 import { PageRequest, PageRequestSync, Pageable } from '@types';
 
 @Injectable()
@@ -29,13 +28,13 @@ export class TopicService extends BaseService<Topic> {
   async saveTopic(profile: Profile, payload: TopicCreateDto, id?: ObjectId) {
     let topic: Topic;
     if (id) {
-      topic = await this.findById(id);
+      topic = await this.getOne(profile, id);
       delete payload._id;
       if (!topic)
         throw new BadRequestException(`Topic ${id.toString()} does not exist`);
     } else {
       if (payload?._id) {
-        const existTopic = await this.findById(payload._id);
+        const existTopic = await this.getOne(profile, payload._id);
         if (existTopic)
           throw new ConflictException(`Topic ${payload._id} already exist`);
       }
@@ -85,6 +84,7 @@ export class TopicService extends BaseService<Topic> {
       where: {
         _id: id,
         profile: profile._id,
+        deletedTime: null,
       },
     });
     if (!topic)
