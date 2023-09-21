@@ -39,7 +39,8 @@ export class BasicInformation {
   @IsDate()
   @ApiPropertyOptional()
   @Transform(({ value }) => stringToDate(value))
-  birthDate: Date;
+  @IsOptional()
+  birthDate?: Date;
 
   @Column()
   @IsEnum(Pronouns)
@@ -48,7 +49,8 @@ export class BasicInformation {
     enum: Pronouns,
     default: Pronouns.HE,
   })
-  pronouns: Pronouns = Pronouns.HE;
+  @IsOptional()
+  pronouns?: Pronouns = Pronouns.HE;
 
   @Column()
   @IsEnum(Sex)
@@ -57,12 +59,14 @@ export class BasicInformation {
     enum: Sex,
     default: Sex.MALE,
   })
-  sex: Sex = Sex.MALE;
+  @IsOptional()
+  sex?: Sex = Sex.MALE;
 
   @Column()
   @Matches(/^\d{3}-\d{2}-\d{4}$/)
   @ApiPropertyOptional()
-  SSN: string;
+  @IsOptional()
+  SSN?: string;
 }
 
 export class EmergencyContact {
@@ -75,30 +79,35 @@ export class EmergencyContact {
   @Column()
   @ApiProperty()
   @IsString()
-  firstName: string;
+  @IsOptional()
+  firstName?: string;
 
   @Column()
   @ApiProperty()
   @IsString()
-  lastName: string;
+  @IsOptional()
+  lastName?: string;
 
   @Column()
   @ApiProperty()
   @IsString()
+  @IsOptional()
   // @IsPhoneNumber('US')
-  phoneNumber: string;
+  phoneNumber?: string;
 }
 
 export class HealthDetail {
   @Column()
   @ApiProperty()
   @IsString()
-  height: string;
+  @IsOptional()
+  height?: string;
 
   @Column()
   @ApiProperty()
   @IsString()
-  weight: string;
+  @IsOptional()
+  weight?: string;
 
   @Column()
   @ApiProperty({
@@ -107,13 +116,15 @@ export class HealthDetail {
   })
   @IsEnum(BloodType)
   @Transform(({ value }) => enumTransform(value, BloodType))
-  bloodType: BloodType = BloodType.UNKNOWN;
+  @IsOptional()
+  bloodType?: BloodType = BloodType.UNKNOWN;
 
   @Column()
   @ApiProperty()
   @IsBoolean()
   @Transform(({ value }) => booleanTransform(value))
-  isOrganDonor: boolean = false;
+  @IsOptional()
+  isOrganDonor?: boolean = false;
 }
 
 export class Acl {
