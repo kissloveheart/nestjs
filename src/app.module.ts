@@ -15,6 +15,7 @@ import { FileModule } from '@modules/file';
 import { ProfileModule } from '@modules/profile';
 import { CardModule } from '@modules/card';
 import { TopicModule } from '@modules/topic';
+import { TemporaryShareModule } from './modules/share/temporary-share.module';
 @Module({
   imports: [
     UserModule,
@@ -31,6 +32,7 @@ import { TopicModule } from '@modules/topic';
     FileModule,
     CardModule,
     TopicModule,
+    TemporaryShareModule,
   ],
   providers: [AuditSubscriber],
 })

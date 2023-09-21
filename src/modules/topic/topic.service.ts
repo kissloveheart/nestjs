@@ -1,4 +1,6 @@
+import { SYSTEM } from '@constant';
 import { LogService } from '@log';
+import { Profile } from '@modules/profile';
 import {
   BadRequestException,
   ConflictException,
@@ -7,13 +9,11 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from '@shared/base';
-import { FilterOperators, FindManyOptions, MongoRepository } from 'typeorm';
-import { Topic } from './entity/topic.entity';
-import { Profile } from '@modules/profile';
-import { SyncTopicDto, TopicCreateDto } from './dto/topic.dto';
-import { ObjectId } from 'mongodb';
 import { PageRequest, PageRequestSync, Pageable } from '@types';
-import { SYSTEM } from '@constant';
+import { ObjectId } from 'mongodb';
+import { FilterOperators, FindManyOptions, MongoRepository } from 'typeorm';
+import { SyncTopicDto, TopicCreateDto } from './dto/topic.dto';
+import { Topic } from './entity/topic.entity';
 
 @Injectable()
 export class TopicService extends BaseService<Topic> {
@@ -73,6 +73,15 @@ export class TopicService extends BaseService<Topic> {
 
     const [topics, count] = await this.findAndCount(filter);
     return new Pageable(topics, { size, page, count });
+  }
+
+  async getAllTopicsOfProfile(profile: Profile) {
+    return await this.find({
+      where: {
+        profile: profile._id,
+        deletedTime: null,
+      },
+    });
   }
 
   async getAllSync(profile: Profile, pageRequest: PageRequestSync) {

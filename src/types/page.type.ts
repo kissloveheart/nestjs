@@ -1,8 +1,9 @@
 import { ApiProperty, ApiPropertyOptional, OmitType } from '@nestjs/swagger';
-import { enumTransform, stringToDate } from '@transform';
+import { booleanTransform, enumTransform, stringToDate } from '@transform';
 import { Transform, Type } from 'class-transformer';
 import {
   IsArray,
+  IsBoolean,
   IsDate,
   IsEnum,
   IsInt,
@@ -88,10 +89,10 @@ export class PageRequest {
 
   @ApiPropertyOptional({
     required: false,
-    default: 'createdTime',
+    default: 'updatedTime',
   })
   @IsOptional()
-  orderBy?: string = 'createdTime';
+  orderBy?: string = 'updatedTime';
 
   @ApiPropertyOptional({
     required: false,
@@ -117,4 +118,11 @@ export class PageRequestSync extends OmitType(PageRequest, [
   @IsDate()
   @Transform(({ value }) => stringToDate(value))
   lastSyncTime: Date;
+}
+
+export class TemporarySharePageRequest extends PageRequest {
+  @ApiProperty()
+  @IsBoolean()
+  @Transform(({ value }) => booleanTransform(value))
+  isGetExpiredLink: boolean = false;
 }
