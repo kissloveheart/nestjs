@@ -28,13 +28,25 @@ export class TopicService extends BaseService<Topic> {
   async saveTopic(profile: Profile, payload: TopicCreateDto, id?: ObjectId) {
     let topic: Topic;
     if (id) {
-      topic = await this.getOne(profile, id);
+      topic = await this.findOne({
+        where: {
+          _id: id,
+          profile: profile._id,
+          deletedTime: null,
+        },
+      });
       delete payload._id;
       if (!topic)
         throw new BadRequestException(`Topic ${id.toString()} does not exist`);
     } else {
       if (payload?._id) {
-        const existTopic = await this.getOne(profile, payload._id);
+        const existTopic = await this.findOne({
+          where: {
+            _id: payload._id,
+            profile: profile._id,
+            deletedTime: null,
+          },
+        });
         if (existTopic)
           throw new ConflictException(`Topic ${payload._id} already exist`);
       }

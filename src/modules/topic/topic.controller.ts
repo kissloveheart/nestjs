@@ -7,6 +7,7 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { TopicService } from './topic.service';
@@ -27,9 +28,13 @@ import {
 } from './dto/topic.dto';
 import { ParseObjectIdPipe } from '@pipe';
 import { ObjectId } from 'typeorm';
+import { ProfileGuard } from '@modules/auth/guard';
+import { Public } from '@decorators';
 
-@Controller('topic')
+@Controller('profile/:profileId/topic')
 @ApiTags('Topic')
+@Public()
+@UseGuards(ProfileGuard)
 export class TopicController {
   constructor(
     private readonly topicService: TopicService,
