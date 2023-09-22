@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.sgknk.knk",
+      "sha256_cert_fingerprints": [
+        "BC:15:57:73:E9:5E:77:37:41:5A:BC:C9:F7:8E:B4:67:1D:F7:3F:26:3C:46:B5:7C:1B:79:00:C3:57:87:4E:1D"
+      ]
+    }
+  }
+]
