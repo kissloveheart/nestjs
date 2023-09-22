@@ -1,12 +1,3 @@
-import { ObjectId } from 'mongodb';
-import { MigrationInterface } from 'typeorm';
-import { MongoQueryRunner } from 'typeorm/driver/mongodb/MongoQueryRunner';
-import {
-  BasicInformation,
-  EmergencyContact,
-  HealthDetail,
-  Profile,
-} from '@modules/profile';
 import {
   AllergySeverity,
   AllergyType,
@@ -16,16 +7,24 @@ import {
   Sex,
 } from '@enum';
 import { faker } from '@faker-js/faker';
-import { plainToClass, plainToInstance } from 'class-transformer';
-import { Note } from '../modules/card/entity/child-entity/note.entity';
+import {
+  BasicInformation,
+  EmergencyContact,
+  HealthDetail,
+  Profile,
+} from '@modules/profile';
+import { plainToClass } from 'class-transformer';
+import { ObjectId } from 'mongodb';
+import { MigrationInterface } from 'typeorm';
+import { MongoQueryRunner } from 'typeorm/driver/mongodb/MongoQueryRunner';
 import { Allergy } from '../modules/card/entity/child-entity/allergy.entity';
-import { AllergyService } from '../modules/card/allergy/allergy.service';
+import { Note } from '../modules/card/entity/child-entity/note.entity';
 
 export class SeedProfile1694490729073 implements MigrationInterface {
   public async up(queryRunner: MongoQueryRunner): Promise<void> {
     // if (process.env.SUFFIX_ENV_NAME !== 'local') return;
     const profilesToInsert = [];
-    for (let i = 1; i <= 100; i++) {
+    for (let i = 1; i <= 20; i++) {
       const profile = plainToClass(Profile, {
         owner: new ObjectId(), // Replace with the owner's ObjectId
         basicInformation: plainToClass(BasicInformation, {
@@ -62,7 +61,7 @@ export class SeedProfile1694490729073 implements MigrationInterface {
     while (await profiles.hasNext()) {
       const profile = await profiles.next();
       const notes = [];
-      for (let j = 1; j <= 100; j++) {
+      for (let j = 1; j <= 10; j++) {
         const note = plainToClass(Note, {
           title: faker.animal.bird(),
           cardType: CardType.NOTES,
@@ -75,7 +74,7 @@ export class SeedProfile1694490729073 implements MigrationInterface {
       await queryRunner.insertMany('card', notes);
 
       const allergies = [];
-      for (let j = 1; j <= 100; j++) {
+      for (let j = 1; j <= 10; j++) {
         const allergy = plainToClass(Allergy, {
           title: faker.animal.bird(),
           cardType: CardType.ALLERGIES,
