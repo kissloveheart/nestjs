@@ -28,7 +28,8 @@ export abstract class Card extends AuditEntity {
   @Column()
   @IsString()
   @ApiProperty()
-  title: string;
+  @IsOptional()
+  title?: string;
 
   @Column()
   @ApiProperty({ enum: CardType })

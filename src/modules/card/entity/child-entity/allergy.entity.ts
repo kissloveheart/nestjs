@@ -19,24 +19,28 @@ export class Allergy extends Card {
   @IsEnum(AllergyType)
   @Transform(({ value }) => enumTransform(value, AllergyType))
   @ApiProperty({ enum: AllergyType })
-  type: AllergyType;
+  @IsOptional()
+  type?: AllergyType;
 
   @Column()
   @IsEnum(AllergySeverity)
   @Transform(({ value }) => enumTransform(value, AllergySeverity))
   @ApiProperty({ enum: AllergySeverity })
-  allergySeverity: AllergySeverity;
+  @IsOptional()
+  allergySeverity?: AllergySeverity;
 
   @Column()
   @IsBoolean()
   @Transform(({ value }) => booleanTransform(value))
   @ApiProperty()
+  @IsOptional()
   isNoLongerExperiencing: boolean = false;
 
   @Column()
   @IsString()
   @ApiProperty()
-  description: string;
+  @IsOptional()
+  description?: string;
 
   @Column()
   @IsArray()
