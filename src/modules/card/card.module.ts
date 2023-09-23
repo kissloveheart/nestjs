@@ -41,6 +41,7 @@ import { IDCardController } from './id-card/id-card.controller';
 import { IDCardService } from './id-card/id-card.service';
 import { Card } from './entity/card.entity';
 import { CardService } from './card.service';
+import { TopicModule } from '@modules/topic';
 
 @Module({
   imports: [
@@ -60,6 +61,7 @@ import { CardService } from './card.service';
       IDCard,
     ]),
     FileModule,
+    forwardRef(() => TopicModule),
     forwardRef(() => ProfileModule),
   ],
   controllers: [

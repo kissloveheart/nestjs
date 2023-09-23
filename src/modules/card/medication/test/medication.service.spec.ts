@@ -1,4 +1,4 @@
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, MongoRepository } from 'typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
 import { createMock } from '@golevelup/ts-jest';
@@ -20,20 +20,29 @@ import {
   mockPageRequest,
   mockPageRequestSync,
   mockProfile,
+  topicData,
+  topicNotExistPayload,
+  topicPayload,
 } from './medication.mock';
-import { SyncMedicationDto } from '@modules/card/dto/medication.dto';
+import {
+  LinkTopic,
+  MedicationDto,
+  SyncMedicationDto,
+} from '@modules/card/dto/medication.dto';
+import { Topic, TopicService } from '@modules/topic';
 
 describe('medicationService', () => {
   let medicationService: MedicationService;
-  let medicationRepository: Repository<Medication>;
+  let medicationRepository: MongoRepository<Medication>;
+  let topicRepository: MongoRepository<Topic>;
   beforeEach(async () => {
     const dataSource: DataSource = await initialTypeOrm();
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         TypeOrmModule.forRoot(),
-        TypeOrmModule.forFeature([Medication]),
+        TypeOrmModule.forFeature([Medication, Topic]),
       ],
-      providers: [MedicationService],
+      providers: [MedicationService, TopicService],
     })
       .overrideProvider(DataSource)
       .useValue(dataSource)
@@ -41,23 +50,21 @@ describe('medicationService', () => {
       .compile();
 
     medicationService = module.get<MedicationService>(MedicationService);
-    medicationRepository = module.get<Repository<Medication>>(
-      getRepositoryToken(Medication),
-    );
+    medicationRepository = module.get(getRepositoryToken(Medication));
+    topicRepository = module.get(getRepositoryToken(Topic));
     await dataSource.getMongoRepository(Medication).insertMany(medicationData);
+    await topicRepository.insert(topicData);
+
     jest.clearAllMocks();
   });
 
   afterEach(async () => {
     await medicationRepository.clear();
+    await topicRepository.clear();
   });
 
   afterAll(async () => {
     await closeMongoConnection();
-  });
-
-  it('should be defined', () => {
-    expect(medicationService).toBeDefined();
   });
 
   describe('saveMedication', () => {
@@ -162,22 +169,33 @@ describe('medicationService', () => {
   describe('getOne', () => {
     it('should return an medication if it exists', async () => {
       const mockMedicationId = new ObjectId('650156e338b8a56d37856604');
-
-      const medication = await medicationRepository.findOne({
-        where: {
-          _id: mockMedicationId,
-          deletedTime: null,
-          profile: new ObjectId('650156e338b8a56d37856611'),
-          cardType: CardType.MEDICATIONS,
+      const cursor = await medicationRepository.aggregate([
+        {
+          $match: {
+            _id: mockMedicationId,
+            profile: new ObjectId('650156e338b8a56d37856611'),
+            cardType: CardType.MEDICATIONS,
+            deletedTime: null,
+          },
         },
-      });
+        {
+          $lookup: {
+            from: 'topic',
+            localField: 'topics',
+            foreignField: '_id',
+            as: 'topics',
+          },
+        },
+      ]);
 
+      const medication = await cursor.next();
+      const newMedication = new MedicationDto(medication);
       const result = await medicationService.getOne(
         mockProfile,
         mockMedicationId,
       );
 
-      expect(result).toEqual(medication);
+      expect(result).toEqual(newMedication);
     });
 
     it('should throw NotFoundException if medication does not exist', async () => {
@@ -190,6 +208,28 @@ describe('medicationService', () => {
           `Medication ${mockMedicationId} does not exist`,
         );
       }
+    });
+  });
+
+  describe('UpdateMedicationTopic', () => {
+    it('should throw NotFoundException if medication does not exist', async () => {
+      await expect(
+        medicationService.updateMedicationTopics(
+          mockProfile,
+          new ObjectId(),
+          topicPayload,
+        ),
+      ).rejects.toThrowError(NotFoundException);
+    });
+
+    it('should throw BadRequestException if payload has invalid topic id', async () => {
+      await expect(
+        medicationService.updateMedicationTopics(
+          mockProfile,
+          new ObjectId('6500113c1895a06e02ab3d87'),
+          topicNotExistPayload,
+        ),
+      ).rejects.toThrowError(BadRequestException);
     });
   });
 });

@@ -88,7 +88,7 @@ export class TopicService extends BaseService<Topic> {
     };
 
     const [topics, count] = await this.findAndCountMongo(filter);
-    const syncTopics = topics.map((allergy) => new SyncTopicDto(allergy));
+    const syncTopics = topics.map((topic) => new SyncTopicDto(topic));
     return new Pageable(syncTopics, { size, page, count });
   }
 
@@ -120,5 +120,14 @@ export class TopicService extends BaseService<Topic> {
         $inc: { __v: 1 },
       },
     );
+  }
+
+  async getAllTopicsOfProfile(profile: Profile) {
+    return await this.find({
+      where: {
+        profile: profile._id,
+        deletedTime: null,
+      },
+    });
   }
 }
