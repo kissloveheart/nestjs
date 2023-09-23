@@ -9,6 +9,8 @@ import { envFilePath } from './env-path.config';
 import { TypeOrmModuleConfig } from './typeorm.config';
 import { LoggerConfig } from './winston.config';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Global()
 @Module({
@@ -45,6 +47,10 @@ import { ThrottlerModule } from '@nestjs/throttler';
         ttl: config.throttler().ttl,
         limit: config.throttler().limit,
       }),
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '../../..', 'public'),
+      renderPath: '.well-known/(.*)',
     }),
   ],
   providers: [AppConfigService],
