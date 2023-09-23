@@ -1,7 +1,6 @@
 import { PROFILE_TOKEN } from '@constant';
 import { Public } from '@decorators';
 import { CardType } from '@enum';
-import { ProfileGuard } from '@guard';
 import { Profile } from '@modules/profile';
 import {
   Body,
@@ -27,6 +26,7 @@ import { ClsService } from 'nestjs-cls';
 import { AllergyDto, SyncAllergyDto } from '../dto/allergy.dto';
 import { Allergy } from '../entity/child-entity/allergy.entity';
 import { AllergyService } from './allergy.service';
+import { ProfileGuard } from '@guard';
 
 @Controller('profile/:profileId/card/allergy')
 @ApiTags('Allergy')

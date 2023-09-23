@@ -1,7 +1,6 @@
 import { PROFILE_TOKEN } from '@constant';
 import { Public } from '@decorators';
 import { CardType } from '@enum';
-import { ProfileGuard } from '@guard';
 import { Profile } from '@modules/profile';
 import {
   Body,
@@ -27,6 +26,7 @@ import { ClsService } from 'nestjs-cls';
 import { QuestionService } from './question.service';
 import { Question } from '../entity/child-entity/question.entity';
 import { SaveQuestionDto, SyncQuestionDto } from '../dto/question.dto';
+import { ProfileGuard } from '@guard';
 
 @Controller('profile/:profileId/card/question')
 @ApiTags('Question')

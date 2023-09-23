@@ -1,7 +1,6 @@
 import { PROFILE_TOKEN } from '@constant';
 import { Public } from '@decorators';
 import { CardType } from '@enum';
-import { ProfileGuard } from '@guard';
 import { Profile } from '@modules/profile';
 import {
   Body,
@@ -27,6 +26,7 @@ import { ClsService } from 'nestjs-cls';
 import { VaccinationService } from './vaccination.service';
 import { Vaccination } from '../entity/child-entity/vaccination.entity';
 import { SyncVaccinationDto, SaveVaccinationDto } from '../dto/vaccination.dto';
+import { ProfileGuard } from '@guard';
 
 @Controller('profile/:profileId/card/vaccination')
 @ApiTags('Vaccination')

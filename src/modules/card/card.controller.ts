@@ -1,8 +1,8 @@
 import { Public } from '@decorators';
-import { ProfileGuard } from '@guard';
 import { Controller, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { ClsService } from 'nestjs-cls';
+import { ProfileGuard } from '@guard';
 
 @Controller('profile/:profileId/card')
 @ApiTags('Card')

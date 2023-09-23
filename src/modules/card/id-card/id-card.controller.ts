@@ -1,7 +1,6 @@
 import { PROFILE_TOKEN } from '@constant';
 import { Public } from '@decorators';
 import { CardType } from '@enum';
-import { ProfileGuard } from '@guard';
 import { Profile } from '@modules/profile';
 import {
   Body,
@@ -27,6 +26,7 @@ import { ClsService } from 'nestjs-cls';
 import { IDCard } from '../entity/child-entity/idCard.entity';
 import { SaveIDCardDto, SyncIDCardDto } from '../dto/id-card.dto';
 import { IDCardService } from './id-card.service';
+import { ProfileGuard } from '@guard';
 
 @Controller('profile/:profileId/card/id-card')
 @ApiTags('ID Card')

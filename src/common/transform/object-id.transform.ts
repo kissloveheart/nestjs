@@ -1,3 +1,4 @@
+import { BadRequestException } from '@nestjs/common';
 import { isString } from 'class-validator';
 import { ObjectId } from 'mongodb';
 
@@ -10,5 +11,5 @@ export const objectIdTransform = (value: unknown) => {
     return new ObjectId(value);
   }
 
-  return null;
+  throw new BadRequestException(`Invalid ID ${value}`);
 };

@@ -28,8 +28,8 @@ import {
 } from './dto/topic.dto';
 import { ParseObjectIdPipe } from '@pipe';
 import { ObjectId } from 'typeorm';
-import { ProfileGuard } from '@modules/auth/guard';
 import { Public } from '@decorators';
+import { ProfileGuard } from '../../common/guard/profile.guard';
 
 @Controller('profile/:profileId/topic')
 @ApiTags('Topic')

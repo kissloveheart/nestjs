@@ -148,7 +148,7 @@
         "<rootDir>/common/middleware"
       ],
       "@guard": [
-        "<rootDir>/modules/auth/guard"
+        "<rootDir>/common/guard"
       ],
       "@shared/(.*)": [
         "<rootDir>/shared/$1"

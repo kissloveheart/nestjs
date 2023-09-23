@@ -21,8 +21,7 @@ import { EmailValidation } from '@pipe';
 import { ApiResponseObject } from '@types';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/auth.dto';
-import { OTPAuthGuard } from './guard/otp.guard';
-import { ThirdPartyAuthGuard } from './guard/third-party.guard';
+import { OTPAuthGuard, ThirdPartyAuthGuard } from '@guard';
 
 @Controller('auth')
 @ApiTags('Auth')

@@ -1,11 +1,10 @@
 import { ApiProperty, ApiPropertyOptional, OmitType } from '@nestjs/swagger';
-import { Medication } from '../entity/child-entity/medication.entity';
-import { ObjectId } from 'mongodb';
-import { IsBoolean, NotEquals } from 'class-validator';
-import { Exclude, Expose, Transform, Type } from 'class-transformer';
 import { booleanTransform, objectIdTransform } from '@transform';
+import { Expose, Transform, Type } from 'class-transformer';
+import { IsBoolean, NotEquals } from 'class-validator';
+import { ObjectId } from 'mongodb';
+import { Medication } from '../entity/child-entity/medication.entity';
 
-@Exclude()
 export class LinkTopic {
   @ApiProperty({ type: String })
   @Type(() => ObjectId)
@@ -16,14 +15,12 @@ export class LinkTopic {
   _id: ObjectId;
 
   @ApiProperty()
-  @Expose()
   @ApiPropertyOptional()
   title?: string;
 
   @ApiProperty()
   @IsBoolean()
   @Transform(({ value }) => booleanTransform(value))
-  @Expose()
   isLinked: boolean;
 
   constructor(partial: unknown) {

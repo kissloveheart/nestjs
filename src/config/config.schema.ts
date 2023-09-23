@@ -19,7 +19,6 @@ export const configValidationSchema = Joi.object({
   THROTTLE_LIMIT: Joi.number().required(),
   THROTTLE_TTL: Joi.number().required(),
   USER_NUMBER_FAILED_PIN_LIMIT: Joi.number().required(),
-  GOOGLE_BUCKET_PREFIX: Joi.string().required(),
   AZURE_STORAGE_CONNECTION_STRING: Joi.string().required(),
   AZURE_STORAGE_CONTAINER_NAME: Joi.string().required(),
   AZURE_STORAGE_SAS_EXPIRED_DAY: Joi.number().required(),

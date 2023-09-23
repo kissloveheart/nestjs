@@ -39,3 +39,4 @@ lerna-debug.log*
 rest.http
 firebase-admin.json
 .env.local
+.env.dev

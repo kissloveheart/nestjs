@@ -3,7 +3,7 @@ import { RoleName } from '@enum';
 import { User } from '@modules/user';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { isPublicRequest } from '../auth.utils';
+import { isPublicRequest } from './auth.utils';
 
 @Injectable()
 export class RoleGuard implements CanActivate {

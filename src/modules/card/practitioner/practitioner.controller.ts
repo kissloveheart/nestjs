@@ -1,7 +1,6 @@
 import { PROFILE_TOKEN } from '@constant';
 import { Public } from '@decorators';
 import { CardType } from '@enum';
-import { ProfileGuard } from '@guard';
 import { Profile } from '@modules/profile';
 import {
   Body,
@@ -30,6 +29,7 @@ import {
 } from '../dto/practitioner.dto';
 import { Practitioner } from '../entity/child-entity/practitioner.entity';
 import { PractitionerService } from './practitioner.service';
+import { ProfileGuard } from '@guard';
 
 @Controller('profile/:profileId/card/practitioner')
 @ApiTags('Practitioner')

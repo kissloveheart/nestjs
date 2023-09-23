@@ -1,7 +1,6 @@
 import { PROFILE_TOKEN } from '@constant';
 import { Public } from '@decorators';
 import { CardType } from '@enum';
-import { ProfileGuard } from '@guard';
 import { Profile } from '@modules/profile';
 import {
   Body,
@@ -35,6 +34,7 @@ import {
 } from '../dto/attachment.dto';
 import { Attachment } from '../entity/child-entity/attachment.entity';
 import { AttachmentService } from './attachment.service';
+import { ProfileGuard } from '@guard';
 
 @Controller('profile/:profileId/card/attachment')
 @ApiTags('Attachment')

@@ -1,7 +1,6 @@
 import { PROFILE_TOKEN } from '@constant';
 import { Public } from '@decorators';
 import { CardType } from '@enum';
-import { ProfileGuard } from '@guard';
 import { Profile } from '@modules/profile';
 import {
   Body,
@@ -27,6 +26,7 @@ import { ClsService } from 'nestjs-cls';
 import { ProcedureService } from './procedure.service';
 import { Procedure } from '../entity/child-entity/procedure.entity';
 import { SaveProcedureDto, SyncProcedureDto } from '../dto/procedure.dto';
+import { ProfileGuard } from '@guard';
 
 @Controller('profile/:profileId/card/procedure')
 @ApiTags('Procedure')

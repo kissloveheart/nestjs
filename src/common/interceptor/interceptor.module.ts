@@ -1,8 +1,7 @@
 import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
-import { ResponseInterceptor } from './response.interceptor';
 import { LogErrorInterceptor } from './log-error.interceptor';
-import { UserInterceptor } from './user.interceptor';
+import { ResponseInterceptor } from './response.interceptor';
 
 @Module({
   providers: [
@@ -17,10 +16,6 @@ import { UserInterceptor } from './user.interceptor';
     {
       provide: APP_INTERCEPTOR,
       useClass: ClassSerializerInterceptor,
-    },
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: UserInterceptor,
     },
   ],
 })

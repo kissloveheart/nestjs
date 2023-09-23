@@ -61,8 +61,7 @@ import { TopicModule } from '@modules/topic';
       IDCard,
     ]),
     FileModule,
-    forwardRef(() => TopicModule),
-    forwardRef(() => ProfileModule),
+    TopicModule,
   ],
   controllers: [
     CardController,

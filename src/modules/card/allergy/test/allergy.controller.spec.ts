@@ -1,23 +1,23 @@
+import { PROFILE_TOKEN } from '@constant';
+import { CardType } from '@enum';
+import { createMock } from '@golevelup/ts-jest';
+import { AllergyDto, SyncAllergyDto } from '@modules/card/dto/allergy.dto';
+import { Allergy } from '@modules/card/entity/child-entity/allergy.entity';
+import { CanActivate, NotFoundException } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { closeMongoConnection, initialTypeOrm } from '@test';
+import { Pageable } from '@types';
+import { ObjectId } from 'mongodb';
 import { ClsService } from 'nestjs-cls';
+import { DataSource } from 'typeorm';
 import { AllergyController } from '../allergy.controller';
 import { AllergyService } from '../allergy.service';
-import { createMock } from '@golevelup/ts-jest';
-import { Test, TestingModule } from '@nestjs/testing';
 import {
   mockPageRequest,
   mockPageRequestSync,
   mockProfile,
 } from './allergy.mock';
-import { PROFILE_TOKEN } from '@constant';
-import { NotFoundException } from '@nestjs/common';
-import { DataSource } from 'typeorm';
-import { Allergy } from '@modules/card/entity/child-entity/allergy.entity';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { AllergyDto, SyncAllergyDto } from '@modules/card/dto/allergy.dto';
-import { Pageable } from '@types';
-import { ObjectId } from 'mongodb';
-import { closeMongoConnection, initialTypeOrm } from '@test';
-import { CardType } from '@enum';
 
 describe('AllergyController', () => {
   let allergyController: AllergyController;
@@ -25,6 +25,7 @@ describe('AllergyController', () => {
   let clsService: ClsService;
   beforeEach(async () => {
     const dataSource: DataSource = await initialTypeOrm();
+    const mockGuard: CanActivate = { canActivate: jest.fn(() => true) };
     const module: TestingModule = await Test.createTestingModule({
       imports: [TypeOrmModule.forRoot(), TypeOrmModule.forFeature([Allergy])],
       controllers: [AllergyController],

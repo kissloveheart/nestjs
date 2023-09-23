@@ -1,6 +1,5 @@
 import { PROFILE_TOKEN } from '@constant';
 import { Public } from '@decorators';
-import { ProfileGuard } from '@guard';
 import { Profile } from '@modules/profile';
 import {
   Body,
@@ -27,6 +26,7 @@ import { NoteService } from './note.service';
 import { Note } from '../entity/child-entity/note.entity';
 import { SaveNoteDto, SyncNoteDto } from '../dto/note.dto';
 import { CardType } from '@enum';
+import { ProfileGuard } from '@guard';
 
 @Controller('profile/:profileId/card/note')
 @ApiTags('Note')

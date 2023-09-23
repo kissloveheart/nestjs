@@ -1,7 +1,6 @@
 import { PROFILE_TOKEN } from '@constant';
 import { Public } from '@decorators';
 import { CardType } from '@enum';
-import { ProfileGuard } from '@guard';
 import { Profile } from '@modules/profile';
 import {
   Body,
@@ -27,6 +26,7 @@ import { ClsService } from 'nestjs-cls';
 import { AppointmentService } from './appointment.service';
 import { Appointment } from '../entity/child-entity/appointment.entity';
 import { SaveAppointmentDto, SyncAppointmentDto } from '../dto/appointment.dto';
+import { ProfileGuard } from '@guard';
 
 @Controller('profile/:profileId/card/appointment')
 @ApiTags('Appointment')

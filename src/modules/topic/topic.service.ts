@@ -130,13 +130,4 @@ export class TopicService extends BaseService<Topic> {
       },
     );
   }
-
-  async getAllTopicsOfProfile(profile: Profile) {
-    return await this.find({
-      where: {
-        profile: profile._id,
-        deletedTime: null,
-      },
-    });
-  }
 }

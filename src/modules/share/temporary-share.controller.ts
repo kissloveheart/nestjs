@@ -12,7 +12,6 @@ import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { TemporaryShareService } from './temporary-share.service';
 import { SaveTemporaryShareDto } from './dto/temporary-share.dto';
 import { Public } from '@decorators';
-import { ProfileGuard } from '@guard';
 import { ClsService } from 'nestjs-cls';
 import { PROFILE_TOKEN } from '@constant';
 import { Profile } from '@modules/profile';
@@ -24,6 +23,7 @@ import {
 import { TemporaryShare } from './entity/temporary-share.entity';
 import { ParseObjectIdPipe } from '@pipe';
 import { ObjectId } from 'mongodb';
+import { ProfileGuard } from '@guard';
 
 @Controller('profile/:profileId/temporary-share')
 @ApiTags('share')

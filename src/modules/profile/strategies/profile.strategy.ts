@@ -1,30 +1,25 @@
 import { PROFILE_TOKEN } from '@constant';
-import { ProfileService } from '@modules/profile';
-import {
-  BadRequestException,
-  CanActivate,
-  ExecutionContext,
-  Inject,
-  Injectable,
-  forwardRef,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { PassportStrategy } from '@nestjs/passport';
 import { Request } from 'express';
 import { ObjectId } from 'mongodb';
 import { ClsService } from 'nestjs-cls';
+import { Strategy } from 'passport-custom';
+import { ProfileService } from '../profile.service';
 
 @Injectable()
-export class ProfileGuard implements CanActivate {
+export class ProfileStrategy extends PassportStrategy(Strategy, 'profile') {
   constructor(
-    @Inject(forwardRef(() => ProfileService))
     private readonly profileService: ProfileService,
     private readonly cls: ClsService,
-  ) {}
+  ) {
+    super();
+  }
 
-  async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request: Request = context.switchToHttp().getRequest();
+  async validate(request: Request): Promise<boolean> {
     const profileId = request.params.profileId;
     if (!ObjectId.isValid(profileId))
-      throw new BadRequestException(`Invalid profile id ${profileId}`);
+      throw new NotFoundException(`Profile id ${profileId} does not exist`);
     const profile = await this.profileService.findProfileWithOutDeletedTimeNull(
       new ObjectId(profileId),
     );

@@ -1,7 +1,6 @@
 import { PROFILE_TOKEN } from '@constant';
 import { Public } from '@decorators';
 import { CardType } from '@enum';
-import { ProfileGuard } from '@guard';
 import { Profile } from '@modules/profile';
 import {
   Body,
@@ -26,6 +25,7 @@ import { ObjectId } from 'mongodb';
 import { ClsService } from 'nestjs-cls';
 import { HospitalizationService } from './hospitalization.service';
 import { Hospitalization } from '../entity/child-entity/hospitalization.entity';
+import { ProfileGuard } from '@guard';
 import {
   SaveHospitalizationDto,
   SyncHospitalizationDto,
