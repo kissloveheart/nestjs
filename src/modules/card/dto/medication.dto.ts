@@ -1,12 +1,56 @@
-import { ApiProperty, OmitType } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional, OmitType } from '@nestjs/swagger';
 import { Medication } from '../entity/child-entity/medication.entity';
+import { ObjectId } from 'mongodb';
+import { IsBoolean, NotEquals } from 'class-validator';
+import { Exclude, Expose, Transform, Type } from 'class-transformer';
+import { booleanTransform, objectIdTransform } from '@transform';
+
+@Exclude()
+export class LinkTopic {
+  @ApiProperty({ type: String })
+  @Type(() => ObjectId)
+  @Transform(({ value }) => value.toString(), { toPlainOnly: true })
+  @Transform(({ value }) => objectIdTransform(value), { toClassOnly: true })
+  @NotEquals(null)
+  @Expose()
+  _id: ObjectId;
+
+  @ApiProperty()
+  @Expose()
+  @ApiPropertyOptional()
+  title?: string;
+
+  @ApiProperty()
+  @IsBoolean()
+  @Transform(({ value }) => booleanTransform(value))
+  @Expose()
+  isLinked: boolean;
+
+  constructor(partial: unknown) {
+    Object.assign(this, partial);
+  }
+}
+
+export class MedicationDto extends OmitType(Medication, [
+  'topics',
+  'profile',
+  'attachments',
+] as const) {
+  @Type(() => LinkTopic)
+  @ApiProperty({ type: LinkTopic, isArray: true })
+  topics: LinkTopic[];
+
+  constructor(partial: Partial<Medication>) {
+    super();
+    Object.assign(this, partial);
+  }
+}
 
 export class SaveMedicationDto extends OmitType(Medication, [
   'topics',
   'profile',
   'cardType',
   'attachments',
-  'prescription',
 ] as const) {}
 
 export class SyncMedicationDto extends OmitType(Medication, [

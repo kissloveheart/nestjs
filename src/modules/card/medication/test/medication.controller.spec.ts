@@ -18,6 +18,7 @@ import {
   mockProfile,
 } from './medication.mock';
 import {
+  MedicationDto,
   SaveMedicationDto,
   SyncMedicationDto,
 } from '@modules/card/dto/medication.dto';
@@ -113,7 +114,7 @@ describe('MedicationController', () => {
   describe('getOneById', () => {
     it('should return an medication by ID', async () => {
       const mockMedicationId = new ObjectId();
-      const mockMedication = new Medication();
+      const mockMedication = new MedicationDto(new Medication());
       clsService.get = jest.fn().mockReturnValue(mockProfile);
       jest.spyOn(medicationService, 'getOne').mockResolvedValue(mockMedication);
       const result = await medicationController.getOneById(mockMedicationId);

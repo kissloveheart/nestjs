@@ -13,7 +13,13 @@ import { PageRequest, PageRequestSync, Pageable } from '@types';
 import { ObjectId } from 'mongodb';
 import { FilterOperators, FindManyOptions, MongoRepository } from 'typeorm';
 import { Medication } from '../entity/child-entity/medication.entity';
-import { SaveMedicationDto, SyncMedicationDto } from '../dto/medication.dto';
+import {
+  MedicationDto,
+  SaveMedicationDto,
+  SyncMedicationDto,
+} from '../dto/medication.dto';
+import { TopicService } from '../../topic/topic.service';
+import { Topic, TopicPayload } from '@modules/topic';
 
 @Injectable()
 export class MedicationService extends BaseService<Medication> {
@@ -21,6 +27,7 @@ export class MedicationService extends BaseService<Medication> {
     @InjectRepository(Medication)
     private readonly medicationRepository: MongoRepository<Medication>,
     private readonly log: LogService,
+    private readonly topicService: TopicService,
   ) {
     super(medicationRepository, Medication.name);
     this.log.setContext(MedicationService.name);
@@ -45,12 +52,12 @@ export class MedicationService extends BaseService<Medication> {
         );
     } else {
       if (payload?._id) {
-        const existIDCard = await this.findOneCardWithDeletedTimeNull(
+        const existMedication = await this.findOneCardWithDeletedTimeNull(
           profile._id,
           payload._id,
-          CardType.ID_CARD,
+          CardType.MEDICATIONS,
         );
-        if (existIDCard)
+        if (existMedication)
           throw new ConflictException(
             `Medication ${payload._id} already exist`,
           );
@@ -102,13 +109,71 @@ export class MedicationService extends BaseService<Medication> {
   }
 
   async getOne(profile: Profile, id: ObjectId) {
+    const cursor = await this.aggregate([
+      {
+        $match: {
+          _id: id,
+          profile: profile._id,
+          cardType: CardType.MEDICATIONS,
+          deletedTime: null,
+        },
+      },
+      {
+        $lookup: {
+          from: 'topic',
+          localField: 'topics',
+          foreignField: '_id',
+          as: 'topics',
+        },
+      },
+    ]);
+
+    if (!(await cursor.hasNext()))
+      throw new NotFoundException(`Medication ${id.toString()} does not exist`);
+    const medication = await cursor.next();
+    const medicationDto = new MedicationDto(medication);
+    return medicationDto;
+  }
+
+  async updateMedicationTopics(
+    profile: Profile,
+    id: ObjectId,
+    payload: TopicPayload,
+  ) {
     const medication = await this.findOneCardWithDeletedTimeNull(
       profile._id,
       id,
       CardType.MEDICATIONS,
     );
-    if (!medication)
+
+    if (!medication) {
       throw new NotFoundException(`Medication ${id.toString()} does not exist`);
-    return medication;
+    }
+
+    if (payload.topics) {
+      const topicsOfProfile =
+        await this.topicService.getAllTopicsOfProfile(profile);
+      const topicIdsOfProfile = topicsOfProfile.map((topic) =>
+        topic._id.toString(),
+      );
+
+      const payloadTopicIds = payload.topics.map((topic) => topic._id);
+      const isValidTopicIds = payloadTopicIds.every((id) =>
+        topicIdsOfProfile.includes(id.toString()),
+      );
+      if (!isValidTopicIds) {
+        throw new BadRequestException(
+          'Temporary medication have invalid topic id',
+        );
+      }
+      const topics: Topic[] = topicsOfProfile.map((topic) => ({
+        ...topic,
+        isLinked: payloadTopicIds.some((id) => id.equals(topic._id)),
+      }));
+      medication.topics = payloadTopicIds;
+      this.topicService.saveAll(topics);
+    }
+    await this.save(medication);
+    return this.getOne(profile, id);
   }
 }

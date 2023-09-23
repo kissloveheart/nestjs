@@ -1,6 +1,8 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { AuditEntity } from '@shared/base';
-import { IsString } from 'class-validator';
+import { booleanTransform } from '@transform';
+import { Transform } from 'class-transformer';
+import { IsBoolean, IsString } from 'class-validator';
 import { ObjectId } from 'mongodb';
 import { Column, Entity } from 'typeorm';
 
@@ -13,4 +15,10 @@ export class Topic extends AuditEntity {
 
   @Column()
   profile: ObjectId;
+
+  @Column()
+  @IsBoolean()
+  @ApiPropertyOptional({ required: false })
+  @Transform(({ value }) => booleanTransform(value))
+  isLinked?: boolean = false;
 }
