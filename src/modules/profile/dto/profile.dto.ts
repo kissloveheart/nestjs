@@ -10,12 +10,16 @@ export class SaveProfileDto extends OmitType(Profile, [
 export class SyncProfileDto extends OmitType(Profile, [
   'updatedTime',
   'deletedTime',
+  'createdTime',
 ]) {
   @ApiProperty()
   updatedTime: Date;
 
   @ApiProperty()
   deletedTime: Date;
+
+  @ApiProperty()
+  createdTime?: Date;
 
   constructor(partial: Partial<Profile>) {
     super();

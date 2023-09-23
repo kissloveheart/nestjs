@@ -112,4 +112,8 @@ export class AppConfigService {
       clientId: this.configService.get<string>('APPLE_CLIENT_ID').split(COMMA),
     };
   }
+
+  frontEndUrl() {
+    return this.configService.get<string>('FE_URL');
+  }
 }

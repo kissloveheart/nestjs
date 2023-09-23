@@ -11,7 +11,8 @@ export class Note extends Card {
   @Column()
   @IsString()
   @ApiProperty()
-  description: string;
+  @IsOptional()
+  description?: string;
 
   @Column()
   @IsArray()

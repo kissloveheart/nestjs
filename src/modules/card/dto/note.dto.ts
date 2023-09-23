@@ -11,12 +11,16 @@ export class SaveNoteDto extends OmitType(Note, [
 export class SyncNoteDto extends OmitType(Note, [
   'updatedTime',
   'deletedTime',
+  'createdTime',
 ]) {
   @ApiProperty()
   updatedTime: Date;
 
   @ApiProperty()
   deletedTime: Date;
+
+  @ApiProperty()
+  createdTime?: Date;
 
   constructor(partial: Partial<Note>) {
     super();

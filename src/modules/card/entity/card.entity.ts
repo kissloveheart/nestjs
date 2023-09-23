@@ -28,7 +28,8 @@ export abstract class Card extends AuditEntity {
   @Column()
   @IsString()
   @ApiProperty()
-  title: string;
+  @IsOptional()
+  title?: string;
 
   @Column()
   @ApiProperty({ enum: CardType })
@@ -46,6 +47,7 @@ export abstract class Card extends AuditEntity {
   @IsBoolean()
   @ApiPropertyOptional({ required: false })
   @Transform(({ value }) => booleanTransform(value))
+  @IsOptional()
   isFollowedUp?: boolean = false;
 
   @Column()

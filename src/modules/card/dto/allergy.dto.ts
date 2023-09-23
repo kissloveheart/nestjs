@@ -11,12 +11,16 @@ export class AllergyDto extends OmitType(Allergy, [
 export class SyncAllergyDto extends OmitType(Allergy, [
   'updatedTime',
   'deletedTime',
+  'createdTime',
 ]) {
   @ApiProperty()
   updatedTime: Date;
 
   @ApiProperty()
   deletedTime: Date;
+
+  @ApiProperty()
+  createdTime: Date;
 
   constructor(partial: Partial<Allergy>) {
     super();
